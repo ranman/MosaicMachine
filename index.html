@@ -81,13 +81,14 @@ $(document).ready(function() {
         "appId"  : '153403654734305',
         "status" : true, // check login status
         "cookie" : true, // enable cookies to allow the server to access the session
+        "xfbml"  : true
     });
     var auth_token = "";
     var uid = "";
     FB.login(function(response) {
         auth_token = response['auth_token'];
         uid = response['uid'];
-        console.write(response);
+        console.log(response);
     });
     
     // $("#grabphotos").bind("click", function(event) {
