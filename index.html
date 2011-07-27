@@ -76,6 +76,8 @@ h1 {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
     <script type="text/javascript">
+var auth_token = "";
+var uid = "";
 $(document).ready(function() {
     FB.init({
         "appId"  : '153403654734305',
@@ -84,9 +86,8 @@ $(document).ready(function() {
         "xfbml"  : true
     });
     FB.login(function(response) {
-        auth_token = response['session']['auth_token'];
+        auth_token = response['session']['access_token'];
         uid = response['session']['uid'];
-        console.log(response)
     });
     var url = "https://api.facebook.com/method/fql.query?callback=?";
     var params = {
