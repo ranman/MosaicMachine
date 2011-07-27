@@ -90,24 +90,24 @@ $(document).ready(function() {
             uid = response['uid'];
             console.write(response);
         });
-        // 
-        // var url = "https://api.facebook.com/method/fql.query?callback=?";
-        // var params = {
-        //     "query": "SELECT uid, name, pic_big FROM user WHERE uid =" + uid +" OR uid IN (SELECT uid2 FROM friend WHERE uid1 ="+ uid +")",
-        //     "access_token": auth_token,
-        //     "format": "JSON"
-        // };
-        // $.getJSON(url, params, function(data) { 
-        //     var p_array = [];
-        //     p_array.push('<ul id="sortable">');
-        //     $.each(data, function(index, item) {
-        //         p_array.push('<li class="ui-state-default"><img src="'+item['pic_big']+'"></li>');
-        //     });
-        //     p_array.push("</ul>");
-        //     $("#photos").html(p_array.join(''));
-        //     $("#sortable").sortable({ handle: 'img' });
-        //     $("#sortable").disableSelection();
-        // });
+
+        var url = "https://api.facebook.com/method/fql.query?callback=?";
+        var params = {
+            "query": "SELECT uid, name, pic_big FROM user WHERE uid =" + uid +" OR uid IN (SELECT uid2 FROM friend WHERE uid1 ="+ uid +")",
+            "access_token": auth_token,
+            "format": "JSON"
+        };
+        $.getJSON(url, params, function(data) { 
+            var p_array = [];
+            p_array.push('<ul id="sortable">');
+            $.each(data, function(index, item) {
+                p_array.push('<li class="ui-state-default"><img src="'+item['pic_big']+'"></li>');
+            });
+            p_array.push("</ul>");
+            $("#photos").html(p_array.join(''));
+            $("#sortable").sortable({ handle: 'img' });
+            $("#sortable").disableSelection();
+        });
     });
 });
     </script>
