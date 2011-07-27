@@ -76,8 +76,31 @@ h1 {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
     <script type="text/javascript">
-var auth_token = "";
-var uid = "";
+function buildMosaic(response) {
+    if(!response.session) {
+        $("#photos").html("<em>Sorry I was unable to log you in</em>");
+        return;
+    }
+
+    FB.api(
+      {
+          'method': 'fql.query',
+          'query': "SELECT uid, name, pic_big FROM user WHERE uid =" + uid +" OR uid IN (SELECT uid2 FROM friend WHERE uid1 ="+ uid +")"
+      },
+      function(response) {
+          console.log(response)
+          var photos = [];
+          photos.push('<ul id="sortable">');
+          $.each(response, function(index, item) {
+              photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'"></li>');
+          });
+          photos.push("</ul>");
+          $("#photos").html(p_array.join(''));
+          $("#sortable").sortable({ handle: 'img' });
+          $("#sortable").disableSelection();
+      }
+    );
+}
 $(document).ready(function() {
     FB.init({
         "appId"  : '153403654734305',
@@ -85,27 +108,9 @@ $(document).ready(function() {
         "cookie" : true, // enable cookies to allow the server to access the session
         "xfbml"  : true
     });
-    FB.login(function(response) {
-        auth_token = response['session']['access_token'];
-        uid = response['session']['uid'];
-    });
-    var url = "https://api.facebook.com/method/fql.query?callback=?";
-    var params = {
-        "query": "SELECT uid, name, pic_big FROM user WHERE uid =" + uid +" OR uid IN (SELECT uid2 FROM friend WHERE uid1 ="+ uid +")",
-        "access_token": auth_token,
-        "format": "JSON"
-    };
-    $.getJSON(url, params, function(data) { 
-        var p_array = [];
-        p_array.push('<ul id="sortable">');
-        $.each(data, function(index, item) {
-            p_array.push('<li class="ui-state-default"><img src="'+item['pic_big']+'"></li>');
-        });
-        p_array.push("</ul>");
-        $("#photos").html(p_array.join(''));
-        $("#sortable").sortable({ handle: 'img' });
-        $("#sortable").disableSelection();
-    });
+    FB.Event.subscribe('auth.login', buildMosaic);
+    FB.Event.subscribe('auth.logout', buildMosaic);
+    FB.getLoginStatus(buildMosaic);
 });
     </script>
 </head>
@@ -113,6 +118,7 @@ $(document).ready(function() {
     <div id="fb-root"></div>
     <div id="constant">
         <h1>Mosaic Machine</h1>
+        <fb:login-button>See Your Mosaic</fb:login-button>
         <div class="right">
             <fb:like href="http://www.mosaicmachine.com" send="true" width="450" show_faces="true" font=""></fb:like>
         </div>
