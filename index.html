@@ -4,6 +4,28 @@
     <style type="text/css">
 * { margin: 0; padding: 0; }
 #sortable { list-style-type: none; margin: 0; padding: 0;}
+#constant {
+    position: fixed;
+    width: 100%;
+    background-color: #ccc;
+    height: 75px;
+}
+.right {
+    float: right;
+    padding-top: 20px;
+    padding-right: 10px;
+}
+#tweet {
+    padding-top: 23px;
+}
+h1 {
+    color: #eee;
+    font-size:60px;
+    font-variant:small-caps;
+    font-family:Helvetica, Arial, sans-serif;
+    padding-left: 20px;
+    float: left;
+}
 #photos {
    /* Prevent vertical gaps */
    line-height: 0;
@@ -86,8 +108,17 @@ $(document).ready(function() {
     </script>
 </head>
 <body>
-    <button id="fb-login">Login</button>
-    <button id="grabphotos">Create Mosaic</button>
+    <div id="constant">
+        <h1>Mosaic Machine</h1>
+        <div class="right">
+            <div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#appId=240704162627609&amp;xfbml=1"></script><fb:like href="http://www.mosaicmachine.com" send="true" width="450" show_faces="true" font=""></fb:like>
+        </div>
+        <div class="right" id="tweet">
+            <a href="http://twitter.com/share" class="twitter-share-button" data-url="mosaicmachine.com" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+        </div>
+        <button id="fb-login">Login</button>
+        <button id="grabphotos">Create Mosaic</button>
+    </div>
 <section id="photos">
 </section>
 </body>
