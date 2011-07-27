@@ -80,7 +80,7 @@ function buildMosaic(response) {
     FB.api(
       {
           'method': 'fql.query',
-          'query': "SELECT uid, name, pic_big FROM user WHERE uid =" + uid +" OR uid IN (SELECT uid2 FROM friend WHERE uid1 ="+ uid +")"
+          'query': "SELECT uid, name, pic_big FROM user WHERE uid =" + response.session.uid +" OR uid IN (SELECT uid2 FROM friend WHERE uid1 ="+ response.session.uid +")"
       },
       function(response) {
           var photos = [];
