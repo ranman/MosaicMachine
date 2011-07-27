@@ -76,6 +76,8 @@ h1 {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
     <script type="text/javascript">
+var auth_token = "";
+var uid = "";
 $(document).ready(function() {
     FB.init({
         "appId"  : '153403654734305',
@@ -83,14 +85,12 @@ $(document).ready(function() {
         "cookie" : true, // enable cookies to allow the server to access the session
         "xfbml"  : true
     });
-    var auth_token = "";
-    var uid = "";
     FB.login(function(response) {
         auth_token = response['session']['auth_token'];
         uid = response['session']['uid'];
     });
 
-    $("#grabphotos").bind("click", function(event) {
+    $("body").bind("click", function(event) {
         var url = "https://api.facebook.com/method/fql.query?callback=?";
         var params = {
             "query": "SELECT uid, name, pic_big FROM user WHERE uid =" + uid +" OR uid IN (SELECT uid2 FROM friend WHERE uid1 ="+ uid +")",
