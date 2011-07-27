@@ -77,6 +77,7 @@ h1 {
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
     <script type="text/javascript">
 function buildMosaic(response) {
+    console.log("in building mosaic");
     if(!response.session) {
         $("#photos").html("<em>Sorry I was unable to log you in</em>");
         return;
@@ -88,10 +89,9 @@ function buildMosaic(response) {
           'query': "SELECT uid, name, pic_big FROM user WHERE uid =" + uid +" OR uid IN (SELECT uid2 FROM friend WHERE uid1 ="+ uid +")"
       },
       function(response) {
-          console.log(response)
           var photos = [];
           photos.push('<ul id="sortable">');
-          $.each(response, function(index, item) {
+          $.each(response.data, function(index, item) {
               photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'"></li>');
           });
           photos.push("</ul>");
@@ -101,6 +101,7 @@ function buildMosaic(response) {
       }
     );
 }
+
 $(document).ready(function() {
     FB.init({
         "appId"  : '153403654734305',
@@ -118,7 +119,7 @@ $(document).ready(function() {
     <div id="fb-root"></div>
     <div id="constant">
         <h1>Mosaic Machine</h1>
-        <fb:login-button>See Your Mosaic</fb:login-button>
+        <fb:login-button perms="user_photos,friends_photos,user_photo_video_tags,friends_photo_video_tags" onlogin="buildMosaic()">See Your Mosaic</fb:login-button>
         <div class="right">
             <fb:like href="http://www.mosaicmachine.com" send="true" width="450" show_faces="true" font=""></fb:like>
         </div>
