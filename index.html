@@ -139,6 +139,7 @@ $(document).ready(function() {
     FB.Event.subscribe('auth.login', buildMosaic);
     FB.Event.subscribe('auth.logout', buildMosaic);
     FB.getLoginStatus(buildMosaic);
+    dialog = $(document).dialog(autoOpen: false);
 });
     </script>
 </head>
@@ -165,6 +166,7 @@ var recentInteractionsStore;
 var count = 0;
 var loadedInteractions = false;
 var loadedWall = false;
+var dialog; 
 
 function buildMosaic(response) {
     if (response && response.session) {
