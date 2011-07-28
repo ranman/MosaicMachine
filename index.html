@@ -184,11 +184,11 @@ function buildMosaic(response) {
         getRecentInterations(response);
     }
 }
-function getRecentInterations(response) {
+function getRecentInterations(login) {
     FB.api(
         {
             'method': 'fql.query',
-            'query':"SELECT post_id, actor_id, message FROM stream WHERE source_id=" + response.session.uid
+            'query':"SELECT post_id, actor_id, message FROM stream WHERE source_id=" + login.session.uid
         },
         function(response) {
             $.each(response, function(index, item){
