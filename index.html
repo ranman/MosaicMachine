@@ -141,11 +141,6 @@ $(document).ready(function() {
     FB.getLoginStatus(buildMosaic);
     dialog = $('<div></div>').dialog({autoOpen: false});
 });
-function addDialog(elem) {
-        elem.click(function(){alert('here');});
-//    elem.mouseover(function(){dialog.dialog('open')});
-//    elem.mouseleave(function(){dialog.dialog('close')});
-}
     </script>
 </head>
 <body>
@@ -188,7 +183,7 @@ function buildMosaic(response) {
               photos.push('<ul id="sortable">');
               $.each(response, function(index, item) {
                   photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'" id="'+item['uid']+'"></li>');
-                  addDialog($('#'+item['uid']));
+                  $('#'+item['uid']).click(function(){alert('here');});
               });
               photos.push("</ul>");
               $("#photos").html(photos.join(''));
