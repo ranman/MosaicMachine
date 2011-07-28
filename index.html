@@ -32,13 +32,11 @@ h1 {
     font-variant:small-caps;
     font-family:Helvetica, Arial, sans-serif;
     text-align: center;
-    width: 100%;
-    float: left;
-}
-#spinner {
-    float: left;
-    width: 100%; 
-    margin: auto;
+    display: none;
+    width: 300px;
+    position: absolute;
+    top: 250px;
+    left: 50%;
 }
 #photos {
    /* Prevent vertical gaps */
@@ -167,9 +165,9 @@ $(document).ready(function() {
 <body>
     <div id="fb-root"></div>
     <div id="loadingSpinner">
-        <div id="spinner"><img src="ajax-loader.gif" /></div>
-        <div id="loadText"></div>
+        <img src="ajax-loader.gif" />
     </div>
+    <div id="loadText"></div>
     <div id="loginButton">
             <fb:login-button perms="user_photos,friends_photos,user_photo_video_tags,friends_photo_video_tags,read_stream" onlogin="buildMosaic()">See Your Mosaic</fb:login-button>
     </div>
