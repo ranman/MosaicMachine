@@ -219,7 +219,7 @@ function loadYouAndFriend(id) {
         query: 'SELECT pid, caption, aid, owner, link, src_big, src_small, created, modified FROM photo WHERE aid IN (SELECT aid FROM album WHERE owner IN ('+id+')) LIMIT 10'
     },
     function(response) {
-        if (response.length > 0)
+        if (response.length > 0) {
             var loadStr = '';
             $.each(response, function(index, item) {
                 //var t = recentInteractionsStore[item['uid']];
