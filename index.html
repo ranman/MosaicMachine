@@ -173,6 +173,7 @@ var recentInteractionsStore;
 var loadState = 0;
 var uid;
 var count = 0;
+var loadNoBegin = true;
 
 function buildMosaic(response) {
     if (response && response.session) {
@@ -180,9 +181,12 @@ function buildMosaic(response) {
         $('#constant').fadeTo(1,0.5);
         $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
         $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
-        recentInteractionsStore = new Array();
-        uid = response.session.uid;
-        recentInteractionsHelper();
+        if (loadNoBegin) {
+            loadNoBegin = false;
+            recentInteractionsStore = new Array();
+            uid = response.session.uid;
+            recentInteractionsHelper();
+        }
     }
 }
 function loadFriendsPics(){
