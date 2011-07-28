@@ -199,6 +199,7 @@ function buildMosaic(response) {
     if (response && response.session) {
         $('#loginButton').hide(); 
         $('#loadingSpinner').show();
+        $('#loadText').show();
         $('#constant').fadeTo(1,0.5);
         $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
         $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
@@ -228,6 +229,7 @@ function loadFriendsPics(){
             },
             function(response) {
               $('#loadingSpinner').hide();
+              $('#loadText').hide();
               var photos = [];
               photos.push('<ul id="sortable">');
               var ids = new Array();
