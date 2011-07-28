@@ -195,7 +195,7 @@ function buildMosaic(response) {
     }
 }
 function getRecentInterations() {
-    if (offset < 200){
+    if (offset < 400){
         FB.api('/me/feed', { limit: 30, offset: offset }, recentInteractionsHelper);
         offset += 30;
     }
