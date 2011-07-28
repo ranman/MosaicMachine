@@ -213,14 +213,13 @@ function buildMosaic(response) {
 }
 
 function loadYouAndFriend(id) {
-    alert(id);
     FB.api(
           {
               method: 'photos.get',
               subj_id: id
           },
           function(response) {
-                $(this).qtip(
+                $('#'+id).qtip(
                 {
                     content: '<img src="'+response[0].src+'">',
                     position: {
