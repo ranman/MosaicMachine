@@ -163,7 +163,6 @@ $(document).ready(function() {
 <script type="text/javascript">
 //SOME GLOBALS FOR THAT STORE ONE'S MOST RECENT INTERACTIONS WITH OTHERS
 var recentInteractionsStore;
-var count = 0;
 var loadedInteractions = false;
 var loadedWall = false;
 var dialog; 
@@ -203,19 +202,16 @@ function recentInteractionsHelper(response) {
         
         $.each(response.data, function(index, item){
             if (!(item.from.id in recentInteractionsStore)) {
-                count += 1;
                 recentInteractionsStore[item.from.id] = item.message;
             }
             if (item.comments && item.comments.data) {
                 $.each(item.comments.data, function(index, item){
                     if (!(item.from.id in recentInteractionsStore)) {
-                        count += 1;
                         recentInteractionsStore[item.from.id] = item.message;
                     }
                 });
             }
         });
-        alert(count);
         if (!loadedWall) {
             loadedWall = true;
             FB.api('/me/home', {limit: 50}, recentInteractionsHelper);
