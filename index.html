@@ -207,24 +207,19 @@ function loadFriendsPics(){
               photos.push('<ul id="sortable">');
               var ids = new Array();
               $.each(response, function(index, item) {
-                  var t = recentInteractionsStore[item['uid']];
-                  if (t) {
-                    photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'" id="'+item['uid']+'" title="'+t+'"></li>');
-                  } else {
-                    photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'" id="'+item['uid']+'"></li>');
-                  }
+                  //var t = recentInteractionsStore[item['uid']];
+                  photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'" id="'+item['uid']+'"></li>');
                   ids.push(item['uid']);
               });
               photos.push("</ul>");
               $("#photos").html(photos.join(''));
-              for (i in ids) {
-                var x = $('#'+ids[i]);
-                if (x.title)
+              for (i in photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'" id="'+item['uid']+'"></li>');) {
+                var x = $('#'+i);
+                if (recentInteractionsStore[i])
                 {
                     x.qtip(
                     {
-                        content: x.title,
-                        
+                        content: recentInteractionsStore[i]
                     });
                 }
               }
