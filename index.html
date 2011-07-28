@@ -154,7 +154,7 @@ $(document).ready(function() {
     <div id="fb-root"></div>
     <div id="loadingSpinner">
         <div style="float: left;"><img src="ajax-loader.gif" /></div>
-        <div id="loadText" style="float: left;">loading text</div>
+        <div id="loadText" style="float: left;"> loading text</div>
     </div>
     <div id="loginButton">
             <fb:login-button perms="user_photos,friends_photos,user_photo_video_tags,friends_photo_video_tags,read_stream" onlogin="buildMosaic()">See Your Mosaic</fb:login-button>
@@ -278,12 +278,15 @@ function loadFriends(response) {
 }
 function recentInteractionsHelper() {
         if (loadState == 0) {
+            $('#loadText').html(' loading your wall...');
             FB.api('/me/feed', {limit: 50}, loadFriends);
         } 
         else if (loadState == 1) {
+            $('#loadText').html(' loading your feed...');
             FB.api('/me/home', {limit: 50}, loadFriends);
         }
         else if (loadState == 2) {
+            $('#loadText').html(' loading your pictures...');
             loadFriendsPics();
         }
         else {
