@@ -201,6 +201,7 @@ function getRecentInterations(response) {
             var end = now - ((i - 1) * month);
             var start = now - ((i) * month);
             myqueries['query'+i] = "SELECT actor_id, message,comments FROM stream WHERE filter_key = 'others' AND created_time < " + end + " AND created_time > " + start + " AND source_id = " + response.session.uid + " LIMIT 50";
+            alert(myqueries['query'+i]);
         }
         FB.api(
             {
