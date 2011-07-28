@@ -191,9 +191,11 @@ function getRecentInterations(response) {
             'query':"SELECT actor_id, message FROM stream WHERE filter_key = 'others' AND source_id = " + response.session.uid
         },
         function(response) {
+            var str = '';
             $.each(response, function(index, item){
-                alert(item['message']);
+                str += item['message'];
             });
+            alert(str);
         }
     );
 }
