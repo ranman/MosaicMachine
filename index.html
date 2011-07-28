@@ -142,8 +142,9 @@ $(document).ready(function() {
     dialog = $('<div></div>').dialog({autoOpen: false});
 });
 function addDialog(elem) {
-    elem.mouseover(function(){dialog.dialog('open')});
-    elem.mouseleave(function(){dialog.dialog('close')});
+        elem.click(function(){alert('here');});
+//    elem.mouseover(function(){dialog.dialog('open')});
+//    elem.mouseleave(function(){dialog.dialog('close')});
 }
     </script>
 </head>
