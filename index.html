@@ -196,8 +196,8 @@ function buildMosaic(response) {
 }
 function getRecentInterations() {
     if (offset < 200){
-        FB.api('/me/feed', { limit: 10, offset: offset }, recentInteractionsHelper);
-        offset += 10;
+        FB.api('/me/feed', { limit: 20, offset: offset }, recentInteractionsHelper);
+        offset += 20;
     }
 }
 function recentInteractionsHelper(response) {
