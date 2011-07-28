@@ -217,11 +217,30 @@ function loadYouAndFriend(id) {
     FB.api(
           {
               method: 'photos.get',
-              subj_id: id,
-              limit: 10
+              subj_id: id
           },
           function(response) {
-                alert(response.length);        
+                $(this).qtip(
+                {
+                    content: '<img src="'+response[0].src+'">',
+                    position: {
+                        corner: {
+                            tooltip: 'bottomLeft',
+                            target: 'bottomLeft'
+                        }
+                    },
+                    style: {
+                        name: 'blue', 
+                        tip: {
+                            corner: 'bottomLeft'
+                        },
+                        border: {
+                            width: 2,
+                            radius: 6
+                        }
+                    }
+                });
+                //alert(response.length);        
           }
     );
 }
