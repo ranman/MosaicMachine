@@ -208,15 +208,18 @@ function loadFriendsPics(){
               var ids = new Array();
               $.each(response, function(index, item) {
                   var t = recentInteractionsStore[item['uid']];
-                  photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'" id="'+item['uid']+'" title="'+t+'"></li>');
+                  if (t) {
+                    photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'" id="'+item['uid']+'" title="'+t+'"></li>');
+                  } else {
+                    photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'" id="'+item['uid']+'"></li>');
+                  }
                   ids.push(item['uid']);
               });
               photos.push("</ul>");
               $("#photos").html(photos.join(''));
               for (i in ids) {
-                
                 var x = $('#'+ids[i]);
-                if (x.title && x.title != '' && x.title.toString() != 'undefined')
+                if (x.title)
                 {
                     x.qtip(
                     {
