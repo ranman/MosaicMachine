@@ -41,7 +41,7 @@ h1 {
     width: 200px;
     text-align: left;
     position: absolute;
-    top: 0px;
+    top: 200px;
     left: 50%;
     margin-left: -70px;
 }
@@ -137,11 +137,11 @@ $(document).ready(function() {
 </head>
 <body>
     <div id="fb-root"></div>
+    <div id="loginButton">
+            <fb:login-button perms="user_photos,friends_photos,user_photo_video_tags,friends_photo_video_tags" onlogin="buildMosaic()">See Your Mosaic</fb:login-button>
+    </div>
     <div id="constant">
         <h1>Mosaic Machine</h1>
-        <div id="loginButton">
-            <fb:login-button perms="user_photos,friends_photos,user_photo_video_tags,friends_photo_video_tags" onlogin="buildMosaic()">See Your Mosaic</fb:login-button>
-        </div>
         <div class="right">
             <fb:like href="http://www.mosaicmachine.com" send="true" width="450" show_faces="true" font=""></fb:like>
         </div>
