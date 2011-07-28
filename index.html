@@ -222,7 +222,6 @@ function loadYouAndFriend(id) {
                 alert(response.length);        
           }
     );
-    SELECT pid FROM photo WHERE aid IN ( SELECT aid FROM album WHERE owner=''$user_id'' ) ORDER BY created DESC LIMIT 1,42
 }
 function loadFriendsPics(){
     var loadStr = '';
