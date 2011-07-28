@@ -148,7 +148,7 @@ h1 {
             <fb:login-button perms="user_photos,friends_photos,user_photo_video_tags,friends_photo_video_tags,read_stream" onlogin="buildMosaic()">See Your Mosaic</fb:login-button>
     </div>
     <div id="constant">
-        <h1>Mosaic Machine</h1>
+        <h1 id="maintitle">Mosaic Machine</h1>
         <h2 id="wtf">wtf is this?</h2>
         <div class="right">
             <fb:like href="http://www.mosaicmachine.com" send="true" width="450" show_faces="true" font=""></fb:like>
@@ -406,6 +406,36 @@ $('#wtf').qtip({
                         fixed: false
                     }
         });
+$('#maintitle').qtip({
+            content: 'built by cary &amp; hunt',
+            position: {
+                        corner: {
+                            tooltip: 'topLeft',
+                            target: 'bottomRight'
+                        }
+                    },
+                    style: {
+                        name: 'blue', 
+                        tip: {
+                            corner: 'topLeft'
+                        },
+                        border: {
+                            width: 2,
+                            radius: 6
+                        }
+                    },
+                    width: {
+                        min: 0,
+                        max: 400
+                    },
+                    show: {
+                        delay: 0,
+                        ready: false
+                    },
+                    hide: {
+                        fixed: false
+                    }
+        });        
 </script>
 </body>
 </html>
