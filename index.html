@@ -190,7 +190,7 @@ function buildMosaic(response) {
               $("#photos").html(photos.join(''));
               for (i in ids) {
                 var x = $('#'+ids[i]);
-                x.mouseover(function(){dialog.dialog('open');});
+                x.mouseover(function(){dialog.dialog('open',{'title': 'hello'});});
                 x.mouseleave(function(){dialog.dialog('close');});
               }
             }
