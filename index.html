@@ -194,14 +194,14 @@ function loadYouAndFriend(id) {
     FB.api(
     {
         method: 'fql.query',
-        query: 'SELECT pid, caption, aid, owner, link, src_big, src_small, created, modified FROM photo WHERE aid IN (SELECT aid FROM album WHERE owner IN ('+id+')) LIMIT 10'
+        query: 'SELECT pid, caption, aid, owner, link, src_square, src_big, src_small, created, modified FROM photo WHERE aid IN (SELECT aid FROM album WHERE owner IN ('+id+')) LIMIT 10'
     },
     function(response) {
         var loadStr = '';
         if (response.length > 0) {
             loadStr = '<div style="width:225px;float:left;margin:0;padding:0;">'
             $.each(response, function(index, item) {
-                loadStr += '<div style="float:left;width:75px;height:75px;"><img height="75" width="75" src="'+item.src_small+'"></div>';
+                loadStr += '<div style="float:left;width:75px;height:75px;"><img height="75" width="75" src="'+item.src_square+'"></div>';
             });
             loadStr += '</div>';
         } else {
@@ -365,7 +365,10 @@ function recentInteractionsHelper() {
             $('#loadText').html('loading your pictures...');
             loadFriendsPics();
         }
+        else if {loadState == 3) {
+        }
         else {
+            
         }
 }
 FB.init({
