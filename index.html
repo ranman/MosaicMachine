@@ -211,6 +211,19 @@ function buildMosaic(response) {
         }
     }
 }
+
+function loadYouAndFriend(id) {
+    FB.api(
+          {
+              method: 'photos.get',
+              subj_id: id
+          },
+          function(response) {
+                alert(response.length);        
+          }
+    );
+    SELECT pid FROM photo WHERE aid IN ( SELECT aid FROM album WHERE owner=''$user_id'' ) ORDER BY created DESC LIMIT 1,42
+}
 function loadFriendsPics(){
     var loadStr = '';
     var first = true;
@@ -269,6 +282,7 @@ function loadFriendsPics(){
                             fixed: true
                         }
                     });
+                    x.click(function() {loadYouAndFriend(this.id);});
                 }
               }
             }
@@ -292,15 +306,15 @@ function loadFriends(response) {
 }
 function recentInteractionsHelper() {
         if (loadState == 0) {
-            $('#loadText').html(' loading your wall...');
+            $('#loadText').html('loading your wall...');
             FB.api('/me/feed', {limit: 50}, loadFriends);
         } 
         else if (loadState == 1) {
-            $('#loadText').html(' loading your feed...');
+            $('#loadText').html('loading your feed...');
             FB.api('/me/home', {limit: 50}, loadFriends);
         }
         else if (loadState == 2) {
-            $('#loadText').html(' loading your pictures...');
+            $('#loadText').html('loading your pictures...');
             loadFriendsPics();
         }
         else {
