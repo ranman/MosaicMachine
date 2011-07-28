@@ -194,7 +194,7 @@ function buildMosaic(response) {
 }
 function getRecentInterations(response) {
     if (response && response.session) {
-        var now = new Date().getTime();
+        var now = (new Date().getTime()) / 1000;
         var month = 31 * 86400;
         var myqueries = new Array();
         for (var i = 1; i < 13; i++) {
