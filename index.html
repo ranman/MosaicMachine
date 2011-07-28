@@ -196,6 +196,7 @@ function getRecentInterations(response) {
     FB.api('/me/feed', { limit: 50 }, recentInteractionsHelper);
 }
 function recentInteractionsHelper(response) {
+        recentInteractionsStore = new Array();
         $.each(response.data, function(index, item){
             if (!(item.from.id in recentInteractionsStore)) {
                 count += 1;
