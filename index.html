@@ -214,6 +214,16 @@ function buildMosaic(response) {
 
 function loadYouAndFriend(id) {
     FB.api(
+    {
+        method: 'fql.query',
+        query: 'SELECT pid, caption, aid, owner, link, src_big, src_small, created, modified FROM photo WHERE aid IN (SELECT aid FROM album WHERE owner IN ('+id+') LIMIT 20'
+    },
+    function(response) {
+        alert('Photos: ' + JSON.stringify(response));
+    }
+);
+/*
+    FB.api(
           {
               method: 'photos.get',
               subj_id: id
@@ -242,6 +252,7 @@ function loadYouAndFriend(id) {
                 //alert(response.length);        
           }
     );
+*/
 }
 function loadFriendsPics(){
     var loadStr = '';
