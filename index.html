@@ -184,18 +184,20 @@ function buildMosaic(response) {
         getRecentInterations(response);
     }
 }
-function getRecentInterations(login) {
-    FB.api(
-        {
-            'method': 'fql.query',
-            'query':"SELECT actor_id, message FROM stream WHERE filter_key = 'others' AND source_id = " + login.session.uid
-        },
-        function(response) {
-            $.each(response, function(index, item){
-                alert(item['message']);
-            });
-        }
-    );
+function getRecentInterations(response) {
+    if (response && response.session)
+        FB.api(
+            {
+                'method': 'fql.query',
+                'query':"SELECT actor_id, message FROM stream WHERE filter_key = 'others' AND source_id = " + login.session.uid
+            },
+            function(response) {
+                $.each(response, function(index, item){
+                    alert(item['message']);
+                });
+            }
+        );
+    }
 }
 FB.init({
     "appId"  : '153403654734305',
