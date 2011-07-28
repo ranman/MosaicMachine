@@ -195,7 +195,7 @@ function buildMosaic(response) {
     }
 }
 function getRecentInterations() {
-    FB.api('/me/feed', { limit: 50, offset: offset }, recentInteractionsHelper);
+    FB.api('/me/feed', { limit: 50, offset}, recentInteractionsHelper);
 }
 function recentInteractionsHelper(response) {
         
@@ -216,7 +216,7 @@ function recentInteractionsHelper(response) {
         alert(count);
         if (!loadedWall) {
             loadedWall = true;
-            FB.api('/me/home', { limit: 50, offset: offset }, recentInteractionsHelper);
+            FB.api('/me/home', { limit: 50}, recentInteractionsHelper);
         }
         loadedWall = true;
 }
