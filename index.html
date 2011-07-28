@@ -195,9 +195,9 @@ function buildMosaic(response) {
     }
 }
 function getRecentInterations() {
-    if (offset < 120){
-        FB.api('/me/feed', { limit: 30, offset: offset }, recentInteractionsHelper);
-        offset += 30;
+    if (offset < 100){
+        FB.api('/me/feed', { limit: 10, offset: offset }, recentInteractionsHelper);
+        offset += 10;
     }
 }
 function recentInteractionsHelper(response) {
@@ -215,8 +215,8 @@ function recentInteractionsHelper(response) {
                 });
             }
         });
-        getRecentInterations();
         alert(count);
+        getRecentInterations();
 }
 FB.init({
     "appId"  : '153403654734305',
