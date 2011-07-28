@@ -214,17 +214,21 @@ function loadFriendsPics(){
               photos.push("</ul>");
               $("#photos").html(photos.join(''));
               for (i in ids) {
+                
                 var x = $('#'+ids[i]);
-                x.qtip(
+                if (x.title != 'undefined')
                 {
-                    content: x.title,
-                    position: {
-                        corner: {
-                         tooltip: 'topMiddle', // Use the corner...
-                         target: 'bottomMiddle' // ...and opposite corner
-                        }
-                    } 
-                });
+                    x.qtip(
+                    {
+                        content: x.title,
+                        position: {
+                            corner: {
+                             tooltip: 'topMiddle', // Use the corner...
+                             target: 'bottomMiddle' // ...and opposite corner
+                            }
+                        } 
+                    });
+                }
               }
             }
         );  
