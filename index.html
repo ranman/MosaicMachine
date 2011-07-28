@@ -162,26 +162,28 @@ $(document).ready(function() {
 <script type="text/javascript">
 function buildMosaic(response) {
     if (response.session) {
-        $('#loginButton').hide();   
+        $('#loginButton').hide(); 
+        $('#constant').fadeTo(1,0.5);
+        $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
+        $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
+        FB.api(
+            {
+              'method': 'fql.query',
+              'query': "SELECT uid, name, pic_big FROM user WHERE uid =" + response.session.uid +" OR uid IN (SELECT uid2 FROM friend WHERE uid1 ="+ response.session.uid +")"
+            },
+            function(response) {
+              var photos = [];
+              photos.push('<ul id="sortable">');
+              $.each(response, function(index, item) {
+                  photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'" name="'+item['uid']+'"></li>');
+              });
+              photos.push("</ul>");
+              $("#photos").html(photos.join(''));
+            }
+        );  
     }
-    $('#constant').fadeTo(1,0.5);
-    $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
-    $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
-    FB.api(
-      {
-          'method': 'fql.query',
-          'query': "SELECT uid, name, pic_big FROM user WHERE uid =" + response.session.uid +" OR uid IN (SELECT uid2 FROM friend WHERE uid1 ="+ response.session.uid +")"
-      },
-      function(response) {
-          var photos = [];
-          photos.push('<ul id="sortable">');
-          $.each(response, function(index, item) {
-              photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'"></li>');
-          });
-          photos.push("</ul>");
-          $("#photos").html(photos.join(''));
-      }
-    );
+}
+function getRecentInterations() {
 }
 FB.init({
     "appId"  : '153403654734305',
