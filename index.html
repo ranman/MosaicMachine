@@ -217,7 +217,13 @@ function loadFriendsPics(){
                 var x = $('#'+ids[i]);
                 x.qtip(
                 {
-                    content: x.title 
+                    content: x.title,
+                    position: {
+                        corner: {
+                         tooltip: 'topMiddle', // Use the corner...
+                         target: 'bottomMiddle' // ...and opposite corner
+                        }
+                    } 
                 });
               }
             }
