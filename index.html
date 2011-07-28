@@ -189,10 +189,11 @@ function loadYouAndFriend(id) {
     function(response) {
         var loadStr = '';
         if (response.length > 0) {
+            loadStr = '<div style="width:225px;float:left;margin:0;padding:0;">'
             $.each(response, function(index, item) {
-                //var t = recentInteractionsStore[item['uid']];
                 loadStr += '<div style="float:left;width:75px;height:75px;"><img height="75" width="75" src="'+item.src_small+'"></div>';
             });
+            loadStr += '</div>';
         } else {
             loadStr += 'privacy settings prevent getting more images. sorry.';
         }
