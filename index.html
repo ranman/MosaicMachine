@@ -224,7 +224,27 @@ function loadYouAndFriend(id) {
             //var t = recentInteractionsStore[item['uid']];
             loadStr += '<img src="'+item.src_small+'">';
         });
-        alert(loadStr);
+        alert(id);
+        $('#'+id).qtip({
+            content: loadStr,
+            position: {
+                        corner: {
+                            tooltip: 'bottomLeft',
+                            target: 'bottomLeft'
+                        }
+                    },
+                    style: {
+                        name: 'blue', 
+                        tip: {
+                            corner: 'bottomLeft'
+                        },
+                        border: {
+                            width: 2,
+                            radius: 6
+                        }
+                    }
+        });
+        
     }
 );
 /*
