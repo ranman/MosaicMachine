@@ -140,7 +140,6 @@ $(document).ready(function() {
     FB.Event.subscribe('auth.login', buildMosaic);
     FB.Event.subscribe('auth.logout', buildMosaic);
     FB.getLoginStatus(buildMosaic);
-    dialog = $('<div id="dialogText"></div>').dialog({autoOpen: false});
 });
     </script>
 </head>
@@ -164,9 +163,11 @@ $(document).ready(function() {
 <script type="text/javascript">
 //SOME GLOBALS FOR THAT STORE ONE'S MOST RECENT INTERACTIONS WITH OTHERS
 var recentInteractionsStore;
-var loadedInteractions = false;
-var loadedWall = false;
-var dialog; 
+// 0 - nothing
+// 1 - loaded from wall
+// 2 - loaded from newsfeed
+// 3 - loaded friend's pictures
+var loadState = 0;
 
 function buildMosaic(response) {
     if (response && response.session) {
@@ -174,10 +175,25 @@ function buildMosaic(response) {
         $('#constant').fadeTo(1,0.5);
         $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
         $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
-        FB.api(
+        recentInteractionsStore = new Array();
+        getRecentInterations();
+    }
+}
+function loadFriendsPics(){
+    var loadStr = '';
+    var first = true;
+    for (i in recentInteractionsStore) {
+        if (first) {
+            loadStr += i;
+            first = false;
+        } else {
+            loadStr += ','+i;
+        }
+    }
+    FB.api(
             {
               'method': 'fql.query',
-              'query': "SELECT uid, name, pic_big FROM user WHERE uid =" + response.session.uid +" OR uid IN (SELECT uid2 FROM friend WHERE uid1 ="+ response.session.uid +")"
+              'query': "SELECT uid, name, pic_big FROM user WHERE uid =" + response.session.uid +" OR uid IN ("+loadStr+")"
             },
             function(response) {
               var photos = [];
@@ -195,19 +211,10 @@ function buildMosaic(response) {
                 x.mouseleave(function(){dialog.dialog('close');});
               }
             }
-        ); 
-        if (!loadedInteractions) { 
-            loadedInteractions = true;
-            recentInteractionsStore = new Array();
-            getRecentInterations();
-        }
-    }
+        );  
 }
-function getRecentInterations() {
-    FB.api('/me/feed', {limit: 50}, recentInteractionsHelper);
-}
-function recentInteractionsHelper(response) {
-        $.each(response.data, function(index, item){
+function loadFriends(response) {
+    $.each(response.data, function(index, item){
             if (!(item.from.id in recentInteractionsStore)) {
                 recentInteractionsStore[item.from.id] = item.message;
             }
@@ -219,11 +226,21 @@ function recentInteractionsHelper(response) {
                 });
             }
         });
-        if (!loadedWall) {
-            loadedWall = true;
-            FB.api('/me/home', {limit: 50}, recentInteractionsHelper);
+    loadState += 1;
+    recentInteractionsHelper();
+}
+function recentInteractionsHelper() {
+        if (loadState == 0) {
+            FB.api('/me/feed', {limit: 50}, loadFriends);
+        } 
+        else if (loadState == 1) {
+            FB.api('/me/home', {limit: 50}, loadFriends);
         }
-        loadedWall = true;
+        else if (loadState == 2) {
+            loadFriendsPics();
+        }
+        else {
+        }
 }
 FB.init({
     "appId"  : '153403654734305',
