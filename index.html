@@ -220,9 +220,14 @@ function loadYouAndFriend(id) {
     },
     function(response) {
         var loadStr = '';
+        var c = 0;
         $.each(response, function(index, item) {
             //var t = recentInteractionsStore[item['uid']];
+            c += 1;
             loadStr += '<img src="'+item.src_small+'">';
+            if (c - 10 == 0) {
+                break;
+            }
         });
         alert(id);
         $('#'+id).qtip({
@@ -242,6 +247,16 @@ function loadYouAndFriend(id) {
                             width: 2,
                             radius: 6
                         }
+                    },
+                    width: {
+                        min: 0,
+                        max: 300
+                    },
+                    show: {
+                        delay: 0
+                    },
+                    hide: {
+                        fixed: true
                     }
         });
         
