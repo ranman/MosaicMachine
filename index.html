@@ -202,7 +202,7 @@ function loadFriendsPics(){
               photos.push('<ul id="sortable">');
               var ids = new Array();
               $.each(response, function(index, item) {
-                var t = recentInteractionsStore[item['uid']];
+                  var t = recentInteractionsStore[item['uid']];
                   photos.push('<li class="ui-state-default" id="'+item['uid']+'" title="'+t+'"><img src="'+item['pic_big']+'"></li>');
                   ids.push(item['uid']);
               });
