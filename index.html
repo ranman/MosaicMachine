@@ -216,16 +216,26 @@ function loadFriendsPics(){
               for (i in ids) {
                 
                 var x = $('#'+ids[i]);
-                if (x.title && x.title != '' && x.title != 'undefined')
+                if (x.title && x.title != '' && x.title.toString() != 'undefined')
                 {
                     x.qtip(
                     {
                         content: x.title,
                         position: {
                             corner: {
-                             tooltip: 'bottomMiddle' // ...and opposite corner
+                             tooltip: 'bottomMiddle', // ...and opposite corner
+                             target: 'topMiddle'
                             }
-                        } 
+                        } ,
+                        style: {
+                            border: {
+                               width: 5,
+                               radius: 10
+                            },
+                            padding: 10, 
+                            textAlign: 'center',
+                            tip: true,
+                        }
                     });
                 }
               }
