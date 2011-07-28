@@ -194,48 +194,20 @@ function buildMosaic(response) {
 }
 function getRecentInterations(response) {
     FB.api('/me/feed', { limit: 50 }, recentInteractionsHelper);
-    /*
-    if (response && response.session) {
-        var now = Math.round((new Date().getTime()) / 1000);
-        var month = 31 * 86400;
-        var myqueries = new Array();
-        for (var i = 1; i < 13; i++) {
-            var end = now - ((i - 1) * month);
-            var start = now - ((i) * month);
-            myqueries['query'+i] = "SELECT actor_id, message,comments FROM stream WHERE filter_key = 'others' AND created_time < " + end + " AND created_time > " + start + " AND source_id = " + response.session.uid + " LIMIT 50";
-            alert(myqueries['query'+i]);
-        }
-        FB.api(
-            {
-                method: 'fql.multiquery',
-                queries:myqueries
-            },
-            recentInteractionsHelper
-        );
-    }
-    */
 }
 function recentInteractionsHelper(response) {
-/*
-    recentInteractionsStore = new Array();
-    alert(response.length);
-    for (var i = 1; i < 13; i++) {
-        var posts = response['query'+i];
-*/
-        alert(response.data.length);
-        $.each(response, function(index, item){
-            if (!(item['actor_id'] in recentInteractionsStore)) {
+        $.each(response.data, function(index, item){
+            if (!(item.from.id in recentInteractionsStore)) {
                 count += 1;
-                recentInteractionsStore[item['actor_id']] = item['message'];
+                recentInteractionsStore[item.from.id] = item.message;
             }
-            $.each(item['comments']['comment_list'], function(index, item){
-                if (!(item['fromid'] in recentInteractionsStore)) {
+            $.each(item.comments.data, function(index, item){
+                if (!(item.from.id in recentInteractionsStore)) {
                     count += 1;
-                    recentInteractionsStore[item['fromid']] = item['text'];
+                    recentInteractionsStore[item.from.id] = item.message;
                 }
             });
         });
- //   }
     alert(count);
 }
 FB.init({
