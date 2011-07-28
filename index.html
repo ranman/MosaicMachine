@@ -223,18 +223,13 @@ function loadFriendsPics(){
                         content: x.title,
                         position: {
                             corner: {
-                             tooltip: 'bottomMiddle', // ...and opposite corner
-                             target: 'topMiddle'
+                             tooltip: 'topLeft', // ...and opposite corner
+                             target: 'topLeft'
                             }
                         } ,
                         style: {
-                            border: {
-                               width: 5,
-                               radius: 10
-                            },
-                            padding: 10, 
-                            textAlign: 'center',
-                            tip: true,
+                            tip: 'bottomLeft',
+                            name: 'blue'
                         }
                     });
                 }
