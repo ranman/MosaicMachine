@@ -218,7 +218,13 @@ function loadFriendsPics(){
                 {
                     x.qtip(
                     {
-                        content: recentInteractionsStore[i]
+                        content: recentInteractionsStore[i],
+                        position: {
+                            corner: {
+                                target: 'topLeft',
+                                tooltip: 'topLeft'
+                            }
+                        }
                     });
                 }
               }
