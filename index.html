@@ -154,7 +154,9 @@ $(document).ready(function() {
 </section>
 <script type="text/javascript">
 function buildMosaic(response) {
-    $('#loginButton').hide();
+    if (response.session) {
+        $('#loginButton').hide();   
+    }
     $('#constant').fadeTo(1,0.5);
     $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
     $('#constant').mouseout(function(){$('#constant').fadeTo(4,0.25);});
