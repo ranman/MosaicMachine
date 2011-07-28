@@ -160,6 +160,7 @@ $(document).ready(function() {
 <section id="photos">
 </section>
 <script type="text/javascript">
+var recentInteractionsStore;
 function buildMosaic(response) {
     if (response && response.session) {
         $('#loginButton').hide(); 
@@ -189,17 +190,25 @@ function getRecentInterations(response) {
         FB.api(
             {
                 'method': 'fql.query',
-                'query':"SELECT actor_id, message,comments  FROM stream WHERE filter_key = 'others' AND source_id = " + response.session.uid
+                'query':"SELECT actor_id, message,comments FROM stream WHERE filter_key = 'others' AND source_id = " + response.session.uid
             },
             function(response) {
+                recentInteractionsStore = new Array();
                 var str = '';
                 var count = 0;
                 $.each(response, function(index, item){
                     count += 1;
-                    str += item['message'];
+                    if (!(item['actor_id'] in recentInteractionsStore)) {
+                        recentInteractionsStore[item['actor_id']] = item['message'];
+                    }
+                    $.each(item['comments']['comment_list'], function(index, item){
+                        count += 1;
+                        if (!(item['fromid'] in recentInteractionsStore)) {
+                            recentInteractionsStore[item['fromid']] = item['text'];
+                        }
+                    });
                 });
                 alert(count);
-                //alert(str);
             }
         );
     }
