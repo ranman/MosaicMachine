@@ -213,6 +213,7 @@ function recentInteractionsHelper(response) {
             }
         });
         alert(count);
+        FB.api('/me/home', { limit: 50, offset: offset }, recentInteractionsHelper);
 }
 FB.init({
     "appId"  : '153403654734305',
