@@ -189,6 +189,7 @@ function buildMosaic(response) {
         ); 
         if (!loadedInteractions) { 
             loadedInteractions = true;
+            recentInteractionsStore = new Array();
             getRecentInterations();
         }
     }
@@ -200,7 +201,6 @@ function getRecentInterations() {
     }
 }
 function recentInteractionsHelper(response) {
-        recentInteractionsStore = new Array();
         $.each(response.data, function(index, item){
             if (!(item.from.id in recentInteractionsStore)) {
                 count += 1;
