@@ -31,9 +31,8 @@ h1 {
     font-size:24px;
     font-variant:small-caps;
     font-family:Helvetica, Arial, sans-serif;
-    margin-top: -2px;
-    padding-left: 10px;
     text-align: center;
+    width: 100%;
 }
 #photos {
    /* Prevent vertical gaps */
@@ -162,7 +161,7 @@ $(document).ready(function() {
 <body>
     <div id="fb-root"></div>
     <div id="loadingSpinner">
-        <div><img src="ajax-loader.gif" /></div>
+        <div style="width: 100%; margin: auto;"><img src="ajax-loader.gif" /></div>
         <div style="clear:both;"></div>
         <div id="loadText"></div>
     </div>
