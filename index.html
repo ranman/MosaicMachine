@@ -192,10 +192,13 @@ function getRecentInterations(response) {
         },
         function(response) {
             var str = '';
+            var count = 0;
             $.each(response, function(index, item){
+                count += 1;
                 str += item['message'];
             });
-            alert(str);
+            alert(count);
+            //alert(str);
         }
     );
 }
