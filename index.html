@@ -178,36 +178,6 @@ function buildMosaic(response) {
         $('#loadingSpinner').show();
         $('#loadText').show();
         $('#constant').fadeTo(1,0.5);
-        $('#wtf').qtip({
-            content: 'a cool way to browse through your friends.  hover over an image to see a recent interation with your friend and click on an image to load more pictures.',
-            position: {
-                        corner: {
-                            tooltip: 'topLeft',
-                            target: 'bottomRight'
-                        }
-                    },
-                    style: {
-                        name: 'blue', 
-                        tip: {
-                            corner: 'topLeft'
-                        },
-                        border: {
-                            width: 2,
-                            radius: 6
-                        }
-                    },
-                    width: {
-                        min: 0,
-                        max: 400
-                    },
-                    show: {
-                        delay: 0,
-                        ready: false
-                    },
-                    hide: {
-                        fixed: false
-                    }
-        });
         $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
         $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
         if (loadNoBegin) {
@@ -406,6 +376,36 @@ FB.init({
 FB.Event.subscribe('auth.login', buildMosaic);
 FB.Event.subscribe('auth.logout', buildMosaic);
 FB.getLoginStatus(buildMosaic);
+$('#wtf').qtip({
+            content: 'a cool way to browse through your friends.  hover over an image to see a recent interation with your friend and click on an image to load more pictures.',
+            position: {
+                        corner: {
+                            tooltip: 'topLeft',
+                            target: 'bottomRight'
+                        }
+                    },
+                    style: {
+                        name: 'blue', 
+                        tip: {
+                            corner: 'topLeft'
+                        },
+                        border: {
+                            width: 2,
+                            radius: 6
+                        }
+                    },
+                    width: {
+                        min: 0,
+                        max: 400
+                    },
+                    show: {
+                        delay: 0,
+                        ready: false
+                    },
+                    hide: {
+                        fixed: false
+                    }
+        });
 </script>
 </body>
 </html>
