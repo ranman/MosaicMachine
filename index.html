@@ -163,6 +163,7 @@ $(document).ready(function() {
 //SOME GLOBALS FOR THAT STORE ONE'S MOST RECENT INTERACTIONS WITH OTHERS
 var recentInteractionsStore;
 var count = 0;
+var loadedInteractions = false;
 
 function buildMosaic(response) {
     if (response && response.session) {
@@ -184,8 +185,11 @@ function buildMosaic(response) {
               photos.push("</ul>");
               $("#photos").html(photos.join(''));
             }
-        );  
-        getRecentInterations(response);
+        ); 
+        if (!loadedInteractions) { 
+            loadedInteractions = true;
+            getRecentInterations(response);
+        }
     }
 }
 function getRecentInterations(response) {
