@@ -217,7 +217,8 @@ function loadYouAndFriend(id) {
     FB.api(
           {
               method: 'photos.get',
-              subj_id: id
+              subj_id: id,
+              limit: 10
           },
           function(response) {
                 alert(response.length);        
