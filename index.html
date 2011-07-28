@@ -141,6 +141,10 @@ $(document).ready(function() {
     FB.getLoginStatus(buildMosaic);
     dialog = $('<div></div>').dialog({autoOpen: false});
 });
+function addDialog(elem) {
+    elem.mouseover(function(){dialog.dialog('open')});
+    elem.mouseleave(function(){dialog.dialog('close')});
+}
     </script>
 </head>
 <body>
