@@ -45,6 +45,15 @@ h1 {
     left: 50%;
     margin-left: -70px;
 }
+#loadingSpinner {
+    width: 200px;
+    text-align: left;
+    position: absolute;
+    top: 200px;
+    left: 50%;
+    margin-left: -70px;
+    display: none;
+}
 #photos img {
   /* Just in case there are inline attributes */
   width: 100% !important;
@@ -145,6 +154,9 @@ $(document).ready(function() {
 </head>
 <body>
     <div id="fb-root"></div>
+    <div id="loadingSpinner">
+        <img src="ajax-loader.gif" />
+    </div>
     <div id="loginButton">
             <fb:login-button perms="user_photos,friends_photos,user_photo_video_tags,friends_photo_video_tags,read_stream" onlogin="buildMosaic()">See Your Mosaic</fb:login-button>
     </div>
@@ -175,6 +187,7 @@ var loadNoBegin = true;
 function buildMosaic(response) {
     if (response && response.session) {
         $('#loginButton').hide(); 
+        $('#loadingSpinner').show();
         $('#constant').fadeTo(1,0.5);
         $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
         $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
@@ -203,6 +216,7 @@ function loadFriendsPics(){
               'query': "SELECT uid, name, pic_big FROM user WHERE uid =" + uid +" OR uid IN ("+loadStr+")"
             },
             function(response) {
+              $('#loadingSpinner').hide();
               var photos = [];
               photos.push('<ul id="sortable">');
               var ids = new Array();
@@ -226,7 +240,7 @@ function loadFriendsPics(){
                             }
                         },
                         style: { 
-                            name: 'blue', // Inherit from preset style
+                            name: 'blue', 
                             tip: {
                                 corner: 'topLeft'
                             },
