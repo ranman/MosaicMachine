@@ -181,10 +181,10 @@ function buildMosaic(response) {
               $("#photos").html(photos.join(''));
             }
         );  
-        getRecentInterations();
+        getRecentInterations(response);
     }
 }
-function getRecentInterations() {
+function getRecentInterations(response) {
     FB.api(
         {
             'method': 'fql.query',
