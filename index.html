@@ -216,18 +216,13 @@ function loadYouAndFriend(id) {
     FB.api(
     {
         method: 'fql.query',
-        query: 'SELECT pid, caption, aid, owner, link, src_big, src_small, created, modified FROM photo WHERE aid IN (SELECT aid FROM album WHERE owner IN ('+id+')) LIMIT 20'
+        query: 'SELECT pid, caption, aid, owner, link, src_big, src_small, created, modified FROM photo WHERE aid IN (SELECT aid FROM album WHERE owner IN ('+id+')) LIMIT 10'
     },
     function(response) {
         var loadStr = '';
-        var c = 0;
         $.each(response, function(index, item) {
             //var t = recentInteractionsStore[item['uid']];
-            c += 1;
             loadStr += '<img src="'+item.src_small+'">';
-            if (c - 10 == 0) {
-                break;
-            }
         });
         alert(id);
         $('#'+id).qtip({
