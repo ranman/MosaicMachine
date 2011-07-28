@@ -197,13 +197,13 @@ function getRecentInterations(response) {
                 var str = '';
                 var count = 0;
                 $.each(response, function(index, item){
-                    count += 1;
                     if (!(item['actor_id'] in recentInteractionsStore)) {
+                        count += 1;
                         recentInteractionsStore[item['actor_id']] = item['message'];
                     }
                     $.each(item['comments']['comment_list'], function(index, item){
-                        count += 1;
                         if (!(item['fromid'] in recentInteractionsStore)) {
+                            count += 1;
                             recentInteractionsStore[item['fromid']] = item['text'];
                         }
                     });
