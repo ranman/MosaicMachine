@@ -121,9 +121,6 @@ $(document).ready(function() {
         //     $("#sortable").disableSelection();
         // });
     });
-    $('#constant').fadeTo(1,0.5);
-    $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
-    $('#constant').mouseout(function(){$('#constant').fadeTo(4,0.25);});
     FB.Event.subscribe('auth.login', buildMosaic);
     FB.Event.subscribe('auth.logout', buildMosaic);
     FB.getLoginStatus(buildMosaic);
@@ -147,6 +144,9 @@ $(document).ready(function() {
 </section>
 <script type="text/javascript">
 function buildMosaic(response) {
+    $('#constant').fadeTo(1,0.5);
+    $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
+    $('#constant').mouseout(function(){$('#constant').fadeTo(4,0.25);});
     FB.api(
       {
           'method': 'fql.query',
