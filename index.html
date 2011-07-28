@@ -149,7 +149,7 @@ h1 {
     </div>
     <div id="constant">
         <h1>Mosaic Machine</h1>
-        <h2 id="wtf">wtf is this</h2>
+        <h2 id="wtf">wtf is this?</h2>
         <div class="right">
             <fb:like href="http://www.mosaicmachine.com" send="true" width="450" show_faces="true" font=""></fb:like>
         </div>
@@ -178,6 +178,36 @@ function buildMosaic(response) {
         $('#loadingSpinner').show();
         $('#loadText').show();
         $('#constant').fadeTo(1,0.5);
+        $('#wtf').qtip({
+            content: 'a cool way to browse through your friends.  hover over an image to see a recent interation with your friend and click on an image to load more pictures.',
+            position: {
+                        corner: {
+                            tooltip: 'bottomRight',
+                            target: 'bottomRight'
+                        }
+                    },
+                    style: {
+                        name: 'blue', 
+                        tip: {
+                            corner: 'bottomRight'
+                        },
+                        border: {
+                            width: 2,
+                            radius: 6
+                        }
+                    },
+                    width: {
+                        min: 0,
+                        max: 400
+                    },
+                    show: {
+                        delay: 0,
+                        ready: true
+                    },
+                    hide: {
+                        fixed: true
+                    }
+        });
         $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
         $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
         if (loadNoBegin) {
