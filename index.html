@@ -78,9 +78,6 @@ h1 {
   -webkit-column-count: 1;
   column-count:         1;
   }
-#tiptip_holder {
-    z-index: 1000;
-}
 }
     </style>
     <meta property="og:title" content="Mosaic Machine"/>
@@ -93,7 +90,7 @@ h1 {
     <script src="http://connect.facebook.net/en_US/all.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
-    <script src="jquery.tipTip.minified.js" type="text/javascript"></script>
+    <script src="jquery.qtip-1.0.0-rc3.min.js" type="text/javascript"></script>
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-24700488-1']);
@@ -218,7 +215,10 @@ function loadFriendsPics(){
               $("#photos").html(photos.join(''));
               for (i in ids) {
                 var x = $('#'+ids[i]);
-                x.tipTip();
+                x.qtip(
+                {
+                    content: x.title 
+                });
               }
             }
         );  
