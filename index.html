@@ -189,7 +189,9 @@ function buildMosaic(response) {
               photos.push("</ul>");
               $("#photos").html(photos.join(''));
               for (i in ids) {
-                $('#'+ids[i]).click(function(){alert('herer');});
+                var x = $('#'+ids[i]);
+                x.mouseover(function(){dialog.dialog('open');});
+                x.mouseleave(function(){dialog.dialog('close');});
               }
             }
         ); 
@@ -204,7 +206,6 @@ function getRecentInterations() {
     FB.api('/me/feed', {limit: 50}, recentInteractionsHelper);
 }
 function recentInteractionsHelper(response) {
-        
         $.each(response.data, function(index, item){
             if (!(item.from.id in recentInteractionsStore)) {
                 recentInteractionsStore[item.from.id] = item.message;
