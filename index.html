@@ -37,6 +37,11 @@ h1 {
    column-gap:           0px;
 
 }
+#loginButton {
+    margin-left: auto;   
+    margin-right: auto;
+    z-index:1000;
+}
 #photos img {
   /* Just in case there are inline attributes */
   width: 100% !important;
@@ -131,7 +136,9 @@ $(document).ready(function() {
     <div id="fb-root"></div>
     <div id="constant">
         <h1>Mosaic Machine</h1>
-        <fb:login-button perms="user_photos,friends_photos,user_photo_video_tags,friends_photo_video_tags" onlogin="buildMosaic()">See Your Mosaic</fb:login-button>
+        <div id="loginButton">
+            <fb:login-button perms="user_photos,friends_photos,user_photo_video_tags,friends_photo_video_tags" onlogin="buildMosaic()">See Your Mosaic</fb:login-button>
+        </div>
         <div class="right">
             <fb:like href="http://www.mosaicmachine.com" send="true" width="450" show_faces="true" font=""></fb:like>
         </div>
