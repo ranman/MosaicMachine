@@ -195,7 +195,7 @@ function buildMosaic(response) {
     }
 }
 function getRecentInterations() {
-    if (offset < 100){
+    if (offset < 200){
         FB.api('/me/feed', { limit: 10, offset: offset }, recentInteractionsHelper);
         offset += 10;
     }
@@ -210,6 +210,7 @@ function recentInteractionsHelper(response) {
                 $.each(item.comments.data, function(index, item){
                     if (!(item.from.id in recentInteractionsStore)) {
                         count += 1;
+                        alert('in comments');
                         recentInteractionsStore[item.from.id] = item.message;
                     }
                 });
