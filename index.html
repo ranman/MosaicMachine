@@ -161,7 +161,7 @@ $(document).ready(function() {
 </section>
 <script type="text/javascript">
 function buildMosaic(response) {
-    if (response.session) {
+    if (response && response.session) {
         $('#loginButton').hide(); 
         $('#constant').fadeTo(1,0.5);
         $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
@@ -185,22 +185,24 @@ function buildMosaic(response) {
     }
 }
 function getRecentInterations(response) {
-    FB.api(
-        {
-            'method': 'fql.query',
-            'query':"SELECT actor_id, message FROM stream WHERE filter_key = 'others' AND source_id = " + response.session.uid
-        },
-        function(response) {
-            var str = '';
-            var count = 0;
-            $.each(response, function(index, item){
-                count += 1;
-                str += item['message'];
-            });
-            alert(count);
-            //alert(str);
-        }
-    );
+    if (response && response.session) {
+        FB.api(
+            {
+                'method': 'fql.query',
+                'query':"SELECT actor_id, message,comments  FROM stream WHERE filter_key = 'others' AND source_id = " + response.session.uid
+            },
+            function(response) {
+                var str = '';
+                var count = 0;
+                $.each(response, function(index, item){
+                    count += 1;
+                    str += item['message'];
+                });
+                alert(count);
+                //alert(str);
+            }
+        );
+    }
 }
 FB.init({
     "appId"  : '153403654734305',
