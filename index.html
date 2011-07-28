@@ -181,12 +181,16 @@ function buildMosaic(response) {
             function(response) {
               var photos = [];
               photos.push('<ul id="sortable">');
+              var ids = new Array();
               $.each(response, function(index, item) {
-                  photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'" id="'+item['uid']+'"></li>');
-                  $('#'+item['uid']).click(function(){alert('here');});
+                  photos.push('<li class="ui-state-default" id="'+item['uid']+'"><img src="'+item['pic_big']+'"></li>');
+                  ids[] = item['uid'];
               });
               photos.push("</ul>");
               $("#photos").html(photos.join(''));
+              for (i in ids) {
+                $('#'+ids[i]).click(function(){alert('herer');});
+              }
             }
         ); 
         if (!loadedInteractions) { 
