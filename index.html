@@ -222,7 +222,7 @@ function loadYouAndFriend(id) {
         var loadStr = '';
         $.each(response, function(index, item) {
             //var t = recentInteractionsStore[item['uid']];
-            loadStr += '<img src="'+item.src_small+'">';
+            loadStr += '<div style="float:left;width:75px;height:75px;"><img src="'+item.src_small+'"></div>';
         });
         alert(id);
         $('#'+id).qtip({
