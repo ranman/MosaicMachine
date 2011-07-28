@@ -192,18 +192,20 @@ function getRecentInterations(response) {
     if (response && response.session) {
         var now = new Date().getTime();
         var month = 31 * 86400;
+        var myqueries = new Array();
         for (var i = 1; i < 13; i++) {
             var end = now - ((i - 1) * month);
             var start = now - ((i) * month);
-            var query = "SELECT actor_id, message,comments FROM stream WHERE filter_key = 'others' AND created_time < " + end + " AND created_time > " + start + " AND source_id = " + response.session.uid + " LIMIT 50";
-            FB.api(
+            myqueries['query'+i] = "SELECT actor_id, message,comments FROM stream WHERE filter_key = 'others' AND created_time < " + end + " AND created_time > " + start + " AND source_id = " + response.session.uid + " LIMIT 50";
+            alert(query);
+        }
+        FB.api(
             {
-                'method': 'fql.query',
-                'query':query
+                method: 'fql.multiquery',
+                queries:myqueries
             },
             recentInteractionsHelper
         );
-        }
     }
 }
 function recentInteractionsHelper(response) {
