@@ -192,26 +192,27 @@ function getRecentInterations(response) {
                 'method': 'fql.query',
                 'query':"SELECT actor_id, message,comments FROM stream WHERE filter_key = 'others' AND source_id = " + response.session.uid
             },
-            function(response) {
-                recentInteractionsStore = new Array();
-                var str = '';
-                var count = 0;
-                $.each(response, function(index, item){
-                    if (!(item['actor_id'] in recentInteractionsStore)) {
-                        count += 1;
-                        recentInteractionsStore[item['actor_id']] = item['message'];
-                    }
-                    $.each(item['comments']['comment_list'], function(index, item){
-                        if (!(item['fromid'] in recentInteractionsStore)) {
-                            count += 1;
-                            recentInteractionsStore[item['fromid']] = item['text'];
-                        }
-                    });
-                });
-                alert(count);
-            }
+            recentInteractionsHelper
         );
     }
+}
+function recentInteractionsHelper(response) {
+    recentInteractionsStore = new Array();
+    var str = '';
+    var count = 0;
+    $.each(response, function(index, item){
+        if (!(item['actor_id'] in recentInteractionsStore)) {
+            count += 1;
+            recentInteractionsStore[item['actor_id']] = item['message'];
+        }
+        $.each(item['comments']['comment_list'], function(index, item){
+            if (!(item['fromid'] in recentInteractionsStore)) {
+                count += 1;
+                recentInteractionsStore[item['fromid']] = item['text'];
+            }
+        });
+    });
+    alert(count);
 }
 FB.init({
     "appId"  : '153403654734305',
