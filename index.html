@@ -139,7 +139,7 @@ $(document).ready(function() {
     FB.Event.subscribe('auth.login', buildMosaic);
     FB.Event.subscribe('auth.logout', buildMosaic);
     FB.getLoginStatus(buildMosaic);
-    dialog = $(document).dialog({autoOpen: false});
+    dialog = $('<div></div>').dialog({autoOpen: false});
 });
     </script>
 </head>
