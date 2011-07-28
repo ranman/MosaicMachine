@@ -202,12 +202,14 @@ function recentInteractionsHelper(response) {
                 count += 1;
                 recentInteractionsStore[item.from.id] = item.message;
             }
-            $.each(item.comments.data, function(index, item){
-                if (!(item.from.id in recentInteractionsStore)) {
-                    count += 1;
-                    recentInteractionsStore[item.from.id] = item.message;
-                }
-            });
+            if (item.comments && item.comments.data) {
+                $.each(item.comments.data, function(index, item){
+                    if (!(item.from.id in recentInteractionsStore)) {
+                        count += 1;
+                        recentInteractionsStore[item.from.id] = item.message;
+                    }
+                });
+            }
         });
     alert(count);
 }
