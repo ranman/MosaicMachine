@@ -144,6 +144,7 @@ h1 {
   }
 }
     </style>
+    <title>Mosaic Machine</title>
     <meta property="og:title" content="Mosaic Machine"/>
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="http://www.mosaicmachine.com"/>
@@ -167,44 +168,6 @@ h1 {
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
-$(document).ready(function() {
-    FB.init({
-        "appId"  : '153403654734305',
-        "status" : true, // check login status
-        "cookie" : true, // enable cookies to allow the server to access the session
-        "xfbml"  : true
-    });
-    var auth_token = "";
-    var uid = "";
-    $("#grabphotos").bind("click", function(event) {
-        FB.login(function(response) {
-            auth_token = response['auth_token'];
-            uid = response['uid'];
-            console.write(response);
-        });
-        // 
-        // var url = "https://api.facebook.com/method/fql.query?callback=?";
-        // var params = {
-        //     "query": "SELECT uid, name, pic_big FROM user WHERE uid =" + uid +" OR uid IN (SELECT uid2 FROM friend WHERE uid1 ="+ uid +")",
-        //     "access_token": auth_token,
-        //     "format": "JSON"
-        // };
-        // $.getJSON(url, params, function(data) { 
-        //     var p_array = [];
-        //     p_array.push('<ul id="sortable">');
-        //     $.each(data, function(index, item) {
-        //         p_array.push('<li class="ui-state-default"><img src="'+item['pic_big']+'"></li>');
-        //     });
-        //     p_array.push("</ul>");
-        //     $("#photos").html(p_array.join(''));
-        //     $("#sortable").sortable({ handle: 'img' });
-        //     $("#sortable").disableSelection();
-        // });
-    });
-    FB.Event.subscribe('auth.login', buildMosaic);
-    FB.Event.subscribe('auth.logout', buildMosaic);
-    FB.getLoginStatus(buildMosaic);
-});
     </script>
 </head>
 <body>
