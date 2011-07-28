@@ -186,7 +186,8 @@ function buildMosaic(response) {
               var photos = [];
               photos.push('<ul id="sortable">');
               $.each(response, function(index, item) {
-                  photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'" name="'+item['uid']+'"></li>');
+                  photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'" id="'+item['uid']+'"></li>');
+                  addDialog($('#'+item['uid']));
               });
               photos.push("</ul>");
               $("#photos").html(photos.join(''));
