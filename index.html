@@ -109,6 +109,9 @@ $(document).ready(function() {
         //     $("#sortable").disableSelection();
         // });
     });
+    $('#constant').fadeTo(1,0.5);
+    $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
+    $('#constant').mouseout(function(){$('#constant').fadeTo(4,0.25);});
 });
     </script>
 </head>
@@ -122,10 +125,8 @@ $(document).ready(function() {
         <div class="right" id="tweet">
             <a href="http://twitter.com/share" class="twitter-share-button" data-url="mosaicmachine.com" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
         </div>
-        <button id="fb-login">Login</button>
         <button id="grabphotos">Create Mosaic</button>
     </div>
-    <button id="grabphotos">Create Mosaic</button>
 <section id="photos">
 </section>
 </body>
