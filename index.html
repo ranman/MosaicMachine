@@ -99,49 +99,9 @@ h1 {
   column-count:         1;
   }
 #lilphotos {
-   /* Prevent vertical gaps */
-   line-height: 0;
-   -webkit-column-count: 5;
-   -webkit-column-gap:   0px;
-   -moz-column-count:    5;
-   -moz-column-gap:      0px;
-   column-count:         5;
-   column-gap:           0px;
-
+    width: 300px;
+    height: 300px;
 }
-#lilphotos img {
-  /* Just in case there are inline attributes */
-  width: 100% !important;
-  height: auto !important;
-}
-
-@media (max-width: 1200px) {
-  #lilphotos {
-  -moz-column-count:    4;
-  -webkit-column-count: 4;
-  column-count:         4;
-  }
-}
-@media (max-width: 1000px) {
-  #lilphotos {
-  -moz-column-count:    3;
-  -webkit-column-count: 3;
-  column-count:         3;
-  }
-}
-@media (max-width: 800px) {
-  #lilphotos {
-  -moz-column-count:    2;
-  -webkit-column-count: 2;
-  column-count:         2;
-  }
-}
-@media (max-width: 400px) {
-  #lilphotos {
-  -moz-column-count:    1;
-  -webkit-column-count: 1;
-  column-count:         1;
-  }
 }
     </style>
     <title>Mosaic Machine</title>
@@ -232,7 +192,7 @@ function loadYouAndFriend(id) {
             loadStr = '<div id="lilphotos">';
             $.each(response, function(index, item) {
                 //var t = recentInteractionsStore[item['uid']];
-                loadStr += '<div style="float:left;width:75px;height:75px;"><img src="'+item.src_small+'"></div>';
+                loadStr += '<div style="float:left;width:75px;height:75px;"><img height="75" width="75" src="'+item.src_small+'"></div>';
             });
             loadStr = '</div>';
         } else {
