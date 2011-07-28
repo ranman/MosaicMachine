@@ -181,9 +181,21 @@ function buildMosaic(response) {
               $("#photos").html(photos.join(''));
             }
         );  
+        getRecentInterations();
     }
 }
 function getRecentInterations() {
+    FB.api(
+        {
+            'method': 'fql.query',
+            'query':"SELECT post_id, actor_id, message FROM stream WHERE source_id=" + response.session.uid
+        },
+        function(response) {
+            $.each(response, function(index, item){
+                alert(item['message']);
+            });
+        }
+    );
 }
 FB.init({
     "appId"  : '153403654734305',
