@@ -219,12 +219,15 @@ function loadYouAndFriend(id) {
         query: 'SELECT pid, caption, aid, owner, link, src_big, src_small, created, modified FROM photo WHERE aid IN (SELECT aid FROM album WHERE owner IN ('+id+')) LIMIT 10'
     },
     function(response) {
-        var loadStr = '';
-        $.each(response, function(index, item) {
-            //var t = recentInteractionsStore[item['uid']];
-            loadStr += '<div style="float:left;width:75px;height:75px;"><img src="'+item.src_small+'"></div>';
-        });
-        alert(id);
+        if (response.length > 0)
+            var loadStr = '';
+            $.each(response, function(index, item) {
+                //var t = recentInteractionsStore[item['uid']];
+                loadStr += '<div style="float:left;width:75px;height:75px;"><img src="'+item.src_small+'"></div>';
+            });
+        } else {
+            loadStr += 'privacy settings prevent getting more images. sorry.';
+        }
         $('#'+id).qtip({
             content: loadStr,
             position: {
