@@ -168,6 +168,7 @@ var recentInteractionsStore;
 // 2 - loaded from newsfeed
 // 3 - loaded friend's pictures
 var loadState = 0;
+var uid;
 
 function buildMosaic(response) {
     if (response && response.session) {
@@ -176,6 +177,7 @@ function buildMosaic(response) {
         $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
         $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
         recentInteractionsStore = new Array();
+        uid = response.session.uid;
         recentInteractionsHelper();
     }
 }
@@ -193,7 +195,7 @@ function loadFriendsPics(){
     FB.api(
             {
               'method': 'fql.query',
-              'query': "SELECT uid, name, pic_big FROM user WHERE uid =" + response.session.uid +" OR uid IN ("+loadStr+")"
+              'query': "SELECT uid, name, pic_big FROM user WHERE uid =" + uid +" OR uid IN ("+loadStr+")"
             },
             function(response) {
               var photos = [];
