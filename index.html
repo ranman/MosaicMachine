@@ -216,7 +216,7 @@ function loadFriendsPics(){
               for (i in ids) {
                 
                 var x = $('#'+ids[i]);
-                if (x.title != 'undefined')
+                if (x.title && x.title != '' && x.title !+ 'undefined')
                 {
                     x.qtip(
                     {
