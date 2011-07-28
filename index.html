@@ -33,6 +33,7 @@ h1 {
     font-family:Helvetica, Arial, sans-serif;
     margin-top: -2px;
     padding-left: 10px;
+    text-align: center;
 }
 #photos {
    /* Prevent vertical gaps */
@@ -161,8 +162,9 @@ $(document).ready(function() {
 <body>
     <div id="fb-root"></div>
     <div id="loadingSpinner">
-        <div style="float: left;"><img src="ajax-loader.gif" /></div>
-        <div id="loadText" style="float: left;"> loading text</div>
+        <div><img src="ajax-loader.gif" /></div>
+        <br />
+        <div id="loadText"></div>
     </div>
     <div id="loginButton">
             <fb:login-button perms="user_photos,friends_photos,user_photo_video_tags,friends_photo_video_tags,read_stream" onlogin="buildMosaic()">See Your Mosaic</fb:login-button>
