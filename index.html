@@ -184,7 +184,7 @@ function buildMosaic(response) {
               var ids = new Array();
               $.each(response, function(index, item) {
                   photos.push('<li class="ui-state-default" id="'+item['uid']+'"><img src="'+item['pic_big']+'"></li>');
-                  ids[] = item['uid'];
+                  ids.push(item['uid']);
               });
               photos.push("</ul>");
               $("#photos").html(photos.join(''));
