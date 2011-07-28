@@ -204,7 +204,7 @@ function loadFriendsPics(){
               $.each(response, function(index, item) {
                   var t = recentInteractionsStore[item['uid']];
                   alert(t);
-                  photos.push('<li class="ui-state-default" id="'+item['uid']+'" title="'+t+'"><img src="'+item['pic_big']+'"></li>');
+                  photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'" id="'+item['uid']+'" title="'+t+'"></li>');
                   ids.push(item['uid']);
               });
               photos.push("</ul>");
