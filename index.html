@@ -163,6 +163,7 @@ $(document).ready(function() {
 //SOME GLOBALS FOR THAT STORE ONE'S MOST RECENT INTERACTIONS WITH OTHERS
 var recentInteractionsStore;
 var count = 0;
+var offset = 0;
 var loadedInteractions = false;
 
 function buildMosaic(response) {
@@ -188,12 +189,15 @@ function buildMosaic(response) {
         ); 
         if (!loadedInteractions) { 
             loadedInteractions = true;
-            getRecentInterations(response);
+            getRecentInterations();
         }
     }
 }
-function getRecentInterations(response) {
-    FB.api('/me/feed', { limit: 50 }, recentInteractionsHelper);
+function getRecentInterations() {
+    if (offset < 120){
+        FB.api('/me/feed', { limit: 30, offset: offset }, recentInteractionsHelper);
+        offset += 30;
+    }
 }
 function recentInteractionsHelper(response) {
         recentInteractionsStore = new Array();
@@ -211,7 +215,8 @@ function recentInteractionsHelper(response) {
                 });
             }
         });
-    alert(count);
+        getRecentInterations();
+        alert(count);
 }
 FB.init({
     "appId"  : '153403654734305',
