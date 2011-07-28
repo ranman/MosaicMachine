@@ -200,7 +200,6 @@ function loadFriendsPics(){
             loadStr += ','+i;
         }
     }
-    alert(loadStr);
     FB.api(
             {
               'method': 'fql.query',
@@ -227,20 +226,17 @@ function loadFriendsPics(){
 function loadFriends(response) {
     $.each(response.data, function(index, item){
             if (!(item.from.id in recentInteractionsStore)) {
-                count += 1;
                 recentInteractionsStore[item.from.id] = item.message;
             }
             if (item.comments && item.comments.data) {
                 $.each(item.comments.data, function(index, item){
                     if (!(item.from.id in recentInteractionsStore)) {
-                        count += 1;
                         recentInteractionsStore[item.from.id] = item.message;
                     }
                 });
             }
         });
     loadState += 1;
-    alert(count);
     recentInteractionsHelper();
 }
 function recentInteractionsHelper() {
