@@ -202,15 +202,15 @@ function loadFriendsPics(){
               photos.push('<ul id="sortable">');
               var ids = new Array();
               $.each(response, function(index, item) {
-                  photos.push('<li class="ui-state-default" id="'+item['uid']+'"><img src="'+item['pic_big']+'"></li>');
+                var t = recentInterationsStore[item['uid']];
+                  photos.push('<li class="ui-state-default" id="'+item['uid']+'" title="'+t+'"><img src="'+item['pic_big']+'"></li>');
                   ids.push(item['uid']);
               });
               photos.push("</ul>");
               $("#photos").html(photos.join(''));
               for (i in ids) {
                 var x = $('#'+ids[i]);
-                x.mouseover(function(){if (this.id in recentInteractionsStore) {$('dialogText').html(recentInteractionsStore[x.id]);dialog.dialog('open')}});
-                x.mouseleave(function(){dialog.dialog('close');});
+                x.tipTip();
               }
             }
         );  
