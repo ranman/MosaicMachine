@@ -26,15 +26,6 @@ h1 {
     padding-left: 20px;
     float: left;
 }
-#wtf {
-    color: #eee;
-    font-size:60px;
-    font-variant:small-caps;
-    font-family:Helvetica, Arial, sans-serif;
-    padding-left: 60px;
-    float: left;
-    display: none;
-}
 #loadText {
     color: #000;
     width: 200px;
@@ -56,9 +47,7 @@ h1 {
    -moz-column-gap:      0px;
    column-count:         5;
    column-gap:           0px;
-
 }
-
 #loginButton {
     width: 200px;
     text-align: left;
@@ -80,6 +69,11 @@ h1 {
   width: 100% !important;
   height: auto !important;
 }
+#lilphotos {
+    width: 300px;
+    height: 300px;
+}
+
 
 @media (max-width: 1200px) {
   #photos {
@@ -108,10 +102,6 @@ h1 {
   -webkit-column-count: 1;
   column-count:         1;
   }
-#lilphotos {
-    width: 300px;
-    height: 300px;
-}
 }
     </style>
     <title>Mosaic Machine</title>
@@ -125,7 +115,6 @@ h1 {
     <script src="http://connect.facebook.net/en_US/all.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
-    <script src="jquery.qtip-1.0.0-rc3.min.js" type="text/javascript"></script>
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-24700488-1']);
@@ -142,301 +131,26 @@ h1 {
 </head>
 <body>
     <div id="fb-root"></div>
+    <header>
+        <div id="constant">
+            <h1 id="maintitle">Mosaic Machine</h1>
+            <div class="right">
+                <fb:like href="http://www.mosaicmachine.com" width="450"></fb:like>
+            </div>
+            <div class="right" id="tweet">
+                <a href="http://twitter.com/share" class="twitter-share-button" data-url="mosaicmachine.com" data-count="vertical">Tweet</a>
+                <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+            </div>
+        </div>
+    </header>
     <div id="loadingSpinner">
         <img src="ajax-loader.gif" />
+        <div id="loadText"></div>
     </div>
-    <div id="loadText"></div>
     <div id="loginButton">
-            <fb:login-button perms="user_photos,friends_photos,user_photo_video_tags,friends_photo_video_tags,read_stream" onlogin="buildMosaic()">See Your Mosaic</fb:login-button>
-    </div>
-    <div id="constant">
-        <h1 id="maintitle">Mosaic Machine</h1>
-        <h2 id="wtf">wtf is this?</h2>
-        <div class="right">
-            <fb:like href="http://www.mosaicmachine.com" send="true" width="450" show_faces="true" font=""></fb:like>
-        </div>
-        <div class="right" id="tweet">
-            <a href="http://twitter.com/share" class="twitter-share-button" data-url="mosaicmachine.com" data-count="horizontal">Tweet</a>
-            <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-        </div>
+            <fb:login-button perms="user_photos,friends_photos,user_photo_video_tags,friends_photo_video_tags,read_stream">See Your Mosaic</fb:login-button>
     </div>
 <section id="photos">
 </section>
-<script type="text/javascript">
-//SOME GLOBALS FOR THAT STORE ONE'S MOST RECENT INTERACTIONS WITH OTHERS
-var recentInteractionsStore;
-// 0 - nothing
-// 1 - loaded from wall
-// 2 - loaded from newsfeed
-// 3 - loaded friend's pictures
-var loadState = 0;
-var uid;
-var count = 0;
-var loadNoBegin = true;
-
-function buildMosaic(response) {
-    if (response && response.session) {
-        $('#loginButton').hide(); 
-        $('#loadingSpinner').show();
-        $('#loadText').show();
-        $('#constant').fadeTo(1,0.5);
-        $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
-        $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
-        if (loadNoBegin) {
-            loadNoBegin = false;
-            recentInteractionsStore = new Array();
-            uid = response.session.uid;
-            recentInteractionsHelper();
-        }
-    }
-}
-
-function loadYouAndFriend(id) {
-    FB.api(
-    {
-        method: 'fql.query',
-        query: 'SELECT pid, caption, aid, owner, link, src_big, src_small, created, modified FROM photo WHERE aid IN (SELECT aid FROM album WHERE owner IN ('+id+')) LIMIT 10'
-    },
-    function(response) {
-        var loadStr = '';
-        if (response.length > 0) {
-            loadStr = '<div style="width:225px;float:left;margin:0;padding:0;">'
-            $.each(response, function(index, item) {
-                loadStr += '<div style="float:left;width:75px;height:75px;"><img height="75" width="75" src="'+item.src_small+'"></div>';
-            });
-            loadStr += '</div>';
-        } else {
-            loadStr += 'privacy settings prevent getting more images. sorry.';
-        }
-        $('#'+id).qtip({
-            content: loadStr,
-            position: {
-                        corner: {
-                            tooltip: 'bottomRight',
-                            target: 'bottomRight'
-                        }
-                    },
-                    style: {
-                        name: 'blue', 
-                        tip: {
-                            corner: 'bottomRight'
-                        },
-                        border: {
-                            width: 2,
-                            radius: 6
-                        }
-                    },
-                    width: {
-                        min: 0,
-                        max: 400
-                    },
-                    show: {
-                        delay: 0,
-                        ready: true
-                    },
-                    hide: {
-                        fixed: true
-                    }
-        });
-        
-    }
-);
-/*
-    FB.api(
-          {
-              method: 'photos.get',
-              subj_id: id
-          },
-          function(response) {
-                $('#'+id).qtip(
-                {
-                    content: '<img src="'+response[0].src+'">',
-                    position: {
-                        corner: {
-                            tooltip: 'bottomLeft',
-                            target: 'bottomLeft'
-                        }
-                    },
-                    style: {
-                        name: 'blue', 
-                        tip: {
-                            corner: 'bottomLeft'
-                        },
-                        border: {
-                            width: 2,
-                            radius: 6
-                        }
-                    }
-                });
-                //alert(response.length);        
-          }
-    );
-*/
-}
-function loadFriendsPics(){
-    var loadStr = '';
-    var first = true;
-    for (i in recentInteractionsStore) {
-        if (first) {
-            loadStr += i;
-            first = false;
-        } else {
-            loadStr += ','+i;
-        }
-    }
-    FB.api(
-            {
-              'method': 'fql.query',
-              'query': "SELECT uid, name, pic_big FROM user WHERE uid =" + uid +" OR uid IN ("+loadStr+")"
-            },
-            function(response) {
-              $('#loadingSpinner').hide();
-              $('#loadText').hide();
-              var photos = [];
-              photos.push('<ul id="sortable">');
-              var ids = new Array();
-              $.each(response, function(index, item) {
-                  //var t = recentInteractionsStore[item['uid']];
-                  photos.push('<li class="ui-state-default"><img src="'+item['pic_big']+'" id="'+item['uid']+'"></li>');
-              });
-              photos.push("</ul>");
-              $("#photos").html(photos.join(''));
-              for (i in recentInteractionsStore) {
-                var x = $('#'+i);
-                if (recentInteractionsStore[i])
-                {
-                    x.qtip(
-                    {
-                        content: recentInteractionsStore[i],
-                        position: {
-                            corner: {
-                                target: 'topLeft',
-                                tooltip: 'topLeft'
-                            }
-                        },
-                        style: { 
-                            name: 'blue', 
-                            tip: {
-                                corner: 'topLeft'
-                            },
-                            border: {
-                                width: 2,
-                                radius: 6
-                            }
-                        },
-                        show: {
-                            delay: 0
-                        },
-                        hide: {
-                            fixed: true
-                        }
-                    });
-                    x.click(function() {loadYouAndFriend(this.id);});
-                }
-              }
-            }
-        );  
-}
-function loadFriends(response) {
-    $.each(response.data, function(index, item){
-            if (!(item.from.id in recentInteractionsStore)) {
-                recentInteractionsStore[item.from.id] = item.message;
-            }
-            if (item.comments && item.comments.data) {
-                $.each(item.comments.data, function(index, item){
-                    if (!(item.from.id in recentInteractionsStore)) {
-                        recentInteractionsStore[item.from.id] = item.message;
-                    }
-                });
-            }
-        });
-    loadState += 1;
-    recentInteractionsHelper();
-}
-function recentInteractionsHelper() {
-        if (loadState == 0) {
-            $('#loadText').html('loading your wall...');
-            FB.api('/me/feed', {limit: 50}, loadFriends);
-        } 
-        else if (loadState == 1) {
-            $('#loadText').html('loading your feed...');
-            FB.api('/me/home', {limit: 50}, loadFriends);
-        }
-        else if (loadState == 2) {
-            $('#loadText').html('loading your pictures...');
-            loadFriendsPics();
-        }
-        else {}
-}
-FB.init({
-    "appId"  : '153403654734305',
-    "status" : true, // check login status
-    "cookie" : true, // enable cookies to allow the server to access the session
-    "xfbml"  : true
-});
-FB.Event.subscribe('auth.login', buildMosaic);
-FB.Event.subscribe('auth.logout', buildMosaic);
-FB.getLoginStatus(buildMosaic);
-$('#wtf').qtip({
-            content: 'a cool way to browse through your friends.  hover over an image to see a recent interation with your friend and click on an image to load more pictures.',
-            position: {
-                        corner: {
-                            tooltip: 'topLeft',
-                            target: 'bottomRight'
-                        }
-                    },
-                    style: {
-                        name: 'blue', 
-                        tip: {
-                            corner: 'topLeft'
-                        },
-                        border: {
-                            width: 2,
-                            radius: 6
-                        }
-                    },
-                    width: {
-                        min: 0,
-                        max: 400
-                    },
-                    show: {
-                        delay: 0,
-                        ready: false
-                    },
-                    hide: {
-                        fixed: false
-                    }
-        });
-$('#maintitle').qtip({
-            content: 'built by cary &amp; hunt',
-            position: {
-                        corner: {
-                            tooltip: 'topLeft',
-                            target: 'bottomRight'
-                        }
-                    },
-                    style: {
-                        name: 'blue', 
-                        tip: {
-                            corner: 'topLeft'
-                        },
-                        border: {
-                            width: 2,
-                            radius: 6
-                        }
-                    },
-                    width: {
-                        min: 0,
-                        max: 400
-                    },
-                    show: {
-                        delay: 0,
-                        ready: false
-                    },
-                    hide: {
-                        fixed: false
-                    }
-        });        
-</script>
 </body>
 </html>
