@@ -10,6 +10,9 @@ $(document).bind("FBLoaded", function() {
 $(document).bind("loadingFriends", function() {
     $('#loadText').text("Loading Friends");
 });
+$(document).bind("displayPhotos", function() {
+    $("#photos").show();
+})
 /* Create the namespace */
 var Mosaic = Mosaic || {
     buildMosaic: function(response) {
