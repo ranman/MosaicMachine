@@ -1,5 +1,5 @@
 /* Events which trigger page changes */
-$.bind("FBLoaded", function() {
+$(document).bind("FBLoaded", function() {
     $('#loginButton').hide();
     $('#loadingSpinner').show();
     $('#loadText').show();
@@ -7,7 +7,7 @@ $.bind("FBLoaded", function() {
     $('#topBar').mouseover(function(){$('#constant').fadeTo(4,1);});
     $('#topBar').mouseleave(function(){$('#constant').fadeTo(4,0.1);});
 });
-$.bind("loadingFriends", function() {
+$(document).bind("loadingFriends", function() {
     $('#loadText').text("Loading Friends");
 });
 /* Create the namespace */
@@ -33,7 +33,7 @@ var Mosaic = Mosaic || {
                 photo_array = [];
                 photo_array.push('<ul id="something">');
                 $.each(response, function(index, friend) {
-                    photo_array.push('<li title="'+friend.name+'" class="something"><img src="'+friend.pic_big+'" /></li>');
+                    photo_array.push('<li id="'+friend.uid+'" title="'+friend.name+'" class="something"><img src="'+friend.pic_big+'" /></li>');
                 });
                 photo_array.push('</ul>');
                 $("#photos").html(photo_array.join(''));
