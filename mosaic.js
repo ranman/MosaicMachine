@@ -11,6 +11,8 @@ $(document).bind("loadingFriends", function() {
     $('#loadText').text("Loading Friends");
 });
 $(document).bind("displayPhotos", function() {
+    $('#loadingSpinner').hide();
+    $('#loadText').hide();
     $("#photos").show();
 })
 /* Create the namespace */
@@ -27,23 +29,44 @@ var Mosaic = Mosaic || {
             /* Select yourself and all friends */
             FB.api({
                 method: 'fql.query',
-                query: 'SELECT uid, name, pic_big FROM user WHERE uid ='
+                query: 'SELECT uid, sex, name, pic_big FROM user WHERE uid ='
                         +uid
-                        +' OR uid IN (SELECT uid2 FROM friend WHERE uid1 ='+uid+')'
+                        +' OR uid IN (SELECT uid2 FROM friend WHERE uid1 ='+uid+') AND sex ="female"'
             }, function(response) {
                 response = Mosaic.filterFriends(response);
                 response = Mosaic.sortFriends(response);
                 photo_array = [];
-                photo_array.push('<ul id="something">');
+                photo_array.push('<ul id="photoList">');
                 $.each(response, function(index, friend) {
                     photo_array.push('<li id="'+friend.uid+'" title="'+friend.name+'" class="something"><img src="'+friend.pic_big+'" /></li>');
                 });
                 photo_array.push('</ul>');
                 $("#photos").html(photo_array.join(''));
+
+                /* Setup the hover */
+                $("#photoList>li").hover(
+                    function() {
+                        //SHow most recent interaction
+                    },
+                    function() {
+                        //Hide most recent interaction
+                    }
+                );
+                $("#photoList>li").click(
+                    function() {
+                        //???
+                    }
+                );
+                $.event.trigger("displayPhotos");
             });
         }
     },
     sortFriends: function(friends) {
+        FB.api({
+            method: ''
+        }, function(response) {
+            
+        });
         return friends;
     },
     filterFriends: function(friends) {
