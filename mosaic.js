@@ -46,7 +46,9 @@ var Mosaic = Mosaic || {
                 /* Setup the hover */
                 $("#photoList>li").hover(
                     function() {
-                        //SHow most recent interaction
+                        //Query to get photos of you and other peeps
+                        //'SELECT src_big FROM photo WHERE pid IN (SELECT pid FROM photo_tag WHERE subject='+uid+' IN (SELECT pid FROM photo_tag WHERE subject='+$(this).attr('id')+'))'
+                        //Show most recent interaction
                     },
                     function() {
                         //Hide most recent interaction
