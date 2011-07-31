@@ -25,13 +25,12 @@ var Mosaic = Mosaic || {
         if(response && response.session) {
             uid = response.session.uid;
             /* Query for getting friend pictures */
-            var friends = FB.Data.query("SELECT uid, sex, name, pic_big" 
-                                        +"FROM user WHERE uid IN "
-                                        +"(SELECT uid2 FROM friend WHERE uid1={0})", uid);
+            var friends = FB.Data.query("SELECT uid2 FROM friend WHERE uid1={0}", uid);
+            var pics = FB.Data.query("SELECT uid, sex, name, pic_big" 
+                                        +" FROM user WHERE uid IN {0}", friends);
             /* Let the page know we've started loading friends */
             $.event.trigger("loadingFriends");
-            FB.Data.waitOn(friends, function(){
-                console.log(friends);
+            FB.Data.waitOn([friends,pics], function(){
                 var html_str = "";
                 html_str += '<ul id="photoList">';
                 FB.Array.forEach(friends.value, function(friend) {
