@@ -24,61 +24,46 @@ var Mosaic = Mosaic || {
          */
         if(response && response.session) {
             uid = response.session.uid;
-            /* Query for getting friend pictures */
-            var friends = FB.Data.query("SELECT uid2 FROM friend WHERE uid1={0}", uid);
-            var pics = FB.Data.query("SELECT uid, sex, name, pic_big" 
-                                        +" FROM user WHERE uid IN {0}", friends);
             /* Let the page know we've started loading friends */
             $.event.trigger("loadingFriends");
-            FB.Data.waitOn([friends,pics], function(){
-                var html_str = "";
-                html_str += '<ul id="photoList">';
-                FB.Array.forEach(friends.value, function(friend) {
-                    html_str += '<li id="'+friend.uid+'" title="'+friend.name+'" class="something"><img src="'+friend.pic_big+'" /></li>';
+            FB.api({
+                method: 'fql.query',
+                query: 'SELECT uid, sex, name, pic_big FROM user '
+                        +'WHERE uid IN '
+                        +'(SELECT uid2 FROM friend WHERE uid1 ='+uid+')'
+            }, function(response) {
+                response = Mosaic.filterFriends(response);
+                response = Mosaic.sortFriends(response);
+                photo_array = [];
+                photo_array.push('<ul id="photoList">');
+                $.each(response, function(index, friend) {
+                    photo_array.push('<li id="'+friend.uid+'" title="'+friend.name+'" class="something"><img src="'+friend.pic_big+'" /></li>');
                 });
-                html_str += '</ul>';
-                document.getElementById('photos').innerHTML = html_str;
+                photo_array.push('</ul>');
+                $("#photos").html(photo_array.join(''));
+
+                /* Setup the hover */
+                $("#photoList>li").hover(
+                    function() {
+                        //Show most recent interaction
+                    },
+                    function() {
+                        //Hide most recent interaction
+                    }
+                );
+                $("#photoList>li").click(
+                    function() {
+                        /* Query to get photos of you with clicked on user */
+                        FB.api({
+                            method: 'fql.query',
+                            query: 'SELECT src_big FROM photo WHERE pid IN (SELECT pid FROM photo_tag WHERE subject='+uid+') AND pid IN (SELECT pid FROM photo_tag WHERE subject='+$(this).attr('id')+')'
+                        }, function(response) {
+                            console.log(response);
+                        })
+                    }
+                );
+                $.event.trigger("displayPhotos");
             });
-            $.event.trigger("displayPhotos");
-            // function(response) {
-            //     response = Mosaic.filterFriends(response);
-            //     response = Mosaic.sortFriends(response);
-            //     photo_array = [];
-            //     photo_array.push('<ul id="photoList">');
-            //     $.each(response, function(index, friend) {
-            //         photo_array.push('<li id="'+friend.uid+'" title="'+friend.name+'" class="something"><img src="'+friend.pic_big+'" /></li>');
-            //     });
-            //     photo_array.push('</ul>');
-            //     $("#photos").html(photo_array.join(''));
-            // 
-            //     /* Setup the hover */
-            //     $("#photoList>li").hover(
-            //         function() {
-            //             //Query to get photos of you and other peeps
-            //             var friendPhotos = FB.Data.query("SELECT src_big FROM photo WHERE pid IN "
-            //                                             +"(SELECT pid FROM photo_tag WHERE subject={0}) "
-            //                                             +"AND pid IN "
-            //                                             +"(SELECT pid FROM photo_tag WHERE subject={1})", 
-            //                                             uid,
-            //                                             $(this).attr('id'));
-            //             //Show most recent interaction
-            //         },
-            //         function() {
-            //             //Hide most recent interaction
-            //         }
-            //     );
-            //     $("#photoList>li").click(
-            //         function() {
-            //             FB.api({
-            //                 method: 'fql.query',
-            //                 query: 'SELECT src_big FROM photo WHERE pid IN (SELECT pid FROM photo_tag WHERE subject='+uid+') AND pid IN (SELECT pid FROM photo_tag WHERE subject='+$(this).attr('id')+')'
-            //             }, function(response) {
-            //                 console.log(response);
-            //             })
-            //         }
-            //     );
-            //     $.event.trigger("displayPhotos");
-            // }
         }
     },
     sortFriends: function(friends) {
