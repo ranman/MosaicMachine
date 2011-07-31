@@ -15,6 +15,10 @@ $(document).bind("displayPhotos", function() {
     $('#loadText').hide();
     $("#photos").show();
 })
+
+/* * * * * * * * * * * * * * * * * * * *
+ *     Actual mosaic shit goes here    *
+ * * * * * * * * * * * * * * * * * * * */
 /* Create the namespace */
 var Mosaic = Mosaic || {
     buildMosaic: function(response) {
@@ -32,8 +36,10 @@ var Mosaic = Mosaic || {
                         +'WHERE uid IN '
                         +'(SELECT uid2 FROM friend WHERE uid1 ='+uid+')'
             }, function(response) {
+                /* Sort and filter through friends */
                 response = Mosaic.filterFriends(response);
                 response = Mosaic.sortFriends(response);
+                /* Build the Mosaic */
                 photo_array = [];
                 photo_array.push('<ul id="photoList">');
                 $.each(response, function(index, friend) {
@@ -41,6 +47,7 @@ var Mosaic = Mosaic || {
                 });
                 photo_array.push('</ul>');
                 $("#photos").html(photo_array.join(''));
+                /* Mouse Event Handlers for Photos */
 
                 /* Setup the hover */
                 $("#photoList>li").hover(
@@ -51,6 +58,7 @@ var Mosaic = Mosaic || {
                         //Hide most recent interaction
                     }
                 );
+                /* Setup the click */
                 $("#photoList>li").click(
                     function() {
                         /* Query to get photos of you with clicked on user */
@@ -62,16 +70,12 @@ var Mosaic = Mosaic || {
                         })
                     }
                 );
+                /* Finally display the photo wall */
                 $.event.trigger("displayPhotos");
             });
         }
     },
     sortFriends: function(friends) {
-        FB.api({
-            method: ''
-        }, function(response) {
-            
-        });
         return friends;
     },
     filterFriends: function(friends) {
