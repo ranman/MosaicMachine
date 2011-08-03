@@ -7,6 +7,9 @@ $(document).bind("FBLoaded", function() {
     $('#constant').fadeTo(1,0.5);
     $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
     $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
+    $('#infobar').fadeTo(1,0.5);
+    $('#infobar').mouseover(function(){$('#infobar').fadeTo(4,1);});
+    $('#infobar').mouseleave(function(){$('#infobar').fadeTo(4,0.25);});
 });
 $(document).bind("loadingFriends", function() {
     $('#loadText').text("Loading Friends");
