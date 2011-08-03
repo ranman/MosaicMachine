@@ -10,10 +10,10 @@ $(document).bind("FBLoaded", function() {
     
     $('#infoContent').fadeTo(1,0.5);
     $('#infoContent').mouseover(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
-    $('#infoContent').mouseleave(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
+    $('#infoContent').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
     
     $('#infoHideDivButton').fadeTo(1,0.5);
-    $('#infoHideDivButton').mouseover(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
+    $('#infoHideDivButton').mouseover(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
     $('#infoHideDivButton').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
 });
 $(document).bind("loadingFriends", function() {
