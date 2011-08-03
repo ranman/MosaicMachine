@@ -3,9 +3,9 @@ $(document).bind("FBLoaded", function() {
     $('#loginButton').hide();
     $('#loadingSpinner').show();
     $('#loadText').show();
-    $('#constant').fadeTo(1,.1);
-    $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
-    $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.1);});
+    $('#topBar').fadeTo(1,.1);
+    $('#topBar').mouseover(function(){$('#topBar').fadeTo(4,1);});
+    $('#topBar').mouseleave(function(){$('#topBar').fadeTo(4,0.1);});
 });
 $(document).bind("loadingFriends", function() {
     $('#loadText').text("Loading Friends");
