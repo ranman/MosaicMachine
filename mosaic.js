@@ -15,7 +15,7 @@ $(document).bind("FBLoaded", function() {
     $('#infoHideDivButton').fadeTo(1,0.5);
     $('#infoHideDivButton').mouseover(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
     $('#infoHideDivButton').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
-    $('#infoHideDivButton').animate({ margin-bottom: "0px" }, 5000); 
+    $('#infoHideDivButton').click(function(){$('#infoHideDivButton').animate({ marginBottom: "0px" }, 5000);});
 });
 $(document).bind("loadingFriends", function() {
     $('#loadText').text("Loading Friends");
