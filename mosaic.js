@@ -12,15 +12,7 @@ $(document).bind("FBLoaded", function() {
     $('#infobar').fadeTo(1,0.5);
     $('#infobar').mouseover(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
     $('#infobar').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
-    
-    $('#infoContent').fadeTo(1,0.5);
-    $('#infoContent').mouseover(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
-    $('#infoContent').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
-    
-    $('#infoHideDivButton').fadeTo(1,0.5);
-    $('#infoHideDivButton').mouseover(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
-    $('#infoHideDivButton').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
-    
+        
     $("#infoHideDivButton").toggle(
 		function(){
  			$("#infobar").animate({marginTop: "-35px"}, 1000);
