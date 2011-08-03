@@ -4,6 +4,15 @@ $(document).bind("FBLoaded", function() {
     $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
     $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
     
+    $('#infoHideDivRight').mouseover(function(e){e.stopPropagation();});
+    $('#infoHideDivRight').mouseleave(function(e){e.stopPropagation();});
+    $('#infoHideDivLeft').mouseover(function(e){e.stopPropagation();});
+    $('#infoHideDivLeft').mouseleave(function(e){e.stopPropagation();});
+    
+    $('#infobar').fadeTo(1,0.5);
+    $('#infobar').mouseover(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
+    $('#infobar').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
+    
     $('#infoContent').fadeTo(1,0.5);
     $('#infoContent').mouseover(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
     $('#infoContent').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
