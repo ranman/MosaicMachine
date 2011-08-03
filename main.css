@@ -4,12 +4,6 @@
 }
 
 #topbar {
-    position: fixed;
-    left: 0px;
-    top: 0px;
-    width: 100%;
-    background-color: #ccc;
-    height: 75px;
 }
 .right {
     float: right;
