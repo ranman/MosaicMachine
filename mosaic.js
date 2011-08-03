@@ -5,9 +5,9 @@ $(document).bind("FBLoaded", function() {
     $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
     
     $('#infoHideDivRight').mouseover(function(e){e.stopPropagation();});
-    $('#infoHideDivRight').mouseleave(function(e){e.stopPropagation();});
+    $('#infoHideDivRight').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
     $('#infoHideDivLeft').mouseover(function(e){e.stopPropagation();});
-    $('#infoHideDivLeft').mouseleave(function(e){e.stopPropagation();});
+    $('#infoHideDivLeft').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
     
     $('#infobar').fadeTo(1,0.5);
     $('#infobar').mouseover(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
