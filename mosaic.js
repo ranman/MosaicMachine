@@ -1,6 +1,5 @@
 /* Events which trigger page changes */
 $(document).bind("FBLoaded", function() {
-    $("#infobar").animate({marginTop: "-225px"}, 1000);
     $('#constant').fadeTo(1,0.5);
     $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
     $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
@@ -27,6 +26,7 @@ $(document).bind("loadingFriends", function() {
     $('#loadingSpinner').show();
     $('#loadText').show();
     $('#loadText').text("Loading Friends");
+    $("#infobar").animate({marginTop: "-225px"}, 1000);
 });
 $(document).bind("displayPhotos", function() {
     $('#loadingSpinner').hide();
