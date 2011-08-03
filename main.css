@@ -1,16 +1,9 @@
+* { margin: 0; padding: 0; }
+
 .right {
     float: right;
     padding-top: 20px;
     padding-right: 10px;
-}
-#topbar {
-    position: fixed;
-    left: 0px;
-    top: 0px;
-    width: 100%;
-    background-color: #ccc;
-    height: 75px;
-    z-index: 10;
 }
 #tweet {
     padding-top: 23px;
@@ -34,6 +27,12 @@ h1 {
     position: absolute;
     top: 250px;
     left: 45.5%;
+}
+#constant {
+    position: fixed;
+    width: 100%;
+    background-color: #ccc;
+    height: 75px;
 }
 #something {
     list-style-type: none;

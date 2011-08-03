@@ -26,26 +26,26 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 </head>
 <body>
-<div id="fb-root"></div>
-<div id="topBar">
-    <h1 id="maintitle">Mosaic Machine</h1>
-    <div class="right">
-        <fb:like href="http://www.mosaicmachine.com" width="450"></fb:like>
+    <div id="fb-root"></div>
+    <div id="loadingSpinner">
+        <img src="ajax-loader.gif" />
+        <div id="loadText"></div>
     </div>
-    <div class="right" id="tweet">
-        <a href="http://twitter.com/share" class="twitter-share-button" data-url="mosaicmachine.com" data-count="vertical">Tweet</a>
-        <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-    </div>
-</div>
-<div id="loadingSpinner">
-    <img src="ajax-loader.gif" />
-    <div id="loadText"></div>
-</div>
-<div id="loginButton">
+    <div id="loginButton">
         <fb:login-button perms="user_photos,friends_photos,user_photo_video_tags,friends_photo_video_tags,read_stream">See Your Mosaic</fb:login-button>
-</div>
-<section id="photos">
-</section>
-<script type="text/javascript" src="mosaic.js"></script>
+    </div>
+    <div id="constant"> 
+        <h1 id="maintitle">Mosaic Machine</h1> 
+        <div class="right"> 
+            <fb:like href="http://www.mosaicmachine.com" send="true" width="450" show_faces="true" font=""></fb:like> 
+        </div> 
+        <div class="right" id="tweet"> 
+            <a href="http://twitter.com/share" class="twitter-share-button" data-url="mosaicmachine.com" data-count="vertical">Tweet</a> 
+            <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script> 
+        </div> 
+    </div> 
+    <section id="photos">
+    </section>
+    <script type="text/javascript" src="mosaic.js"></script>
 </body>
 </html>

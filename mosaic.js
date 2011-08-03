@@ -3,10 +3,10 @@ $(document).bind("FBLoaded", function() {
     $('#loginButton').hide();
     $('#loadingSpinner').show();
     $('#loadText').show();
-    var tb = $('#topbar');
-    tb.fadeTo(1,.1);
-    tb.mouseover(function(){$('#topbar').fadeTo(4,1);});
-    tb.mouseleave(function(){$('#topbar').fadeTo(4,0.1);}); 
+
+    $('#constant').fadeTo(1,0.5);
+    $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
+    $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
 });
 $(document).bind("loadingFriends", function() {
     $('#loadText').text("Loading Friends");
