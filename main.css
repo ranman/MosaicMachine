@@ -36,7 +36,8 @@ h1 {
 }
 #infobar {
     position: fixed;
-    top: 100% - 225px;
+    top: 100%;
+    margin-bottom: -225px;
     width: 100%;
     height: 225px;
 }
