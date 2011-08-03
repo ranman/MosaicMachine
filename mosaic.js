@@ -7,9 +7,14 @@ $(document).bind("FBLoaded", function() {
     $('#constant').fadeTo(1,0.5);
     $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
     $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
-    $('#infobar').fadeTo(1,0.5);
-    $('#infobar').mouseover(function(){$('#infobar').fadeTo(4,1);});
-    $('#infobar').mouseleave(function(){$('#infobar').fadeTo(4,0.25);});
+    
+    $('#infoContent').fadeTo(1,0.5);
+    $('#infoContent').mouseover(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
+    $('#infoContent').mouseleave(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
+    
+    $('#infoHideDivButton').fadeTo(1,0.5);
+    $('#infoHideDivButton').mouseover(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
+    $('#infoHideDivButton').mouseleave(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
 });
 $(document).bind("loadingFriends", function() {
     $('#loadText').text("Loading Friends");
