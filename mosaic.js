@@ -3,10 +3,17 @@ $(document).bind("FBLoaded", function() {
     $('#loginButton').hide();
     $('#loadingSpinner').show();
     $('#loadText').show();
-    $('#constant').fadeTo(1,.1);
-    $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
-    $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.1);});
-    alert('here');
+    //setting up top bar
+    var tb = $('#topbar');
+    tb.css('position', 'fixed');
+    tb.css('left', '0px');
+    tb.css('top', '0px');
+    tb.css('width', '100%');
+    tb.css('background-color', '#ccc');
+    tb.css('height', '75px');   
+    tb.fadeTo(1,.1);
+    tb.mouseover(function(){$('#topbar').fadeTo(4,1);});
+    tb.mouseleave(function(){$('#topbar').fadeTo(4,0.1);}); 
 });
 $(document).bind("loadingFriends", function() {
     $('#loadText').text("Loading Friends");
