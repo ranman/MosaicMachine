@@ -4,8 +4,8 @@ $(document).bind("FBLoaded", function() {
     $('#loadingSpinner').show();
     $('#loadText').show();
     $('#topBar').fadeTo(1,.1);
-    $('#topBar').mouseover(function(){$('#constant').fadeTo(4,1);});
-    $('#topBar').mouseleave(function(){$('#constant').fadeTo(4,0.1);});
+    $('#topBar').mouseover(function(){this.fadeTo(4,1);});
+    $('#topBar').mouseleave(function(){this.fadeTo(4,0.1);});
 });
 $(document).bind("loadingFriends", function() {
     $('#loadText').text("Loading Friends");
