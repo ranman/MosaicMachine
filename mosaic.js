@@ -15,7 +15,15 @@ $(document).bind("FBLoaded", function() {
     $('#infoHideDivButton').fadeTo(1,0.5);
     $('#infoHideDivButton').mouseover(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
     $('#infoHideDivButton').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
-    $('#infoHideDivButton').click(function(){$('#infobar').animate({marginBottom: 0},5000);});
+    
+    $("#infoHideDivButton").toggle(
+		function(){
+ 			$("#infoContent").animate({height: "0px"}, {queue:false, duration: 2000, easing: 'easeOutBounce'})
+ 		},
+        function(){
+			$("#infoContent").animate({height: "225px"}, {queue:false, duration: 2000, easing: 'easeOutBounce'})
+        }
+    ); 
 });
 $(document).bind("loadingFriends", function() {
     $('#loadText').text("Loading Friends");
