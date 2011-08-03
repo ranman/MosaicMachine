@@ -18,10 +18,10 @@ $(document).bind("FBLoaded", function() {
     
     $("#infoHideDivButton").toggle(
 		function(){
- 			$("#infobar").animate({marginBottom: "-35px"}, 2000);
+ 			$("#infobar").animate({marginBottom: "-35px"}, 4);
  		},
         function(){
-			$("#infobar").animate({marginBottom: "-225px"}, 2000);
+			$("#infobar").animate({marginBottom: "-225px"}, 4);
         }
     ); 
 });
