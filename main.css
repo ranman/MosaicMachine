@@ -5,7 +5,15 @@
     padding-top: 20px;
     padding-right: 10px;
 }
-
+#topbar {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    background-color: #ccc;
+    height: 75px;
+    z-index: 10;
+}
 #tweet {
     padding-top: 23px;
 }
