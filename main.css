@@ -58,6 +58,7 @@ h1 {
     background-color: #ccc;
     font-family: 'Lobster', cursive;
     font-size: 20px;
+    text-align: center;
 }
 #infoHideDivLeft {
     float: left;
