@@ -83,6 +83,16 @@ h1 {
     font-size: 14px;
     font-family: 'Droid Sans', sans-serif;
 }
+table {
+}
+th {
+    font-weight: 400;
+}
+tr {
+}
+td {
+    font-weight: 700;
+}
 
 #something {
     list-style-type: none;
