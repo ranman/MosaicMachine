@@ -9,7 +9,8 @@ $(document).bind("FBLoaded", function() {
     $('#infoHideDivLeft').mouseover(function(e){e.stopPropagation();});
     $('#infoHideDivLeft').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
     
-    $('#infobar').fadeTo(1,0.5);
+    $('#infoContent').fadeTo(4,0.5);
+    $('#infoHideDivButton').fadeTo(4,0.5);
     $('#infobar').mouseover(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
     $('#infobar').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
         
