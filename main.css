@@ -15,6 +15,7 @@ h1 {
     font-family: 'Lobster', cursive;
     padding-left: 20px;
     float: left;
+    text-shadow: black 2px 2px 0;
 }
 #loadText {
     color: #000;
