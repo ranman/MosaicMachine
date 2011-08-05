@@ -89,11 +89,13 @@ table {
 th {
     font-weight: 400;
     text-align: left;
-    text-decoration:underline
+    text-decoration:underline;
+    padding: 2px;
 }
 tr {
 }
 td {
+    padding: 2px;
     font-weight: 700;
 }
 
