@@ -83,9 +83,14 @@ h1 {
     font-size: 14px;
     font-family: 'Droid Sans', sans-serif;
 }
+#suserimg {
+    float: left;
+    width: 10%;
+}
 table {
+    float: left;
     padding-top: 5px;
-    width: 100%;
+    width: 90%;
 }
 th {
     font-weight: 400;
