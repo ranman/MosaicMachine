@@ -102,10 +102,9 @@ h1 {
     height: 50px;
 }
 #pName {
-    margin-top: 5px;
     text-align: center;
     font-family: 'Lobster', cursive;
-    font-size: 20px;
+    font-size: 24px;
     text-shadow: black 1px 1px 1px;
     color: #eee;
 }
