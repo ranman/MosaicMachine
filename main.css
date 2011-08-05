@@ -91,6 +91,7 @@ h1 {
     -moz-border-topleft:  20px;
     -webkit-border-radius: 20px;
     margin: 2%;
+    padding-top: 20px;
 }
 #centering {
     margin:0px auto;
