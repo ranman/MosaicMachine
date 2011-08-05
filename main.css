@@ -84,12 +84,12 @@ h1 {
     font-family: 'Droid Sans', sans-serif;
 }
 table {
+    width: 100%;
 }
 th {
     font-weight: 400;
     text-align: left;
     border-bottom: 1px solid black;
-    width: 100%;
 }
 tr {
 }
