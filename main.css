@@ -90,7 +90,9 @@ th {
     font-weight: 400;
     text-align: left;
     text-decoration:underline;
-    padding: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
 }
 tr {
 }
