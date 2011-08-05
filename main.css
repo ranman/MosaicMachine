@@ -89,6 +89,8 @@ h1 {
 }
 #centering {
     margin:0px auto;
+    width: 75px;
+    height: 75px;
 }
 table {
     float: left;
