@@ -101,7 +101,7 @@ h1 {
     height: 50px;
 }
 #pPicture {
-
+    border: 1px solid black; 
 }
 #pName {
     text-align: center;
