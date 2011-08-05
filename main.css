@@ -91,6 +91,9 @@ h1 {
     margin:0px auto;
     width: 75px;
     height: 75px;
+    -moz-box-shadow: 3px 3px 4px #000;
+    -webkit-box-shadow: 3px 3px 4px #000;
+    box-shadow: 3px 3px 4px #000;
 }
 table {
     float: left;
