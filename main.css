@@ -105,6 +105,7 @@ h1 {
     font-family: 'Lobster', cursive;
     font-size: 20px;
     text-shadow: black 1px 1px 1px;
+    color: #eee;
 }
 table {
     float: left;
