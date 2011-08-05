@@ -102,7 +102,9 @@ h1 {
 #pName {
     margin-top: 5px;
     text-align: center;
-    font-weight: 700;
+    font-family: 'Lobster', cursive;
+    font-size: 20px;
+    text-shadow: black 1px 1px 1px;
 }
 table {
     float: left;
