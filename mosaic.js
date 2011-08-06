@@ -101,7 +101,7 @@ var Mosaic = Mosaic || new function(){
         
         alert(str);
         
-        $('#pSigOther').html(str);
+        $('#pInfo').html(str);
         $('#pBio').html(response[0].about_me);
     };
     this.loadProfile = function(id, callback) {
