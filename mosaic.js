@@ -52,7 +52,7 @@ var Mosaic = Mosaic || new function(){
             uid = response.session.uid;
             Mosaic.loadProfile(uid, function(response) {
                 console.log(response);
-                alert('here');
+                alert($('#pName').text());
                 $('#pPictureImg').attr("src", response.pic_small);
                 $('#pName').html(response.name);
                 $('#pBio').html(response.name);
