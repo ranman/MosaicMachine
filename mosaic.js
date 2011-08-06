@@ -95,7 +95,7 @@ var Mosaic = Mosaic || new function(){
     this.onFriendClick = function(){
         var id = $(this).attr('id');
         selectedUser = id;
-        $('#pPictureImg').attr("src", 'ajax-loader.gif');
+        $('#pPictureImg').attr("src", 'ajaxDark.gif');
         $('#pName').html('loading...');
         $('#profileData').html('');
         $('#profileBio').html('');
