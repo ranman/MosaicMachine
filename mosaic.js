@@ -48,7 +48,7 @@ var Mosaic = Mosaic || {
          */
         if(response && response.session) {
             uid = response.session.uid;
-            this.loadProfile(uid, function(response) {console.log(response); }); 
+            Mosaic.loadProfile(uid, function(response) {console.log(response); }); 
             /* Let the page know we've started loading friends */
             $.event.trigger("loadingFriends");
             FB.api({
