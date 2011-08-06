@@ -123,14 +123,16 @@ h1 {
     float: left;
     font-weight: 700;
     max-width: 10%;
+    padding-top: 20px;
 }
 
 #profileBio {
     padding-left: 1%;
+    padding-top: 20px;
     float: left;
     border-left: 1px solid black;
     font-weight: 700;
-    max-width: 30%;
+    max-width: 40%;
 }
 
 #something {
