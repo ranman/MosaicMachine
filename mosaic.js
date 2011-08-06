@@ -21,7 +21,7 @@ $(document).bind("FBLoaded", function() {
         function(){
 			$("#infobar").animate({marginTop: "-225px"}, 1000);
         }
-    ); 
+    );
 });
 $(document).bind("loadingFriends", function() {
     $('#loginButton').hide();
@@ -48,6 +48,7 @@ var Mosaic = Mosaic || {
          */
         if(response && response.session) {
             uid = response.session.uid;
+            this.loadProfile(uid, function(response) {console.log(response); }); 
             /* Let the page know we've started loading friends */
             $.event.trigger("loadingFriends");
             FB.api({
@@ -94,6 +95,12 @@ var Mosaic = Mosaic || {
                 $.event.trigger("displayPhotos");
             });
         }
+    },
+    loadProfile: function(id, callback) {
+        FB.api({
+                    method: 'fql.query',
+                    query: 'SELECT uid, name, pic_small, religion, birthday, sex, meeting_for, meeting_sex, relationship_status, significant_other_id, political, current_location, interests, music, tv, movies, books, quotes, about_me, hs_info, education_history, status, website FROM user WHERE uid='+id 
+               }, callback);
     },
     sortFriends: function(friends) {
         return friends;
