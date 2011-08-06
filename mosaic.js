@@ -40,7 +40,7 @@ $(document).bind("displayPhotos", function() {
  *     Actual mosaic shit goes here    *
  * * * * * * * * * * * * * * * * * * * */
 /* Create the namespace */
-/* I wanted public, and private methods + variables.  Module pattern now.*/
+/* I wanted public and private methods + fields.  Module pattern now.*/
 var Mosaic = Mosaic || new function(){
     var loadedUsers = new Array(); // this will store data about already loaded users to prevent duplicate calls
     this.buildMosaic = function(response) {
