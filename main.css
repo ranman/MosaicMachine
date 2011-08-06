@@ -117,25 +117,18 @@ h1 {
     color: #eee;
 }
 
-#profile {
-    float: left;
-    width: 45%;
-    margin-top: 0px;
-    padding-top: 20px;
-}
-
 #profileData {
     text-align: right;
     padding-right: 2%;
     float: left;
-    width: 18%;
+    width: 15%;
     font-weight: 700;
 }
 
 #profileBio {
     padding-left: 2%;
     float: left;
-    width: 77%;
+    width: 40%;
     border-left: 1px solid black;
     font-weight: 700;
 }

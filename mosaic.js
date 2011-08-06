@@ -111,9 +111,13 @@ var Mosaic = Mosaic || new function(){
             $('#pName').html(response[0].name);
         
             var str = response[0].sex+"<br />"+response[0].current_location.name+"<br />"+response[0].birthday+"<br />"+response[0].political+"<br />"+response[0].religion;
-        
+            
             $('#profileData').html(str);
-            $('#profileBio').html(response[0].about_me);    
+            if (response[0].about_me.length > 0) {
+                $('#profileBio').html('privacy prevents loading profile =(');  
+            } else {
+                $('#profileBio').html(response[0].about_me);  
+            }  
         }
     };
     this.loadProfile = function(id, callback) {
