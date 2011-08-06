@@ -124,15 +124,15 @@ h1 {
 
 #profileData {
     text-align: right;
-    padding-right: 10px;
+    padding-right: 1%;
     float: left;
-    width: 25%;
+    width: 24%;
 }
 
 #profileBio {
-    padding-right: 10px;
+    padding-right: 1%;
     float: left;
-    width: 75%;
+    width: 74%;
 }
 
 #something {
