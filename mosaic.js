@@ -93,12 +93,13 @@ var Mosaic = Mosaic || new function(){
     };
     /* Call this function when a user clicks on a profile picture*/
     this.onFriendClick = function(){
-        selectedUser = $(this).attr('id');
+        var id = $(this).attr('id');
+        selectedUser = id;
         $('#pPictureImg').attr("src", 'ajax-loader.gif');
         $('#pName').html('loading...');
         $('#profileData').html('');
         $('#profileBio').html('');   
-        Mosaic.loadProfile(uid, Mosaic.displayProfile);
+        Mosaic.loadProfile(id, Mosaic.displayProfile);
     };
     this.displayProfile = function (response) {
         console.log('in display profile');
