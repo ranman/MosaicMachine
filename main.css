@@ -1,5 +1,4 @@
 * { margin: 0; padding: 0; }
-
 .right {
     float: right;
     padding-top: 20px;
@@ -16,18 +15,6 @@ h1 {
     padding-left: 20px;
     float: left;
     text-shadow: black 1px 1px 1px;
-}
-#loadText {
-    color: #000;
-    width: 200px;
-    text-align: center;
-    font-size:24px;
-    font-variant:small-caps;
-    font-family:Helvetica, Arial, sans-serif;
-    display: none;
-    position: absolute;
-    top: 250px;
-    left: 45.5%;
 }
 #constant {
     position: fixed;
@@ -62,8 +49,8 @@ h1 {
     text-align: center;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    -moz-border-radius-topleft:  20px;
-    -moz-border-radius-topright:  20px;
+    -moz-border-radius-topleft: 20px;
+    -moz-border-radius-topright: 20px;
     -webkit-border-top-left-radius: 20px;
     -webkit-border-top-right-radius: 20px;
 }
@@ -137,22 +124,6 @@ td {
     padding-bottom: 2px;
     font-weight: 700;
 }
-
-#something {
-    list-style-type: none;
-}
-#photos {
-   /* Prevent vertical gaps */
-   line-height: 0;topBar
-   display: none;
-   width: 100%;
-   -webkit-column-count: 5;
-   -webkit-column-gap:   0px;
-   -moz-column-count:    5;
-   -moz-column-gap:      0px;
-   column-count:         5;
-   column-gap:           0px;
-}
 #loginButton {
     width: 200px;
     text-align: left;
@@ -160,6 +131,18 @@ td {
     top: 200px;
     left: 50%;
     margin-left: -70px;
+}
+#loadText {
+    color: #000;
+    width: 200px;
+    text-align: center;
+    font-size:24px;
+    font-variant: small-caps;
+    font-family: Helvetica, Arial, sans-serif;
+    display: none;
+    position: absolute;
+    top: 250px;
+    left: 50%;
 }
 #loadingSpinner {
     width: 300px;
@@ -169,6 +152,23 @@ td {
     left: 50%;
     display: none;
 }
+#photoList {
+    list-style-type: none;
+}
+.photoListItem {}
+#photos {
+   /* Prevent vertical gaps */
+   line-height: 0;topBar
+   display: hidden;
+   width: 100%;
+   -webkit-column-count: 5;
+   -webkit-column-gap:   0px;
+   -moz-column-count:    5;
+   -moz-column-gap:      0px;
+   column-count:         5;
+   column-gap:           0px;
+}
+
 #photos img {
   /* Just in case there are inline attributes */
   width: 100% !important;
