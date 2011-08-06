@@ -99,7 +99,7 @@ var Mosaic = Mosaic || new function(){
         $('#pName').html('loading...');
         $('#profileData').html('');
         $('#profileBio').html('');
-        if ($("#infobar").css('marginTop') == "-225px") {
+        if ($("#infobar").css('marginTop') != "-225px") {
             $("#infobar").animate({marginTop: "-225px"}, 1000);    
         }   
         Mosaic.loadProfile(id, Mosaic.displayProfile);
