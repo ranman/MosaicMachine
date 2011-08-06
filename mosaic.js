@@ -53,6 +53,7 @@ $(document).bind('photoListItemClick', function() {
 /* Create the namespace */
 var Mosaic = Mosaic || new function(){
     var loadedUsers = new Array(); // this will store data about already loaded users to prevent duplicate calls
+    var selectedUser; //stores which user's profile to load ans display
     this.buildMosaic = function(response) {
         /* Let the pageb know we've started talking to facebook */
         /* If the response exists, check the session, 
@@ -60,6 +61,7 @@ var Mosaic = Mosaic || new function(){
          */
         if(response && response.session) {
             uid = response.session.uid;
+            selectedUser = uid+'';
             Mosaic.loadProfile(uid, Mosaic.displayProfile); 
             /* Let the page know we've started loading friends */
             $.event.trigger("loadingFriends");
@@ -93,14 +95,25 @@ var Mosaic = Mosaic || new function(){
             });
         }
     };
+    /* Call this function when a user clicks on a profile picture*/
+    this.onFriendClick = function(){
+        selectedUser = $(this).attr('id');
+        $('#pPictureImg').attr("src", 'ajax-loader.gif');
+        $('#pName').html('loading...');
+        $('#profileData').html('');
+        $('#profileBio').html('');   
+        Mosaic.loadProfile(uid, Mosaic.displayProfile);
+    };
     this.displayProfile = function (response) {
-        $('#pPictureImg').attr("src", response[0].pic_small);
-        $('#pName').html(response[0].name);
+        if (response[0].uid+'' == selectedUser) {
+            $('#pPictureImg').attr("src", response[0].pic_small);
+            $('#pName').html(response[0].name);
         
-        var str = response[0].sex+"<br />"+response[0].current_location.name+"<br />"+response[0].birthday+"<br />"+response[0].political+"<br />"+response[0].religion;
+            var str = response[0].sex+"<br />"+response[0].current_location.name+"<br />"+response[0].birthday+"<br />"+response[0].political+"<br />"+response[0].religion;
         
-        $('#profileData').html(str);
-        $('#profileBio').html(response[0].about_me);
+            $('#profileData').html(str);
+            $('#profileBio').html(response[0].about_me);    
+        }
     };
     this.loadProfile = function(id, callback) {
         if (id in loadedUsers) {
@@ -110,7 +123,7 @@ var Mosaic = Mosaic || new function(){
                 method: 'fql.query',
                 query: 'SELECT uid, name, pic_small, religion, birthday, sex, meeting_for, meeting_sex, relationship_status, significant_other_id, political, current_location, interests, music, tv, movies, books, quotes, about_me, hs_info, education_history, status, website FROM user WHERE uid='+id
             }, function(response) {
-                loadedUsers[id] = response;
+                loadedUsers[response[0].uid+''] = response;
                 Mosaic.displayProfile(response);
             });
         }
