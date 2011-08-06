@@ -69,6 +69,11 @@ h1 {
 }
 #infoHideDivButtonText {
     padding-top: 5px;
+    text-align: center;
+    font-family: 'Lobster', cursive;
+    font-size: 24px;
+    text-shadow: black 1px 1px 1px;
+    color: #eee;
 }
 #infoHideDivLeft {
     float: left;
