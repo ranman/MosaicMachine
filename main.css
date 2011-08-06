@@ -133,6 +133,7 @@ h1 {
     padding-right: 1%;
     float: left;
     width: 74%;
+    border: 1px solid black;
 }
 
 #something {
