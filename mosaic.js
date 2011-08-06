@@ -99,10 +99,8 @@ var Mosaic = Mosaic || new function(){
         
         var str = response[0].sex+"<br />"+response[0].current_location.name+"<br />"+response[0].birthday+"<br />"+response[0].political+"<br />"+response[0].religion;
         
-        alert(str);
-        
-        $('#pInfo').html(str);
-        $('#pBio').html(response[0].about_me);
+        $('#profileData').html(str);
+        $('#profileBio').html(response[0].about_me);
     };
     this.loadProfile = function(id, callback) {
         if (id in loadedUsers) {
