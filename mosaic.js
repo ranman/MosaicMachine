@@ -51,6 +51,7 @@ var Mosaic = Mosaic || new function(){
         if(response && response.session) {
             uid = response.session.uid;
             Mosaic.loadProfile(uid, function(response) {
+                console.log(response);
                 $('#pPictureImg').attr("src", response[0].pic_small);
                 $('#pName').html(response[0].name);
                 $('#pBio').html(response[0].name);
