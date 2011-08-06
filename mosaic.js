@@ -99,7 +99,9 @@ var Mosaic = Mosaic || new function(){
         $('#pName').html('loading...');
         $('#profileData').html('');
         $('#profileBio').html('');
-        $("#infobar").animate({marginTop: "-225px"}, 1000);   
+        if ($("#infobar").css('marginTop') == "-225px") {
+            $("#infobar").animate({marginTop: "-225px"}, 1000);    
+        }   
         Mosaic.loadProfile(id, Mosaic.displayProfile);
     };
     this.displayProfile = function (response) {
