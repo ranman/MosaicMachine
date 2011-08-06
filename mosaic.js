@@ -128,8 +128,6 @@ var Mosaic = Mosaic || new function(){
                 str += response[0].religion+"<br />";
             }
             
-            response[0].sex+"<br />"+response[0].current_location.name+"<br />"+response[0].birthday+"<br />"+response[0].political+"<br />"+response[0].religion;
-            
             $('#profileData').html(str);
             if (!(response[0].about_me.length === undefined)) {
                 $('#profileBio').html(response[0].about_me);   
