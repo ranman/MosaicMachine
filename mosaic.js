@@ -40,9 +40,11 @@ $(document).bind("displayPhotos", function() {
  *     Actual mosaic shit goes here    *
  * * * * * * * * * * * * * * * * * * * */
 /* Create the namespace */
-var Mosaic = Mosaic || {
-    buildMosaic: function(response) {
-        /* Let the page know we've started talking to facebook */
+/* I wanted public, and private methods + variables.  Module pattern now.*/
+var Mosaic = Mosaic || new function(){
+    var loadedUsers = new Array(); // this will store data about already loaded users to prevent duplicate calls
+    this.buildMosaic = function(response) {
+        /* Let the pageb know we've started talking to facebook */
         /* If the response exists, check the session, 
          * if session exists, the login succeeded, proceed.
          */
@@ -69,7 +71,7 @@ var Mosaic = Mosaic || {
                 photo_array.push('</ul>');
                 $("#photos").html(photo_array.join(''));
                 /* Mouse Event Handlers for Photos */
-
+loadedUsers
                 /* Setup the hover */
                 $("#photoList>li").hover(
                     function() {
@@ -95,20 +97,27 @@ var Mosaic = Mosaic || {
                 $.event.trigger("displayPhotos");
             });
         }
-    },
-    loadProfile: function(id, callback) {
-        FB.api({
+    };
+    this.loadProfile = function(id, callback) {
+        if (id+'' in loadedUsers) {
+            return loadedUsers[id+''];
+        } else {
+            FB.api({
                     method: 'fql.query',
                     query: 'SELECT uid, name, pic_small, religion, birthday, sex, meeting_for, meeting_sex, relationship_status, significant_other_id, political, current_location, interests, music, tv, movies, books, quotes, about_me, hs_info, education_history, status, website FROM user WHERE uid='+id 
-               }, callback);
-    },
-    sortFriends: function(friends) {
+               }, function(response) {
+                    loadedUsers[id+''] = response;
+                    callback(response); 
+               });
+        }
+    }; 
+    this.sortFriends = function(friends) {
         return friends;
     },
-    filterFriends: function(friends) {
+    this.filterFriends = function(friends) {
         return friends;
     }
-};
+}();
 /* Load FB-async */
 window.fbAsyncInit = function() {
     FB.init({appId: '153403654734305', status: true, cookie: true,
