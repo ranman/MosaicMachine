@@ -51,21 +51,20 @@ var Mosaic = Mosaic || new function(){
         if(response && response.session) {
             uid = response.session.uid;
             Mosaic.loadProfile(uid, function(response) {
-                console.log(response);
                 $('#pPictureImg').attr("src", response[0].pic_small);
                 $('#pName').html(response[0].name);
-                $('#pBio').html(response[0].name);
-                $('#pGender').html(response[0].name);
-                $('#pLocale').html(response[0].name);
-                $('#pBirthday').html(response[0].name);
-                $('#pPolitics').html(response[0].name);
-                $('#pReligion').html(response[0].name);
-                $('#pSigOther').html(response[0].name);
-                $('#pLookingFor').html(response[0].name);
-                $('#pRStatus').html(response[0].name);
-                $('#pEducation').html(response[0].name);
-                $('#pWork').html(response[0].name);
-                $('#pWebsite').html(response[0].name);
+                $('#pBio').html(response[0].about_me);
+                $('#pGender').html(response[0].sex);
+                $('#pLocale').html(response[0].current_location.name);
+                $('#pBirthday').html(response[0].birthday);
+                $('#pPolitics').html(response[0].political);
+                $('#pReligion').html(response[0].religion);
+                $('#pSigOther').html(response[0].significant_other_id);
+                //$('#pLookingFor').html(response[0].);
+                $('#pRStatus').html(response[0].relationship_status);
+                //$('#pEducation').html(response[0].);
+                //$('#pWork').html(response[0].education);
+                $('#pWebsite').html(response[0].website);
             }); 
             /* Let the page know we've started loading friends */
             $.event.trigger("loadingFriends");
