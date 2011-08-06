@@ -51,28 +51,20 @@ var Mosaic = Mosaic || new function(){
         if(response && response.session) {
             uid = response.session.uid;
             Mosaic.loadProfile(uid, function(response) {
-                console.log(response);
-                alert(response[0].name);
-                /*
-                alert($('#pName').text());
-                
-                $('#pPictureImg').attr("src", response.pic_small);
-                $('#pName').html(response.name);
-                */
-                /*
-                $('#pBio').html(response.name);
-                $('#pGender').html(response.name);
-                $('#pLocale').html(response.name);
-                $('#pBirthday').html(response.name);
-                $('#pPolitics').html(response.name);
-                $('#pReligion').html(response.name);
-                $('#pSigOther').html(response.name);
-                $('#pLookingFor').html(response.name);
-                $('#pRStatus').html(response.name);
-                $('#pEducation').html(response.name);
-                $('#pWork').html(response.name);
-                $('#pWebsite').html(response.name);
-                */
+                $('#pPictureImg').attr("src", response[0].pic_small);
+                $('#pName').html(response[0].name);
+                $('#pBio').html(response[0].name);
+                $('#pGender').html(response[0].name);
+                $('#pLocale').html(response[0].name);
+                $('#pBirthday').html(response[0].name);
+                $('#pPolitics').html(response[0].name);
+                $('#pReligion').html(response[0].name);
+                $('#pSigOther').html(response[0].name);
+                $('#pLookingFor').html(response[0].name);
+                $('#pRStatus').html(response[0].name);
+                $('#pEducation').html(response[0].name);
+                $('#pWork').html(response[0].name);
+                $('#pWebsite').html(response[0].name);
             }); 
             /* Let the page know we've started loading friends */
             $.event.trigger("loadingFriends");
