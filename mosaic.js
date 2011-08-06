@@ -55,6 +55,7 @@ var Mosaic = Mosaic || new function(){
                 alert($('#pName').text());
                 $('#pPictureImg').attr("src", response.pic_small);
                 $('#pName').html(response.name);
+                /*
                 $('#pBio').html(response.name);
                 $('#pGender').html(response.name);
                 $('#pLocale').html(response.name);
@@ -67,6 +68,7 @@ var Mosaic = Mosaic || new function(){
                 $('#pEducation').html(response.name);
                 $('#pWork').html(response.name);
                 $('#pWebsite').html(response.name);
+                */
             }); 
             /* Let the page know we've started loading friends */
             $.event.trigger("loadingFriends");
