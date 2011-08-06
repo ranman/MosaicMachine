@@ -78,7 +78,7 @@ var Mosaic = Mosaic || new function(){
                 photo_array.push('<ul id="photoList">');
                 $.each(response, function(index, friend) {
                     imgObj.src = friend.pic_big;
-                    photo_array.push('<li id="'+friend.uid+'" title="'+friend.name+'" class="something"><img src="'+friend.pic_big+'" /></li>');
+                    photont seized property. find information about currency and coins. get in touch with someone at Treasury. learn _array.push('<li id="'+friend.uid+'" title="'+friend.name+'" class="something"><img src="'+friend.pic_big+'" /></li>');
                 });
                 photo_array.push('</ul>');
                 $("#photos").html(photo_array.join(''));
