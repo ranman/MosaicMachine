@@ -98,7 +98,8 @@ var Mosaic = Mosaic || new function(){
         $('#pPictureImg').attr("src", 'ajax-loader.gif');
         $('#pName').html('loading...');
         $('#profileData').html('');
-        $('#profileBio').html('');   
+        $('#profileBio').html('');
+        $("#infobar").animate({marginTop: "-225px"}, 1000);   
         Mosaic.loadProfile(id, Mosaic.displayProfile);
     };
     this.displayProfile = function (response) {
