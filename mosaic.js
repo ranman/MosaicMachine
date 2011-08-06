@@ -40,15 +40,12 @@ $(document).bind("displayPhotos", function() {
 })
 $(document).bind('photoListItemClick', function() {
     /* Query to get photos of you with clicked on user */
-    alert('here');
-    /*
     FB.api({
         method: 'fql.query',
         query: 'SELECT src_big FROM photo WHERE pid IN (SELECT pid FROM photo_tag WHERE subject='+uid+') AND pid IN (SELECT pid FROM photo_tag WHERE subject='+$(this).attr('id')+')'
     }, function(response) {
         console.log(response);
-    })
-    */
+    })   
 });
 /* * * * * * * * * * * * * * * * * * * *
  *     Actual mosaic shit goes here    *
@@ -90,7 +87,7 @@ var Mosaic = Mosaic || new function(){
                 /* Setup the click */
                 $('#photoList>li').click(
                     function() {
-                        $.event.trigger('photoListItemClick');
+                        alert('here');
                     }
                 );
                 /* Finally display the photo wall */
