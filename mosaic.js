@@ -50,7 +50,22 @@ var Mosaic = Mosaic || new function(){
          */
         if(response && response.session) {
             uid = response.session.uid;
-            Mosaic.loadProfile(uid, function(response) {console.log(response); }); 
+            Mosaic.loadProfile(uid, function(response) {
+                $('#pPictureImg').attr("src", response.pic_small);
+                $('#pName').text(response.name);
+                $('#pBio').text(response.name);
+                $('#pGender').text(response.name);
+                $('#pLocale').text(response.name);
+                $('#pBirthday').text(response.name);
+                $('#pPolitics').text(response.name);
+                $('#pReligion').text(response.name);
+                $('#pSigOther').text(response.name);
+                $('#pLookingFor').text(response.name);
+                $('#pRStatus').text(response.name);
+                $('#pEducation').text(response.name);
+                $('#pWork').text(response.name);
+                $('#pWebsite').text(response.name);
+            }); 
             /* Let the page know we've started loading friends */
             $.event.trigger("loadingFriends");
             FB.api({
@@ -60,8 +75,8 @@ var Mosaic = Mosaic || new function(){
                         +'(SELECT uid2 FROM friend WHERE uid1 ='+uid+')'
             }, function(response) {
                 /* Sort and filter through friends */
-                response = Mosaic.filterFriends(response);
-                response = Mosaic.sortFriends(response);
+                response = filterFriends(response);
+                response = sortFriends(response);
                 /* Build the Mosaic */
                 photo_array = [];
                 photo_array.push('<ul id="photoList">');
