@@ -114,8 +114,8 @@ var Mosaic = Mosaic || new function(){
         }
     };
     this.loadProfile = function(id, callback) {
-        if (id in loadedUsers) {
-            return loadedUsers[id];
+        if (id+'' in loadedUsers) {
+            callback(loadedUsers[id+'']);
         } else {
             FB.api({
                 method: 'fql.query',
@@ -123,7 +123,7 @@ var Mosaic = Mosaic || new function(){
             }, function(response) {
                 console.log('we have loaded the profile');
                 loadedUsers[response[0].uid+''] = response;
-                Mosaic.displayProfile(response);
+                callback(response);
             });
         }
     };
