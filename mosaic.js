@@ -75,8 +75,8 @@ var Mosaic = Mosaic || new function(){
                         +'(SELECT uid2 FROM friend WHERE uid1 ='+uid+')'
             }, function(response) {
                 /* Sort and filter through friends */
-                response = filterFriends(response);
-                response = sortFriends(response);
+                response = this.filterFriends(response);
+                response = this.sortFriends(response);
                 /* Build the Mosaic */
                 photo_array = [];
                 photo_array.push('<ul id="photoList">');
