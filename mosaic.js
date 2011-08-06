@@ -96,18 +96,11 @@ var Mosaic = Mosaic || new function(){
     this.displayProfile = function (response) {
         $('#pPictureImg').attr("src", response[0].pic_small);
         $('#pName').html(response[0].name);
+        
+        var str = response[0].sex+"<br />"+response[0].current_location.name+"<br />"+response[0].birthday+"<br />"+response[0].political+"<br />"+response[0].religion;
+        
+        $('#pSigOther').html(str);
         $('#pBio').html(response[0].about_me);
-        $('#pGender').html(response[0].sex);
-        $('#pLocale').html(response[0].current_location.name);
-        $('#pBirthday').html(response[0].birthday);
-        $('#pPolitics').html(response[0].political);
-        $('#pReligion').html(response[0].religion);
-        $('#pSigOther').html(response[0].significant_other_id);
-        //$('#pLookingFor').html(response[0].);
-        $('#pRStatus').html(response[0].relationship_status);
-        //$('#pEducation').html(response[0].);
-        //$('#pWork').html(response[0].education);
-        $('#pWebsite').html(response[0].website);
     };
     this.loadProfile = function(id, callback) {
         if (id in loadedUsers) {
