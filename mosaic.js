@@ -52,19 +52,19 @@ var Mosaic = Mosaic || new function(){
             uid = response.session.uid;
             Mosaic.loadProfile(uid, function(response) {
                 $('#pPictureImg').attr("src", response.pic_small);
-                $('#pName').text(response.name);
-                $('#pBio').text(response.name);
-                $('#pGender').text(response.name);
-                $('#pLocale').text(response.name);
-                $('#pBirthday').text(response.name);
-                $('#pPolitics').text(response.name);
-                $('#pReligion').text(response.name);
-                $('#pSigOther').text(response.name);
-                $('#pLookingFor').text(response.name);
-                $('#pRStatus').text(response.name);
-                $('#pEducation').text(response.name);
-                $('#pWork').text(response.name);
-                $('#pWebsite').text(response.name);
+                $('#pName').html(response.name);
+                $('#pBio').html(response.name);
+                $('#pGender').html(response.name);
+                $('#pLocale').html(response.name);
+                $('#pBirthday').html(response.name);
+                $('#pPolitics').html(response.name);
+                $('#pReligion').html(response.name);
+                $('#pSigOther').html(response.name);
+                $('#pLookingFor').html(response.name);
+                $('#pRStatus').html(response.name);
+                $('#pEducation').html(response.name);
+                $('#pWork').html(response.name);
+                $('#pWebsite').html(response.name);
             }); 
             /* Let the page know we've started loading friends */
             $.event.trigger("loadingFriends");
