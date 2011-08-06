@@ -101,6 +101,7 @@ var Mosaic = Mosaic || new function(){
         Mosaic.loadProfile(uid, Mosaic.displayProfile);
     };
     this.displayProfile = function (response) {
+        console.log('in display profile');
         if (response[0].uid+'' == selectedUser) {
             $('#pPictureImg').attr("src", response[0].pic_small);
             $('#pName').html(response[0].name);
@@ -119,6 +120,7 @@ var Mosaic = Mosaic || new function(){
                 method: 'fql.query',
                 query: 'SELECT uid, name, pic_small, religion, birthday, sex, meeting_for, meeting_sex, relationship_status, significant_other_id, political, current_location, interests, music, tv, movies, books, quotes, about_me, hs_info, education_history, status, website FROM user WHERE uid='+id
             }, function(response) {
+                console.log('we have loaded the profile');
                 loadedUsers[response[0].uid+''] = response;
                 Mosaic.displayProfile(response);
             });
