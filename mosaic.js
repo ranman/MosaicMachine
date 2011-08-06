@@ -85,11 +85,7 @@ var Mosaic = Mosaic || new function(){
                 photo_array.push('</ul>');
                 $("#photos").html(photo_array.join(''));
                 /* Setup the click */
-                $('#photoList>li').click(
-                    function() {
-                        alert('here');
-                    }
-                );
+                $('#photoList>li').click(Mosaic.onFriendClick);
                 /* Finally display the photo wall */
                 $.event.trigger("displayPhotos");
             });
