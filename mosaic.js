@@ -67,7 +67,7 @@ var Mosaic = Mosaic || new function(){
             $.event.trigger("loadingFriends");
             FB.api({
                 method: 'fql.query',
-                query: 'SELECT uid, sex, name, pic_big FROM user '
+                query: 'SELECT uid, gender, locale, name, pic_big, relationship_status FROM user '
                         +'WHERE uid IN '
                         +'(SELECT uid2 FROM friend WHERE uid1 ='+uid+')'
             }, function(response) {
@@ -154,6 +154,16 @@ var Mosaic = Mosaic || new function(){
     this.filterFriends = function(friends) {
         return friends;
     };
+    
+    /* New code for various tasks related to slide out/in selectors */
+    /* load all friends / profile pictures for init */
+    /* load permissions for a friend */
+    /* load photos of a friend */
+    /* load your facebook albums */
+    /* load one of your facebook albums */
+    
+    
+    
 }();
 /*** END MOSAIC CODE ***/
 /* Load FB-async */
