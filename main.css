@@ -161,7 +161,7 @@ h1 {
     width: 144px;
     height: 111px;
     padding: 10px;
-    background-color: yellow;
+    background-color: #ccc;
 }
 .slideForward {
     float: left;

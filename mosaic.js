@@ -37,7 +37,7 @@ $(document).bind("displayPhotos", function() {
     $('#loadingSpinner').hide();
     $('#loadText').hide();
     $("#photos").show();
-    Slider.init('myAlbums', produceItemTest, false);
+    Slider.init('myAlbums', Mosaic.sliderAlbumsPreviewArray, false);
     Slider.init('profiles', produceItemTest, false);
     Slider.init('filter', produceItemTest, false);
 });
@@ -50,7 +50,7 @@ $(document).bind("displayPhotos", function() {
 var Slider = Slider || new function(){
     var sliderParams = [];
     this.init = function(id, loadCall, al){
-        sliderParams[id] = {toggle: 0, slideItems: null, load: loadCall, alwaysLoad: al, pos: 0};
+        sliderParams[id] = {toggle: 0, slideItems: [], load: loadCall,loadMode: 0, alwaysLoad: al, pos: 0};
         $('#'+id+'>.slideLabel').click(function(){
             Slider.toggle(id);
         });
@@ -89,7 +89,46 @@ var Slider = Slider || new function(){
                 $('#'+id+'>.slideBackward').animate({width: '55px'}, 500, function(){});
             }
         }
-    }
+    };
+    this.clear = function(id) {
+        var s = sliderParams[id];  
+        $('#'+id+'>.slideContent>.slideContentHelper').html('');
+        s.slideItems.length = 0;
+        s.pos = 0;
+    };
+    this.add = function(item, id) {
+        var s = sliderParams[id];    
+        if (s.loadMode == 1) {
+            Slider.setLoading(id, 0);
+        } 
+        for (i in item.reverse()) {
+            $('#'+id+'>.slideContent>.slideContentHelper').append(item[i]);
+            s.slideItems.push(item[i]);
+        }
+        if (s.pos == 0) {
+            s.pos = (s.slideItems.length - 3);
+            $('#'+id+'>.slideContent>.slideContentHelper').css('left', ((s.slideItems.length - 3) * -164)+'px');
+            Slider.buttonAdjust(id);
+        } else {
+            $('#'+id+'>.slideContent>.slideContentHelper').css('left', ((s.slideItems.length - 3) * -164)+'px');
+        }
+    };
+    this.setLoading = function(id, loadState) {
+        var s = sliderParams[id];
+        s.loadMode = loadState;
+        if (loadState == 0) {
+            Slider.clear(id);
+        }
+        else if (loadState == 1) {
+            Slider.clear(id);
+            $('#'+id+'>.slideContent>.slideContentHelper').append('<div class="slideContentItem"></div>');
+            $('#'+id+'>.slideContent>.slideContentHelper').append('<div class="slideContentItem"><img src="ajax-loader.gif" /></div>');
+            s.slideItems.push('<div class="slideContentItem">block</div>');
+            s.slideItems.push('<div class="slideContentItem">loading spinner</div>');
+            Slider.buttonAdjust(id);
+        }    
+        else{}
+    };
     this.toggle = function(id) {
         var s = sliderParams[id];
         if (s.toggle == 1) {
@@ -103,14 +142,9 @@ var Slider = Slider || new function(){
             $('#'+id).animate({marginLeft: slideVal+'px'},1000,function(){});
             s.toggle = 0; 
         } else {
-            if (s.slideItems == null || s.alwaysLoad) {
-                s.slideItems = s.load();
-                for (i in s.slideItems.reverse()) {
-                    $('#'+id+'>.slideContent>.slideContentHelper').append(s.slideItems[i]);
-                }
-                var threeDiff = s.slideItems.length % 3;
-                s.pos = (s.slideItems.length - 3);
-                $('#'+id+'>.slideContent>.slideContentHelper').css('left', ((s.slideItems.length - 3) * -164)+'px');
+            if (s.slideItems.length == 0 || s.alwaysLoad) {
+                Slider.setLoading(id, 1);
+                s.load(id);
             } 
             Slider.buttonAdjust(id);
             $('#'+id).animate({marginLeft: '0px'},1000,function(){});
@@ -119,7 +153,8 @@ var Slider = Slider || new function(){
     };
 }(); 
 
-function produceItemTest() {
+function produceItemTest(id) {
+    /*Mosaic.sliderAlbumsPreviewArray();*/
     var i1 = '<div class="slideContentItem">hello-i1</div>';
     var i2 = '<div class="slideContentItem">hello-i2</div>';
     var i3 = '<div class="slideContentItem">hello-i3</div>';
@@ -128,12 +163,13 @@ function produceItemTest() {
     var i6 = '<div class="slideContentItem">hello-i6</div>';
     var i7 = '<div class="slideContentItem">hello-i7</div>';
     var i8 = '<div class="slideContentItem">hello-i8</div>';
-    return [i1,i2,i3,i4,i5,i6,i7,i8]
+    Slider.add([i1,i2,i3,i4,i5,i6,i7,i8], id);
 }
 
 /* Create the namespace */
 var Mosaic = Mosaic || new function(){
     var cUser; //this is the uid of the user who is using the application
+    var accessToken;
     
     /* caching fields*/
     var friendsCache = [];
@@ -151,6 +187,7 @@ var Mosaic = Mosaic || new function(){
         if(response && response.session) {
             uid = response.session.uid;
             cUser = uid+'';
+            accessToken = response.session.access_token;   
             /* Let the page know we've started loading friends */
             $.event.trigger("loadingFriends");
             
@@ -236,15 +273,25 @@ var Mosaic = Mosaic || new function(){
             });
         }
     };
+    //TODO: START HERE WHEN YOU RETURN
+    this.sliderAlbumsPreviewArray = function(id) {
+        Mosaic.loadUserAlbums(cUser, function(response){
+            var output = [];
+            for (ak in response.data) {
+               output.push('<div class="slideContentItem"><img src="https://graph.facebook.com/'+response.data[ak].id+'/picture?access_token='+accessToken+'"title="'+response.data[ak].name+'" height="111" width="144"/></div>'); 
+            }
+            Slider.add(output, id);
+        });
+    };
     /* load one of your facebook albums */
     this.loadUserAlbums = function(uid, callback) {
-        if (uid+'' in MosaicCache.albums) {
+        //SELECT name,cover_pid from album where owner=1212638232
+        //SELECT src from photo where pid in (5208241548352168150, 5208241548350182755)
+        if (uid+'' in albumsCache) {
             callback(albumsCache[uid+'']);
         } else { 
-        //add code to inspect cache
             FB.api('/me/albums', function(response){
-                albumsCache[uid+''] = response;    
-                console.log(response);
+                albumsCache[uid+''] = response;
                 callback(response);
             });
         }
