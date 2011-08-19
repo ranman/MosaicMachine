@@ -148,7 +148,7 @@ h1 {
     width: 492px;
     height: 131px;
     overflow: hidden;
-    background-color: blue;
+    background-color: #ccc;
 }
 .slideContentHelper {
     float: left;

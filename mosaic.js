@@ -93,9 +93,14 @@ var Slider = Slider || new function(){
     this.toggle = function(id) {
         var s = sliderParams[id];
         if (s.toggle == 1) {
-            $('#'+id).animate({marginLeft: '-602px'},1000,function(){});
-            $('#'+id+'>.slideBackward').css('width', '55px');
-            $('#'+id+'>.slideForward').css('width', '55px');
+            var slideVal = -602;
+            if (parseInt($('#'+id+'>.slideBackward').css('width')) < 55) {
+                slideVal += 55;
+            }
+            if (parseInt($('#'+id+'>.slideForward').css('width')) < 55) {
+                slideVal += 55;
+            }
+            $('#'+id).animate({marginLeft: slideVal+'px'},1000,function(){});
             s.toggle = 0; 
         } else {
             if (s.slideItems == null || s.alwaysLoad) {
