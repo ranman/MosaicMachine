@@ -38,132 +38,160 @@ $(document).bind("displayPhotos", function() {
     $('#loadText').hide();
     $("#photos").show();
 })
-$(document).bind('photoListItemClick', function() {
-    /* Query to get photos of you with clicked on user */
-    FB.api({
-        method: 'fql.query',
-        query: 'SELECT src_big FROM photo WHERE pid IN (SELECT pid FROM photo_tag WHERE subject='+uid+') AND pid IN (SELECT pid FROM photo_tag WHERE subject='+$(this).attr('id')+')'
-    }, function(response) {
-        console.log(response);
-    })   
-});
 /* * * * * * * * * * * * * * * * * * * *
  *     Actual mosaic shit goes here    *
  * * * * * * * * * * * * * * * * * * * */
 /* Create the namespace */
 var Mosaic = Mosaic || new function(){
-    var loadedUsers = new Array(); // this will store data about already loaded users to prevent duplicate calls
-    var selectedUser; //stores which user's profile to load ans display
+    var cUser; //this is the uid of the user who is using the application
+    
+    /* caching fields*/
+    var friendsCache = [];
+    var jointCache = [];
+    var permissionsCache = [];
+    var albumsCache = []; // stores data about cUser's albums
+    var albumDataCache = []; // stores the images in each of cUser's albums
+    var friendPhotoCache = [];
+    
     this.buildMosaic = function(response) {
-        /* Let the pageb know we've started talking to facebook */
-        /* If the response exists, check the session, 
+        /* Let the pageb know we've started talking to facebook 
+         * If the response exists, check the session, 
          * if session exists, the login succeeded, proceed.
          */
         if(response && response.session) {
             uid = response.session.uid;
-            selectedUser = uid+'';
-            Mosaic.loadProfile(uid, Mosaic.displayProfile); 
+            cUser = uid+'';
             /* Let the page know we've started loading friends */
             $.event.trigger("loadingFriends");
-            FB.api({
-                method: 'fql.query',
-                query: 'SELECT uid, gender, locale, name, pic_big, relationship_status FROM user '
-                        +'WHERE uid IN '
-                        +'(SELECT uid2 FROM friend WHERE uid1 ='+uid+')'
-            }, function(response) {
-                /* Sort and filter through friends */
+            
+            Mosaic.loadFriends(uid, function(photos){
+                $("#photos").html('<ul id="photoList"></ul>');
+                
                 response = Mosaic.filterFriends(response);
                 response = Mosaic.sortFriends(response);
-                /* Build the Mosaic */
-                photo_array = [];
-                imgObj = new Image(); //Image Object for preloading photos
-                photo_array.push('<ul id="photoList">');
-                $.each(response, function(index, friend) {
-                    imgObj.src = friend.pic_big;
-                    photo_array.push('<li id="'+friend.uid+'" title="'+friend.name+'" class="something"><img src="'+friend.pic_big+'" /></li>');
-                });
-                photo_array.push('</ul>');
-                $("#photos").html(photo_array.join(''));
-                /* Setup the click */
-                $('#photoList>li').click(Mosaic.onFriendClick);
-                /* Finally display the photo wall */
+                Mosaic.addPhotos(photos, function(){});
+                
                 $.event.trigger("displayPhotos");
             });
         }
     };
-    /* Call this function when a user clicks on a profile picture*/
-    this.onFriendClick = function(){
-        var id = $(this).attr('id');
-        selectedUser = id;
-        $('#pPictureImg').attr("src", 'ajaxDark.gif');
-        $('#pName').html('loading...');
-        $('#profileData').html('');
-        $('#profileBio').html('');
-        if ($("#infobar").css('marginTop') != "-225px") {
-            $("#infobar").animate({marginTop: "-225px"}, 1000);    
-        }   
-        Mosaic.loadProfile(id, Mosaic.displayProfile);
-    };
-    this.displayProfile = function (response) {
-        console.log('in display profile');
-        if (response[0].uid+'' == selectedUser) {
-            $('#pPictureImg').attr("src", response[0].pic_small);
-            $('#pName').html(response[0].name);
-        
-            var str = '';
-            
-            if (response[0].sex != null) {
-                str += response[0].sex+"<br />";
-            }
-            if (response[0].current_location.name != null) {
-                str += response[0].current_location.name+"<br />";
-            }
-            if (response[0].birthday != null) {
-                str += response[0].birthday+"<br />";
-            }
-            if (response[0].political != null) {
-                str += response[0].political+"<br />";
-            }
-            if (response[0].religion != null) {
-                str += response[0].religion+"<br />";
-            }
-            
-            $('#profileData').html(str);
-            if (!(response[0].about_me.length === undefined)) {
-                $('#profileBio').html(response[0].about_me);   
-            }
+    this.addPhotos = function(photos, clickCallback) {
+        photo_array = [];
+        for (p in photos) {
+            photo_array.push('<li id="'+photos[p].ids+'" title="'+photos[p].name+'" class="something"><img src="'+photos[p].src+'" /></li>');
         }
+        $("#photoList").html($("#photoList").html()+photo_array.join(''));
+        $('#photoList>li').click(clickCallback);
     };
-    this.loadProfile = function(id, callback) {
-        if (id+'' in loadedUsers) {
-            callback(loadedUsers[id+'']);
-        } else {
-            FB.api({
-                method: 'fql.query',
-                query: 'SELECT uid, name, pic_small, religion, birthday, sex, meeting_for, meeting_sex, relationship_status, significant_other_id, political, current_location, interests, music, tv, movies, books, quotes, about_me, hs_info, education_history, status, website FROM user WHERE uid='+id
-            }, function(response) {
-                console.log('we have loaded the profile');
-                loadedUsers[response[0].uid+''] = response;
-                callback(response);
-            });
-        }
+    this.clearPhotos = function() {
+        $("#photoList").html('');
     };
+    //TODO: make working filtering functions
     this.sortFriends = function(friends) {
         return friends;
     };
     this.filterFriends = function(friends) {
         return friends;
     };
-    
-    /* New code for various tasks related to slide out/in selectors */
+        
     /* load all friends / profile pictures for init */
-    /* load permissions for a friend */
+    this.loadFriends = function(uid, callback) {
+        if (friendsCache.length > 0) {
+            callback(friendsCache);
+        } else {
+            FB.api({
+                method: 'fql.query',
+                query: 'SELECT uid, sex, name, pic_big, relationship_status FROM user '
+                      +'WHERE uid IN '
+                      +'(SELECT uid2 FROM friend WHERE uid1 ='+uid+')'
+            }, function(response) {
+                $.each(response, function(index, friend) {
+                    friendsCache[friend.uid+''] = {ids: friend.uid, sex: friend.sex, name: friend.name, src: friend.pic_big, relationship_status: friend.relationship_status};
+                });
+                callback(friendsCache);
+            });
+        }           
+    };
+    /* load permissions for a friend */ 
+    /*
+    this.loadPermissions = function(id, callback) {
+        FB.api
+    };
+    */
+    //uid2 is always the friend of the current user
+    this.loadJointPhotos = function(uid1, uid2, callback){ 
+        if (uid2+'' in Mosaic.jointCache) {
+            callback(jointCache[uid2+'']);
+        } else {
+            FB.api({
+            method: 'fql.query',
+            query: 'SELECT src_big FROM photo WHERE pid IN (SELECT pid FROM photo_tag WHERE subject='+uid1+') AND pid IN (SELECT pid FROM photo_tag WHERE subject='+uid2+')'
+            }, function(response) {
+                jointCache[uid2+''] = response;
+                console.log(response);
+                callback(response);
+            }); 
+        }
+    };
+    
     /* load photos of a friend */
-    /* load your facebook albums */
+    this.loadPhotos = function(uid, callback) {
+        if (uid+'' in friendPhotoCache) {
+            return callback(friendPhotoCache[uid+'']);
+        } else {
+            FB.api('/'+uid+'/photos', function(response){
+                friendPhotoCache[uid+''] = response;    
+                console.log(response);
+                callback(response);
+            });
+        }
+    };
     /* load one of your facebook albums */
-    
-    
-    
+    this.loadUserAlbums = function(uid, callback) {
+        if (uid+'' in MosaicCache.albums) {
+            callback(albumsCache[uid+'']);
+        } else { 
+        //add code to inspect cache
+            FB.api('/me/albums', function(response){
+                albumsCache[uid+''] = response;    
+                console.log(response);
+                callback(response);
+            });
+        }
+    }
+    /* load your facebook albums */
+    this.loadAlbumPhotos = function(albumId, callback) {
+        if (albumId+'' in albumDataCache) {
+            callback(albumDataCache[albumId+'']);
+        } else {
+            FB.api('/'+albumId+'/photos', function(response){
+                albumDataCache[albumId+''] = response;
+                var paging = pagingHelperCache(response)
+                if (paging) {
+                    console.log(paging);
+                } 
+            });
+        }
+    };
+    /*Some calls to the FB API only return part of the dataset
+    *we'll need to build in code to get successive pages and add these to the mosaic on screen
+    *this is why we have an addPhotos function, becuase photos may be loaded in batches and delivered to screen
+    */
+    this.pagingHelper = function(response) {
+        if ("next" in response.paging) {
+            var pStr = response.paging.next.split('?').pop();
+            var pArr = pStr.split('&');
+            var p1 = pArr.pop().split('=');
+            var startV = p1.pop();
+            var startL = p1.pop();
+            var p2 = pArr.pop().split('=');
+            var stopV = p2.pop();
+            var stopL = p2.pop();
+            return {startL: startL,startV: startV,stopL: stopL,stopV: stopV};
+        } else {
+            return false;
+        }
+    }; 
 }();
 /*** END MOSAIC CODE ***/
 /* Load FB-async */
