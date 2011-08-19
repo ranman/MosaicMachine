@@ -153,8 +153,8 @@ var Slider = Slider || new function(){
     };
 }(); 
 
+/* Dummy function for testing sliders*/
 function produceItemTest(id) {
-    /*Mosaic.sliderAlbumsPreviewArray();*/
     var i1 = '<div class="slideContentItem">hello-i1</div>';
     var i2 = '<div class="slideContentItem">hello-i2</div>';
     var i3 = '<div class="slideContentItem">hello-i3</div>';
@@ -169,7 +169,7 @@ function produceItemTest(id) {
 /* Create the namespace */
 var Mosaic = Mosaic || new function(){
     var cUser; //this is the uid of the user who is using the application
-    var accessToken;
+    var accessToken; // we'll need this to get to a lot of the photos
     
     /* caching fields*/
     var friendsCache = [];
@@ -180,7 +180,7 @@ var Mosaic = Mosaic || new function(){
     var friendPhotoCache = [];
     
     this.buildMosaic = function(response) {
-        /* Let the pageb know we've started talking to facebook 
+        /* Let the page know we've started talking to facebook 
          * If the response exists, check the session, 
          * if session exists, the login succeeded, proceed.
          */
@@ -239,12 +239,6 @@ var Mosaic = Mosaic || new function(){
             });
         }           
     };
-    /* load permissions for a friend */ 
-    /*
-    this.loadPermissions = function(id, callback) {
-        FB.api
-    };
-    */
     //uid2 is always the friend of the current user
     this.loadJointPhotos = function(uid1, uid2, callback){ 
         if (uid2+'' in Mosaic.jointCache) {
@@ -273,20 +267,21 @@ var Mosaic = Mosaic || new function(){
             });
         }
     };
-    //TODO: START HERE WHEN YOU RETURN
     this.sliderAlbumsPreviewArray = function(id) {
         Mosaic.loadUserAlbums(cUser, function(response){
             var output = [];
             for (ak in response.data) {
+                /*
+                * IMPORTANT: THIS IS HOW THE /picture part of the graph api and access token are used together in order to 
+                * get the pretty pictures.
+                */ 
                output.push('<div class="slideContentItem"><img src="https://graph.facebook.com/'+response.data[ak].id+'/picture?access_token='+accessToken+'"title="'+response.data[ak].name+'" height="111" width="144"/></div>'); 
             }
             Slider.add(output, id);
         });
     };
-    /* load one of your facebook albums */
+    /* loads the albums of a user*/
     this.loadUserAlbums = function(uid, callback) {
-        //SELECT name,cover_pid from album where owner=1212638232
-        //SELECT src from photo where pid in (5208241548352168150, 5208241548350182755)
         if (uid+'' in albumsCache) {
             callback(albumsCache[uid+'']);
         } else { 
@@ -296,7 +291,7 @@ var Mosaic = Mosaic || new function(){
             });
         }
     }
-    /* load your facebook albums */
+    /* load the photos of a specific album*/
     this.loadAlbumPhotos = function(albumId, callback) {
         if (albumId+'' in albumDataCache) {
             callback(albumDataCache[albumId+'']);
