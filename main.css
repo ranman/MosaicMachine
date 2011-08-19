@@ -125,7 +125,7 @@ h1 {
     float: left;
     height: 131px;
     width: 55px;
-    background-color: orange;
+    background-color: #ccc;
     overflow: hidden;
 }
 .slideContent {
@@ -152,7 +152,7 @@ h1 {
     float: left;
     height: 131px;
     width: 55px;
-    background-color: orange;
+    background-color: #ccc;
     overflow: hidden;
 }
 .slideLabel {
