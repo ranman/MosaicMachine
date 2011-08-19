@@ -107,13 +107,22 @@ h1 {
     top: 130px;
     left: 0px;   
 }
+#albumLabel {
+    margin-top: 10px;
+}
 #profiles {
     top: 281px;
     left: 0px;
 }
+#profileLabel {
+    margin-top: 10px;
+}
 #filter {
     top: 432px;
     left: 0px;
+}
+#filterLabel {
+    margin-top: 10px;
 }
 .slideContainer {
     height: 131px;

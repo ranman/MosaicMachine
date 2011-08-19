@@ -38,8 +38,8 @@ $(document).bind("displayPhotos", function() {
     $('#loadText').hide();
     $("#photos").show();
     Slider.init('myAlbums', produceItemTest, false);
-    Slider.init('profiles', null, false);
-    Slider.init('filter', null, false);
+    Slider.init('profiles', produceItemTest, false);
+    Slider.init('filter', produceItemTest, false);
 });
 /* * * * * * * * * * * * * * * * * * * *
  *     Actual mosaic shit goes here    *
