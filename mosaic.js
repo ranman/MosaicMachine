@@ -32,15 +32,100 @@ $(document).bind("loadingFriends", function() {
 });
 $(document).bind('loadingPhotos', function() {
     $('#loadText').text('Loading Photos');
-})
+});
 $(document).bind("displayPhotos", function() {
     $('#loadingSpinner').hide();
     $('#loadText').hide();
     $("#photos").show();
-})
+    Slider.init('myAlbums', produceItemTest, false);
+    Slider.init('profiles', null, false);
+    Slider.init('filter', null, false);
+});
 /* * * * * * * * * * * * * * * * * * * *
  *     Actual mosaic shit goes here    *
  * * * * * * * * * * * * * * * * * * * */
+
+/* sliderStuff */
+
+var Slider = Slider || new function(){
+    var sliderParams = [];
+    this.init = function(id, loadCall, al){
+        sliderParams[id] = {toggle: 0, slideItems: null, load: loadCall, alwaysLoad: al, pos: 0};
+        $('#'+id+'>.slideLabel').click(function(){
+            Slider.toggle(id);
+        });
+        $('#'+id+'>.slideBackward').click(function(){
+            var s = sliderParams[id];
+            var threeDiff = s.slideItems.length % 3;
+            if ((s.pos + threeDiff) - 3 >= 0) {
+                s.pos -= 3;
+                $('#'+id+'>.slideContent>.slideContentHelper').animate({left: (s.pos * -164)+'px'}, 1000, function(){});   
+            }   
+            Slider.buttonAdjust(id);  
+        });
+        $('#'+id+'>.slideForward').click(function(){
+            var s = sliderParams[id];
+            if (s.pos + 3 <= (s.slideItems.length - 3)) {
+                s.pos += 3;
+                $('#'+id+'>.slideContent>.slideContentHelper').animate({left: (s.pos * -164)+'px'}, 1000, function(){}); 
+            }   
+            Slider.buttonAdjust(id);
+        });
+    };
+    this.buttonAdjust = function(id) {
+        var s = sliderParams[id];
+        var threeDiff = s.slideItems.length % 3;
+        if (s.pos == (s.slideItems.length - 3)) {
+                $('#'+id+'>.slideForward').animate({width: '0px'}, 500, function(){});
+        } else {
+            if (parseInt($('#'+id+'>.slideForward').css('width')) == 0) {
+                $('#'+id+'>.slideForward').animate({width: '55px'}, 500, function(){});
+            }
+        }
+        if ((s.pos + threeDiff) - 3 <= 0) {
+                $('#'+id+'>.slideBackward').animate({width: '0px'}, 500, function(){});
+        } else {
+            if (parseInt($('#'+id+'>.slideBackward').css('width')) == 0) {
+                $('#'+id+'>.slideBackward').animate({width: '55px'}, 500, function(){});
+            }
+        }
+    }
+    this.toggle = function(id) {
+        var s = sliderParams[id];
+        if (s.toggle == 1) {
+            $('#'+id).animate({marginLeft: '-602px'},1000,function(){});
+            $('#'+id+'>.slideBackward').css('width', '55px');
+            $('#'+id+'>.slideForward').css('width', '55px');
+            s.toggle = 0; 
+        } else {
+            if (s.slideItems == null || s.alwaysLoad) {
+                s.slideItems = s.load();
+                for (i in s.slideItems.reverse()) {
+                    $('#'+id+'>.slideContent>.slideContentHelper').append(s.slideItems[i]);
+                }
+                var threeDiff = s.slideItems.length % 3;
+                s.pos = (s.slideItems.length - 3);
+                $('#'+id+'>.slideContent>.slideContentHelper').css('left', ((s.slideItems.length - 3) * -164)+'px');
+            } 
+            Slider.buttonAdjust(id);
+            $('#'+id).animate({marginLeft: '0px'},1000,function(){});
+            s.toggle = 1; 
+        }
+    };
+}(); 
+
+function produceItemTest() {
+    var i1 = '<div class="slideContentItem">hello-i1</div>';
+    var i2 = '<div class="slideContentItem">hello-i2</div>';
+    var i3 = '<div class="slideContentItem">hello-i3</div>';
+    var i4 = '<div class="slideContentItem">hello-i4</div>';
+    var i5 = '<div class="slideContentItem">hello-i5</div>';
+    var i6 = '<div class="slideContentItem">hello-i6</div>';
+    var i7 = '<div class="slideContentItem">hello-i7</div>';
+    var i8 = '<div class="slideContentItem">hello-i8</div>';
+    return [i1,i2,i3,i4,i5,i6,i7,i8]
+}
+
 /* Create the namespace */
 var Mosaic = Mosaic || new function(){
     var cUser; //this is the uid of the user who is using the application

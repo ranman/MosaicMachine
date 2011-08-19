@@ -102,3 +102,62 @@ h1 {
   column-count:         1;
   }
 }
+/* this is the slideout styling*/
+#myAlbums {
+    top: 130px;
+    left: 0px;   
+}
+#profiles {
+    top: 281px;
+    left: 0px;
+}
+#filter {
+    top: 432px;
+    left: 0px;
+}
+.slideContainer {
+    height: 131px;
+    width: 657px;  
+    position: fixed;  
+    margin-left: -602px;
+}
+.slideBackward {
+    float: left;
+    height: 131px;
+    width: 55px;
+    background-color: orange;
+    overflow: hidden;
+}
+.slideContent {
+    float: left;
+    width: 492px;
+    height: 131px;
+    overflow: hidden;
+    background-color: blue;
+}
+.slideContentHelper {
+    float: left;
+    position: relative;
+    width: 9999px;
+    height: 131px;
+}
+.slideContentItem {
+    float: left;
+    width: 144px;
+    height: 111px;
+    padding: 10px;
+    background-color: yellow;
+}
+.slideForward {
+    float: left;
+    height: 131px;
+    width: 55px;
+    background-color: orange;
+    overflow: hidden;
+}
+.slideLabel {
+    float: left;
+    height: 131px;
+    width: 55px;    
+    background-color: red;
+}
