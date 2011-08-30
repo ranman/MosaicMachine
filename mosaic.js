@@ -1,42 +1,52 @@
 /* Events which trigger page changes */
+window.$my = {
+    constant: $('#constant'),
+    infoHideDivRight: $('#infoHideDivRight'),
+    infoHideDivLeft: $('#infoHideDivLeft'),
+    infoHideDivButton: $('#infoHideDivButton'),
+    infoContent: $('#infoContent'),
+    infobar: $('#infobar'),
+    loginButton: $('#loginButton'),
+    loadingSpinner: $('#loadingSpinner'),
+    loadText: $('#loadText'),
+    photos: $('#photos')
+};
 $(document).bind("FBLoaded", function() {
-    $('#constant').fadeTo(1,0.5);
-    $('#constant').mouseover(function(){$('#constant').fadeTo(4,1);});
-    $('#constant').mouseleave(function(){$('#constant').fadeTo(4,0.25);});
+    $my.constant.fadeTo(1,0.5).mouseover(function(){$my.constant.fadeTo(4,1);}).mouseleave(function(){$my.constant.fadeTo(4,0.25);});
 
-    $('#infoHideDivRight').mouseover(function(e){e.stopPropagation();});
-    $('#infoHideDivRight').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
-    $('#infoHideDivLeft').mouseover(function(e){e.stopPropagation();});
-    $('#infoHideDivLeft').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
+    $my.infoHideDivRight.mouseover(function(e){e.stopPropagation();});
+    $my.infoHideDivRight.mouseleave(function(){$my.infoContent.fadeTo(4,0.25);$my.infoHideDivButton.fadeTo(4,0.25);});
+    $my.infoHideDivLeft.mouseover(function(e){e.stopPropagation();});
+    $my.infoHideDivLeft.mouseleave(function(){$my.infoContent.fadeTo(4,0.25);$my.infoHideDivButton.fadeTo(4,0.25);});
 
-    $('#infoContent').fadeTo(4,0.5);
-    $('#infoHideDivButton').fadeTo(4,0.5);
-    $('#infobar').mouseover(function(){$('#infoContent').fadeTo(4,1);$('#infoHideDivButton').fadeTo(4,1);});
-    $('#infobar').mouseleave(function(){$('#infoContent').fadeTo(4,0.25);$('#infoHideDivButton').fadeTo(4,0.25);});
+    $my.infoContent.fadeTo(4,0.5);
+    $my.infoHideDivButton.fadeTo(4,0.5);
+    $my.infobar.mouseover(function(){$my.infoContent.fadeTo(4,1);$my.infoHideDivButton.fadeTo(4,1);});
+    $my.infobar.mouseleave(function(){$my.infoContent.fadeTo(4,0.25);$my.infoHideDivButton.fadeTo(4,0.25);});
 
-    $("#infoHideDivButton").toggle(
+    $my.infoHideBarDiv.toggle(
         function(){
-            $("#infobar").animate({marginTop: "-35px"}, 1000);
+            $my.infobar.animate({marginTop: "-35px"}, 1000);
         },
         function(){
-            $("#infobar").animate({marginTop: "-225px"}, 1000);
+            $my.infobar.animate({marginTop: "-225px"}, 1000);
         }
     );
 });
-$(document).bind("loadingFriends", function() {
-    $('#loginButton').hide();
-    $('#loadingSpinner').show();
-    $('#loadText').show();
-    $('#loadText').text("Loading Friends");
-    $("#infobar").animate({marginTop: "-225px"}, 1000);
+$(document).bind('loadingFriends', function() {
+    $my.loginButton.hide();
+    $my.loadingSpinner.show();
+    $my.loadText.show();
+    $my.loadText.text('Loading Friends');
+    $my.infobar.animate({marginTop: '-225px'}, 1000);
 });
 $(document).bind('loadingPhotos', function() {
-    $('#loadText').text('Loading Photos');
+    $my.loadText.text('Loading Photos');
 });
 $(document).bind("displayPhotos", function() {
-    $('#loadingSpinner').hide();
-    $('#loadText').hide();
-    $("#photos").show();
+    $my.loadingSpinner.hide();
+    $my.loadText.hide();
+    $my.photos.show();
     Slider.init('myAlbums', Mosaic.sliderAlbumsPreviewArray, false);
     Slider.init('profiles', produceItemTest, false);
     Slider.init('filter', produceItemTest, false);
@@ -194,8 +204,8 @@ var Mosaic = Mosaic || new function(){
             Mosaic.loadFriends(uid, function(photos){
                 $("#photos").html('<ul id="photoList"></ul>');
                 
-                response = Mosaic.filterFriends(response);
-                response = Mosaic.sortFriends(response);
+                response = Mosaic.filterFriends(response, {});
+                response = Mosaic.sortFriends(response, {});
                 Mosaic.addPhotos(photos, function(){});
                 
                 $.event.trigger("displayPhotos");
@@ -205,7 +215,7 @@ var Mosaic = Mosaic || new function(){
     this.addPhotos = function(photos, clickCallback) {
         photo_array = [];
         for (p in photos) {
-            photo_array.push('<li id="'+photos[p].ids+'" title="'+photos[p].name+'" class="something"><img src="'+photos[p].src+'" /></li>');
+            photo_array.push('<li id="'+photos[p].ids+'" title="'+photos[p].name+'"><img src="'+photos[p].src+'" /></li>');
         }
         $("#photoList").html($("#photoList").html()+photo_array.join(''));
         $('#photoList>li').click(clickCallback);
@@ -214,10 +224,10 @@ var Mosaic = Mosaic || new function(){
         $("#photoList").html('');
     };
     //TODO: make working filtering functions
-    this.sortFriends = function(friends) {
+    this.sortFriends = function(friends, params) {
         return friends;
     };
-    this.filterFriends = function(friends) {
+    this.filterFriends = function(friends, params) {
         return friends;
     };
         
@@ -237,7 +247,7 @@ var Mosaic = Mosaic || new function(){
                 });
                 callback(friendsCache);
             });
-        }           
+        }
     };
     //uid2 is always the friend of the current user
     this.loadJointPhotos = function(uid1, uid2, callback){ 
@@ -261,7 +271,7 @@ var Mosaic = Mosaic || new function(){
             return callback(friendPhotoCache[uid+'']);
         } else {
             FB.api('/'+uid+'/photos', function(response){
-                friendPhotoCache[uid+''] = response;    
+                friendPhotoCache[uid+''] = response;
                 console.log(response);
                 callback(response);
             });
@@ -275,7 +285,8 @@ var Mosaic = Mosaic || new function(){
                 * IMPORTANT: THIS IS HOW THE /picture part of the graph api and access token are used together in order to 
                 * get the pretty pictures.
                 */ 
-               output.push('<div class="slideContentItem"><img src="https://graph.facebook.com/'+response.data[ak].id+'/picture?access_token='+accessToken+'"title="'+response.data[ak].name+'" height="111" width="144"/></div>'); 
+               output.push('<div class="slideContentItem"><img src="https://graph.facebook.com/'+response.data[ak].id+'/picture?access_token='+accessToken+'"title="'+response.data[ak].name+'" height="111" width="144"/></div>');
+               // TODO: bind click functions to slide content items
             }
             Slider.add(output, id);
         });
@@ -291,7 +302,7 @@ var Mosaic = Mosaic || new function(){
             });
         }
     }
-    /* load the photos of a specific album*/
+    /* load the photos of a specific album */
     this.loadAlbumPhotos = function(albumId, callback) {
         if (albumId+'' in albumDataCache) {
             callback(albumDataCache[albumId+'']);
