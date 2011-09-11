@@ -51,24 +51,23 @@ $(document).bind("displayPhotos", function() {
 var Slider = Slider || new function(){
     var sliderParams = [];
     this.init = function(id, loadCall, al){
-        sliderParams[id] = {toggle: 0, slideItems: [], load: loadCall,loadMode: 0, alwaysLoad: al, pos: 0};
-        $('#'+id+'>.slideLabel').click(function(){
+        sliderParams[id] = {toggle: 0, slideItems: [], load: loadCall,loadMode: 0, alwaysLoad: al, pos: 0, me: $('#'+id), label: $('#'+id+'>.slideLabel'), backward: $('#'+id+'>.slideBackward'), forward: $('#'+id+'>.slideForward'), contentHelper: $('#'+id+'>.slideContent>.slideContentHelper')};
+        var s = sliderParams[id];
+        s.label.click(function(){
             Slider.toggle(id);
         });
-        $('#'+id+'>.slideBackward').click(function(){
-            var s = sliderParams[id];
+        s.backward.click(function(){
             var threeDiff = s.slideItems.length % 3;
             if ((s.pos + threeDiff) - 3 >= 0) {
                 s.pos -= 3;
-                $('#'+id+'>.slideContent>.slideContentHelper').animate({left: (s.pos * -164)+'px'}, 1000, function(){});   
+                s.contentHelper.animate({left: (s.pos * -164)+'px'}, 1000, function(){});   
             }   
             Slider.buttonAdjust(id);  
         });
-        $('#'+id+'>.slideForward').click(function(){
-            var s = sliderParams[id];
+        s.forward.click(function(){
             if (s.pos + 3 <= (s.slideItems.length - 3)) {
                 s.pos += 3;
-                $('#'+id+'>.slideContent>.slideContentHelper').animate({left: (s.pos * -164)+'px'}, 1000, function(){}); 
+                s.contentHelper.animate({left: (s.pos * -164)+'px'}, 1000, function(){}); 
             }   
             Slider.buttonAdjust(id);
         });
@@ -77,23 +76,24 @@ var Slider = Slider || new function(){
         var s = sliderParams[id];
         var threeDiff = s.slideItems.length % 3;
         if (s.pos == (s.slideItems.length - 3)) {
-                $('#'+id+'>.slideForward').animate({width: '0px'}, 500, function(){});
+               s.forward.animate({width: '0px'}, 500, function(){});
         } else {
-            if (parseInt($('#'+id+'>.slideForward').css('width')) == 0) {
-                $('#'+id+'>.slideForward').animate({width: '55px'}, 500, function(){});
+            if (parseInt(s.forward.css('width')) == 0) {
+                s.forward.animate({width: '55px'}, 500, function(){});
             }
         }
+        console.log((s.pos + threeDiff) - 3);
         if ((s.pos + threeDiff) - 3 <= 0) {
-                $('#'+id+'>.slideBackward').animate({width: '0px'}, 500, function(){});
+                s.backward.animate({width: '0px'}, 500, function(){});
         } else {
-            if (parseInt($('#'+id+'>.slideBackward').css('width')) == 0) {
-                $('#'+id+'>.slideBackward').animate({width: '55px'}, 500, function(){});
+            if (parseInt(s.backward.css('width')) == 0) {
+                s.backward.animate({width: '55px'}, 500, function(){});
             }
         }
     };
     this.clear = function(id) {
         var s = sliderParams[id];  
-        $('#'+id+'>.slideContent>.slideContentHelper').html('');
+        s.contentHelper.html('');
         s.slideItems.length = 0;
         s.pos = 0;
     };
@@ -103,17 +103,15 @@ var Slider = Slider || new function(){
             Slider.setLoading(id, 0);
         } 
         for (i in item.reverse()) {
-            $('#'+id+'>.slideContent>.slideContentHelper').append(item[i]);
+            s.contentHelper.append(item[i]);
             s.slideItems.push(item[i]);
         }
-        $('#'+id+'>.slideContent>.slideContentHelper').children().click(callback);
+        s.contentHelper.children().click(callback);
         if (s.pos == 0) {
             s.pos = (s.slideItems.length - 3);
-            $('#'+id+'>.slideContent>.slideContentHelper').css('left', ((s.slideItems.length - 3) * -164)+'px');
-            Slider.buttonAdjust(id);
-        } else {
-            $('#'+id+'>.slideContent>.slideContentHelper').css('left', ((s.slideItems.length - 3) * -164)+'px');
-        }
+        } 
+        s.contentHelper.css('left', ((s.slideItems.length - 3) * -164)+'px');
+        Slider.buttonAdjust(id);
     };
     this.setLoading = function(id, loadState) {
         var s = sliderParams[id];
@@ -123,11 +121,10 @@ var Slider = Slider || new function(){
         }
         else if (loadState == 1) {
             Slider.clear(id);
-            $('#'+id+'>.slideContent>.slideContentHelper').append('<div class="slideContentItem"></div>');
-            $('#'+id+'>.slideContent>.slideContentHelper').append('<div class="slideContentItem"><img src="ajax-loader.gif" /></div>');
+            s.contentHelper.append('<div class="slideContentItem"></div>');
+            s.contentHelper.append('<div class="slideContentItem"><img src="ajax-loader.gif" /></div>');
             s.slideItems.push('<div class="slideContentItem">block</div>');
             s.slideItems.push('<div class="slideContentItem">loading spinner</div>');
-            Slider.buttonAdjust(id);
         }    
         else{}
     };
@@ -135,21 +132,24 @@ var Slider = Slider || new function(){
         var s = sliderParams[id];
         if (s.toggle == 1) {
             var slideVal = -602;
-            if (parseInt($('#'+id+'>.slideBackward').css('width')) < 55) {
+            if (parseInt(s.backward.css('width')) < 55) {
                 slideVal += 55;
             }
-            if (parseInt($('#'+id+'>.slideForward').css('width')) < 55) {
+            if (parseInt(s.forward.css('width')) < 55) {
                 slideVal += 55;
             }
-            $('#'+id).animate({marginLeft: slideVal+'px'},1000,function(){});
+            s.me.animate({marginLeft: slideVal+'px'},1000,function(){});
             s.toggle = 0; 
         } else {
             if (s.slideItems.length == 0 || s.alwaysLoad) {
                 Slider.setLoading(id, 1);
                 s.load(id);
-            } 
-            Slider.buttonAdjust(id);
-            $('#'+id).animate({marginLeft: '0px'},1000,function(){});
+                console.log('here1');
+            } else {
+            	console.log('here2');
+            	Slider.buttonAdjust(id);
+            }
+            s.me.animate({marginLeft: '0px'},1000,function(){});
             s.toggle = 1; 
         }
     };
@@ -291,6 +291,7 @@ var Mosaic = Mosaic || new function(){
         }
     };
     /* load the photos of a specific album */
+    //TODO: CACHING FOR MULTIPLE REQUEST ALBUM LOADS
     this.loadAlbumPhotos = function() {
     	var albumId = this.id;
         if (albumId+'' in albumDataCache) {
@@ -309,7 +310,7 @@ var Mosaic = Mosaic || new function(){
                 	photos.push(tPhoto);
                 }
                 Mosaic.addPhotos(photos, function(){});
-                if ("next" in response.paging) {
+                if (response.paging && "next" in response.paging) {
                 	var paging = Mosaic.pagingHelper(response);
                 	if (paging.limit && paging.offset) {
                 		FB.api('/'+albumId+'/photos?offset='+paging.offset+'&limit='+paging.limit, function(response){
@@ -331,7 +332,7 @@ var Mosaic = Mosaic || new function(){
     *this is why we have an addPhotos function, becuase photos may be loaded in batches and delivered to screen
     */
     this.pagingHelper = function(response) {
-        if ("next" in response.paging) {
+        if (response.paging && "next" in response.paging) {
         	var limit = null;
         	var offset = null;
             var pStr = response.paging.next.split('?').pop();
