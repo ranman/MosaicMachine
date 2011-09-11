@@ -23,15 +23,6 @@ $(document).bind("FBLoaded", function() {
     $my.infoHideDivButton.fadeTo(4,0.5);
     $my.infobar.mouseover(function(){$my.infoContent.fadeTo(4,1);$my.infoHideDivButton.fadeTo(4,1);});
     $my.infobar.mouseleave(function(){$my.infoContent.fadeTo(4,0.25);$my.infoHideDivButton.fadeTo(4,0.25);});
-
-    $my.infoHideBarDiv.toggle(
-        function(){
-            $my.infobar.animate({marginTop: "-35px"}, 1000);
-        },
-        function(){
-            $my.infobar.animate({marginTop: "-225px"}, 1000);
-        }
-    );
 });
 $(document).bind('loadingFriends', function() {
     $my.loginButton.hide();
@@ -106,7 +97,7 @@ var Slider = Slider || new function(){
         s.slideItems.length = 0;
         s.pos = 0;
     };
-    this.add = function(item, id) {
+    this.add = function(item, id, callback) {
         var s = sliderParams[id];    
         if (s.loadMode == 1) {
             Slider.setLoading(id, 0);
@@ -115,6 +106,7 @@ var Slider = Slider || new function(){
             $('#'+id+'>.slideContent>.slideContentHelper').append(item[i]);
             s.slideItems.push(item[i]);
         }
+        $('#'+id+'>.slideContent>.slideContentHelper').children().click(callback);
         if (s.pos == 0) {
             s.pos = (s.slideItems.length - 3);
             $('#'+id+'>.slideContent>.slideContentHelper').css('left', ((s.slideItems.length - 3) * -164)+'px');
@@ -281,14 +273,10 @@ var Mosaic = Mosaic || new function(){
         Mosaic.loadUserAlbums(cUser, function(response){
             var output = [];
             for (ak in response.data) {
-                /*
-                * IMPORTANT: THIS IS HOW THE /picture part of the graph api and access token are used together in order to 
-                * get the pretty pictures.
-                */ 
-               output.push('<div class="slideContentItem"><img src="https://graph.facebook.com/'+response.data[ak].id+'/picture?access_token='+accessToken+'"title="'+response.data[ak].name+'" height="111" width="144"/></div>');
+               output.push('<div class="slideContentItem" id="'+response.data[ak].id+'"><img src="https://graph.facebook.com/'+response.data[ak].id+'/picture?access_token='+accessToken+'"title="'+response.data[ak].name+'" height="111" width="144"/></div>');
                // TODO: bind click functions to slide content items
             }
-            Slider.add(output, id);
+            Slider.add(output, id, Mosaic.loadAlbumPhotos);
         });
     };
     /* loads the albums of a user*/
@@ -301,18 +289,40 @@ var Mosaic = Mosaic || new function(){
                 callback(response);
             });
         }
-    }
+    };
     /* load the photos of a specific album */
-    this.loadAlbumPhotos = function(albumId, callback) {
+    this.loadAlbumPhotos = function() {
+    	var albumId = this.id;
         if (albumId+'' in albumDataCache) {
             callback(albumDataCache[albumId+'']);
         } else {
+        	Mosaic.clearPhotos();
+        	var f = function(response) {
+        		albumDataCache[albumId+''] = response;
+                console.log(response);
+                var photos = [];
+                for (p in response.data) {
+                	var tPhoto = new Object();
+                	tPhoto.ids = response.data[p].from.id;
+                	tPhoto.name = response.data[p].from.name; 
+                	tPhoto.src = response.data[p].source;
+                	photos.push(tPhoto);
+                }
+                Mosaic.addPhotos(photos, function(){});
+                if ("next" in response.paging) {
+                	var paging = Mosaic.pagingHelper(response);
+                	if (paging.limit && paging.offset) {
+                		FB.api('/'+albumId+'/photos?offset='+paging.offset+'&limit='+paging.limit, function(response){
+                			console.log(Mosaic.pagingHelper(response));
+                			f(response);
+            			});
+            		}
+                }
+        	};
             FB.api('/'+albumId+'/photos', function(response){
-                albumDataCache[albumId+''] = response;
-                var paging = pagingHelperCache(response)
-                if (paging) {
-                    console.log(paging);
-                } 
+            	//TODO: ADD LOADING SPINNER LOGIC
+            	console.log(Mosaic.pagingHelper(response));
+                f(response);
             });
         }
     };
@@ -322,15 +332,22 @@ var Mosaic = Mosaic || new function(){
     */
     this.pagingHelper = function(response) {
         if ("next" in response.paging) {
+        	var limit = null;
+        	var offset = null;
             var pStr = response.paging.next.split('?').pop();
             var pArr = pStr.split('&');
-            var p1 = pArr.pop().split('=');
-            var startV = p1.pop();
-            var startL = p1.pop();
-            var p2 = pArr.pop().split('=');
-            var stopV = p2.pop();
-            var stopL = p2.pop();
-            return {startL: startL,startV: startV,stopL: stopL,stopV: stopV};
+            for (i in pArr) {
+            	var t = pArr[i].split('=');
+            	var val = t.pop();
+            	var key = t.pop();
+            	if (key == 'limit') {
+            		limit = val;
+            	}
+            	if (key == 'offset') {
+            		offset = val;
+            	}
+            }
+            return {limit: limit, offset: offset};
         } else {
             return false;
         }
