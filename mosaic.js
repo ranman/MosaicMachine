@@ -39,7 +39,7 @@ $(document).bind("displayPhotos", function() {
     $my.loadText.hide();
     $my.photos.show();
     Slider.init('myAlbums', Mosaic.sliderAlbumsPreviewArray, false);
-    Slider.init('profiles', produceItemTest, false);
+    Slider.init('profiles', null, false);
     Slider.init('filter', produceItemTest, false);
 });
 /* * * * * * * * * * * * * * * * * * * *
@@ -82,7 +82,6 @@ var Slider = Slider || new function(){
                 s.forward.animate({width: '55px'}, 500, function(){});
             }
         }
-        console.log((s.pos + threeDiff) - 3);
         if ((s.pos + threeDiff) - 3 <= 0) {
                 s.backward.animate({width: '0px'}, 500, function(){});
         } else {
@@ -141,18 +140,25 @@ var Slider = Slider || new function(){
             s.me.animate({marginLeft: slideVal+'px'},1000,function(){});
             s.toggle = 0; 
         } else {
-            if (s.slideItems.length == 0 || s.alwaysLoad) {
-                Slider.setLoading(id, 1);
-                s.load(id);
-                console.log('here1');
+            Slider.slideOut(id);
+        }
+    };
+    this.slideOut = function(id) {
+    	var s = sliderParams[id];
+    	if (s.toggle == 0) {
+    		if (s.slideItems.length == 0 || s.alwaysLoad) {
+    			if (s.load != null) {
+    				Slider.setLoading(id, 1);
+    				console.log('before load');
+                	s.load(id);	
+    			}
             } else {
-            	console.log('here2');
             	Slider.buttonAdjust(id);
             }
             s.me.animate({marginLeft: '0px'},1000,function(){});
             s.toggle = 1; 
-        }
-    };
+    	}
+    }
 }(); 
 
 /* Dummy function for testing sliders*/
@@ -194,31 +200,39 @@ var Mosaic = Mosaic || new function(){
             $.event.trigger("loadingFriends");
             
             Mosaic.loadFriends(uid, function(photos){
-                $("#photos").html('<ul id="photoList"></ul>');
+                $my.photos.html('<ul id="photoList"></ul>');
+                $my.photoList = $('#photoList');
                 
                 response = Mosaic.filterFriends(response, {});
-                response = Mosaic.sortFriends(response, {});
-                Mosaic.addPhotos(photos, function(){});
+                Mosaic.addPhotos(photos, Mosaic.photoClick);
                 
                 $.event.trigger("displayPhotos");
             });
+            
         }
     };
     this.addPhotos = function(photos, clickCallback) {
-        photo_array = [];
+        var photo_array = [];
         for (p in photos) {
             photo_array.push('<li id="'+photos[p].ids+'" title="'+photos[p].name+'"><img src="'+photos[p].src+'" /></li>');
         }
-        $("#photoList").html($("#photoList").html()+photo_array.join(''));
-        $('#photoList>li').click(clickCallback);
+        $my.photoList.html($my.photoList.html()+photo_array.join(''));
+        $my.photoList.children().click(clickCallback);
+    };
+    //TODO: START HERE TOMMORROW
+    this.photoClick = function(){
+    	//clear profiles
+    	Slider.slideOut('profiles');
+    	//build a box with the right buttons for each profile
+    	//need to add callbacks here because of multiple buttons
+    	//add null callback code to slider.add
+    	//add these slider
+    	console.log(this.id);
     };
     this.clearPhotos = function() {
-        $("#photoList").html('');
+        $my.photoList.html('');
     };
     //TODO: make working filtering functions
-    this.sortFriends = function(friends, params) {
-        return friends;
-    };
     this.filterFriends = function(friends, params) {
         return friends;
     };
@@ -295,26 +309,41 @@ var Mosaic = Mosaic || new function(){
     this.loadAlbumPhotos = function() {
     	var albumId = this.id;
         if (albumId+'' in albumDataCache) {
+        	//TODO: BROKEN CACHING IS BREAKING ALBUM RELOAD
             callback(albumDataCache[albumId+'']);
         } else {
         	Mosaic.clearPhotos();
         	var f = function(response) {
         		albumDataCache[albumId+''] = response;
-                console.log(response);
                 var photos = [];
                 for (p in response.data) {
                 	var tPhoto = new Object();
-                	tPhoto.ids = response.data[p].from.id;
-                	tPhoto.name = response.data[p].from.name; 
-                	tPhoto.src = response.data[p].source;
+                	var raw = response.data[p];
+                	tPhoto.ids = raw.from.id;
+                	tPhoto.name = '';
+                	if (raw.tags && raw.tags.data) {
+						var firstName = true;
+                		for (i in raw.tags.data) {
+                			if (raw.tags.data[i].id != cUser) {
+                				tPhoto.ids += ','+raw.tags.data[i].id;	
+                			}
+                			if(firstName) {
+                				tPhoto.name += raw.tags.data[i].name;
+                				firstName = false;
+                			} else {
+                				tPhoto.name += ', '+raw.tags.data[i].name;
+                			}
+                		}
+                	}
+                	tPhoto.src = raw.source;
                 	photos.push(tPhoto);
                 }
-                Mosaic.addPhotos(photos, function(){});
+                Mosaic.addPhotos(photos, Mosaic.photoClick);
                 if (response.paging && "next" in response.paging) {
                 	var paging = Mosaic.pagingHelper(response);
                 	if (paging.limit && paging.offset) {
                 		FB.api('/'+albumId+'/photos?offset='+paging.offset+'&limit='+paging.limit, function(response){
-                			console.log(Mosaic.pagingHelper(response));
+                			console.log(response);
                 			f(response);
             			});
             		}
@@ -322,15 +351,11 @@ var Mosaic = Mosaic || new function(){
         	};
             FB.api('/'+albumId+'/photos', function(response){
             	//TODO: ADD LOADING SPINNER LOGIC
-            	console.log(Mosaic.pagingHelper(response));
+            	console.log(response);
                 f(response);
             });
         }
     };
-    /*Some calls to the FB API only return part of the dataset
-    *we'll need to build in code to get successive pages and add these to the mosaic on screen
-    *this is why we have an addPhotos function, becuase photos may be loaded in batches and delivered to screen
-    */
     this.pagingHelper = function(response) {
         if (response.paging && "next" in response.paging) {
         	var limit = null;
