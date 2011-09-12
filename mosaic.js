@@ -42,10 +42,6 @@ $(document).bind("displayPhotos", function() {
     Slider.init('profiles', null, false);
     Slider.init('filter', produceItemTest, false);
 });
-/* * * * * * * * * * * * * * * * * * * *
- *     Actual mosaic shit goes here    *
- * * * * * * * * * * * * * * * * * * * */
-
 /* sliderStuff */
 
 var Slider = Slider || new function(){
@@ -151,7 +147,6 @@ var Slider = Slider || new function(){
     		if (s.slideItems.length == 0 || s.alwaysLoad) {
     			if (s.load != null) {
     				Slider.setLoading(id, 1);
-    				console.log('before load');
                 	s.load(id);	
     			}
             } else {
@@ -175,7 +170,9 @@ function produceItemTest(id) {
     var i8 = '<div class="slideContentItem">hello-i8</div>';
     Slider.add([i1,i2,i3,i4,i5,i6,i7,i8], id);
 }
-
+/* * * * * * * * * * * * * * * * * * * *
+ *     Actual mosaic shit goes here    *
+ * * * * * * * * * * * * * * * * * * * */
 /* Create the namespace */
 var Mosaic = Mosaic || new function(){
     var cUser; //this is the uid of the user who is using the application
@@ -226,7 +223,6 @@ var Mosaic = Mosaic || new function(){
     	Slider.clear('profiles');
     	Slider.slideOut('profiles');
     	var tButtons = [];
-    	//build a box with the right buttons for each profile
     	var ids = this.id.split(',');
     	for (i in ids) {
 			var tId = ids[i];
@@ -242,18 +238,21 @@ var Mosaic = Mosaic || new function(){
 					class: 'smallPicture'
 				});
 				picture.appendTo(contentItem);
-				var tName = user.name.split(' ');
-				tName.pop();
-				var first = tName.pop();
 				var dn = $('<div>', {
 					class: 'smallName',
-					text: first
+					text: user.name.split(' ')[0]
 				});
 				dn.appendTo(contentItem);
 				if (tId == cUser) { 
 					var myPictures = $('<button>', {
 						text: 'pictures'
 					});
+					//TODO: ADD CLICK HANDLERS
+					/*
+					myPictures.click(function(){
+						alert('here');
+					});
+					*/
 					myPictures.appendTo(contentItem);
 					var myFriends = $('<button>',{
 						text: 'friends'
@@ -261,7 +260,7 @@ var Mosaic = Mosaic || new function(){
 					myFriends.appendTo(contentItem);
 				} else {
 					var myPictures = $('<button>', {
-						text: 'me'
+						text: 'pictures'
 					});
 					myPictures.appendTo(contentItem);
 					var myFriends = $('<button>',{
@@ -280,6 +279,7 @@ var Mosaic = Mosaic || new function(){
         $my.photoList.html('');
     };
     //TODO: make working filtering functions
+    //THESE SCAN CURRENTLY DISPLAYED PHOTOS AND JUST CHANGE VISABILITY PROPERTIES
     this.filterFriends = function(friends, params) {
         return friends;
     };
@@ -352,40 +352,48 @@ var Mosaic = Mosaic || new function(){
         }
     };
     /* load the photos of a specific album */
-    //TODO: CACHING FOR MULTIPLE REQUEST ALBUM LOADS
+    //TODO: GLOBAL LOCK ON WHAT PHOTOS ARE BEING DISPLAYED
     this.loadAlbumPhotos = function() {
     	var albumId = this.id;
+    	var ap = function(response) {
+    		var photos = [];
+            for (p in response.data) {
+            	var tPhoto = new Object();
+              	var raw = response.data[p];
+                tPhoto.ids = raw.from.id;
+                tPhoto.name = '';
+                if (raw.tags && raw.tags.data) {
+					var firstName = true;
+               		for (i in raw.tags.data) {
+               			if (raw.tags.data[i].id != cUser) {
+               				tPhoto.ids += ','+raw.tags.data[i].id;	
+               			}
+               			if(firstName) {
+               				tPhoto.name += raw.tags.data[i].name;
+               				firstName = false;
+               			} else {
+               				tPhoto.name += ', '+raw.tags.data[i].name;
+               			}
+               		}
+               	}
+               	tPhoto.src = raw.source;
+               	photos.push(tPhoto);
+            }
+            Mosaic.addPhotos(photos, Mosaic.photoClick);
+    	};
+    	Mosaic.clearPhotos();
         if (albumId+'' in albumDataCache) {
-        	//TODO: BROKEN CACHING IS BREAKING ALBUM RELOAD
-            callback(albumDataCache[albumId+'']);
+        	for (d in albumDataCache[albumId+'']) {
+        		ap(albumDataCache[albumId+''][d]);
+        	} 
         } else {
-        	Mosaic.clearPhotos();
         	var f = function(response) {
-        		albumDataCache[albumId+''] = response;
-                var photos = [];
-                for (p in response.data) {
-                	var tPhoto = new Object();
-                	var raw = response.data[p];
-                	tPhoto.ids = raw.from.id;
-                	tPhoto.name = '';
-                	if (raw.tags && raw.tags.data) {
-						var firstName = true;
-                		for (i in raw.tags.data) {
-                			if (raw.tags.data[i].id != cUser) {
-                				tPhoto.ids += ','+raw.tags.data[i].id;	
-                			}
-                			if(firstName) {
-                				tPhoto.name += raw.tags.data[i].name;
-                				firstName = false;
-                			} else {
-                				tPhoto.name += ', '+raw.tags.data[i].name;
-                			}
-                		}
-                	}
-                	tPhoto.src = raw.source;
-                	photos.push(tPhoto);
-                }
-                Mosaic.addPhotos(photos, Mosaic.photoClick);
+        		if (albumId+'' in albumDataCache) {
+        			albumDataCache[albumId+''].push(response);
+        		} else {
+        			albumDataCache[albumId+''] = [response];	
+        		}
+                ap(response);
                 if (response.paging && "next" in response.paging) {
                 	var paging = Mosaic.pagingHelper(response);
                 	if (paging.limit && paging.offset) {
