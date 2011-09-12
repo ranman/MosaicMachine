@@ -105,7 +105,9 @@ var Slider = Slider || new function(){
             s.contentHelper.append(item[i]);
             s.slideItems.push(item[i]);
         }
-        s.contentHelper.children().click(callback);
+        if (callback != null) {
+        	s.contentHelper.children().click(callback);
+        }
         if (s.pos == 0) {
             s.pos = (s.slideItems.length - 3);
         } 
@@ -221,13 +223,58 @@ var Mosaic = Mosaic || new function(){
     };
     //TODO: START HERE TOMMORROW
     this.photoClick = function(){
-    	//clear profiles
+    	Slider.clear('profiles');
     	Slider.slideOut('profiles');
+    	var tButtons = [];
     	//build a box with the right buttons for each profile
+    	var ids = this.id.split(',');
+    	for (i in ids) {
+			var tId = ids[i];
+			console.log(tId);
+			if (tId in friendsCache) {
+				var user = friendsCache[tId];
+				var contentItem = $('<div>', {
+					class: 'slideContentItem'
+				});
+				var picture = $('<img>', {
+					src: user.small,
+					name: user.name,
+					class: 'smallPicture'
+				});
+				picture.appendTo(contentItem);
+				var tName = user.name.split(' ');
+				tName.pop();
+				var first = tName.pop();
+				var dn = $('<div>', {
+					class: 'smallName',
+					text: first
+				});
+				dn.appendTo(contentItem);
+				if (tId == cUser) { 
+					var myPictures = $('<button>', {
+						text: 'pictures'
+					});
+					myPictures.appendTo(contentItem);
+					var myFriends = $('<button>',{
+						text: 'friends'
+					});
+					myFriends.appendTo(contentItem);
+				} else {
+					var myPictures = $('<button>', {
+						text: 'me'
+					});
+					myPictures.appendTo(contentItem);
+					var myFriends = $('<button>',{
+						text: 'me & you'
+					});
+					myFriends.appendTo(contentItem);
+				}
+				tButtons.push(contentItem);
+			}
+		}
     	//need to add callbacks here because of multiple buttons
-    	//add null callback code to slider.add
     	//add these slider
-    	console.log(this.id);
+    	Slider.add(tButtons, 'profiles', null);
     };
     this.clearPhotos = function() {
         $my.photoList.html('');
@@ -244,12 +291,12 @@ var Mosaic = Mosaic || new function(){
         } else {
             FB.api({
                 method: 'fql.query',
-                query: 'SELECT uid, sex, name, pic_big, relationship_status FROM user '
-                      +'WHERE uid IN '
+                query: 'SELECT uid, sex, name, pic_big, pic_square, relationship_status FROM user '
+                      +'WHERE uid='+cUser+' OR uid IN '
                       +'(SELECT uid2 FROM friend WHERE uid1 ='+uid+')'
             }, function(response) {
                 $.each(response, function(index, friend) {
-                    friendsCache[friend.uid+''] = {ids: friend.uid, sex: friend.sex, name: friend.name, src: friend.pic_big, relationship_status: friend.relationship_status};
+                    friendsCache[friend.uid+''] = {ids: friend.uid, sex: friend.sex, name: friend.name, src: friend.pic_big, small: friend.pic_square, relationship_status: friend.relationship_status};
                 });
                 callback(friendsCache);
             });
