@@ -128,15 +128,7 @@ var Slider = Slider || new function(){
     this.toggle = function(id) {
         var s = sliderParams[id];
         if (s.toggle == 1) {
-            var slideVal = -602;
-            if (parseInt(s.backward.css('width')) < 55) {
-                slideVal += 55;
-            }
-            if (parseInt(s.forward.css('width')) < 55) {
-                slideVal += 55;
-            }
-            s.me.animate({marginLeft: slideVal+'px'},1000,function(){});
-            s.toggle = 0; 
+            Slider.slideIn(id);
         } else {
             Slider.slideOut(id);
         }
@@ -156,6 +148,20 @@ var Slider = Slider || new function(){
             s.toggle = 1; 
     	}
     }
+    this.slideIn = function(id) {
+    	var s = sliderParams[id];
+        if (s.toggle == 1) {
+            var slideVal = -602;
+            if (parseInt(s.backward.css('width')) < 55) {
+                slideVal += 55;
+            }
+            if (parseInt(s.forward.css('width')) < 55) {
+                slideVal += 55;
+            }
+            s.me.animate({marginLeft: slideVal+'px'},1000,function(){});
+            s.toggle = 0; 
+    	}
+    };
 }(); 
 
 /* Dummy function for testing sliders*/
@@ -257,6 +263,13 @@ var Mosaic = Mosaic || new function(){
 					var myFriends = $('<button>',{
 						text: 'friends'
 					});
+					myFriends.click(function(){
+						Mosaic.loadFriends(cUser, function(photos){
+							Slider.slideIn('profiles');
+							Mosaic.clearPhotos();
+                			Mosaic.addPhotos(photos, Mosaic.photoClick);
+            			});
+					});
 					myFriends.appendTo(contentItem);
 				} else {
 					var myPictures = $('<button>', {
@@ -354,6 +367,7 @@ var Mosaic = Mosaic || new function(){
     /* load the photos of a specific album */
     //TODO: GLOBAL LOCK ON WHAT PHOTOS ARE BEING DISPLAYED
     this.loadAlbumPhotos = function() {
+    	Slider.slideIn('myAlbums');
     	var albumId = this.id;
     	var ap = function(response) {
     		var photos = [];
