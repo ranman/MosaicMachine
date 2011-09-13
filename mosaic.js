@@ -1,4 +1,4 @@
-/* Events which trigger page changes */
+/* global variables */
 window.$my = {
     constant: $('#constant'),
     infoHideDivRight: $('#infoHideDivRight'),
@@ -11,6 +11,7 @@ window.$my = {
     loadText: $('#loadText'),
     photos: $('#photos')
 };
+/* Events which trigger page changes */
 $(document).bind("FBLoaded", function() {
     $my.constant.fadeTo(1,0.5).mouseover(function(){$my.constant.fadeTo(4,1);}).mouseleave(function(){$my.constant.fadeTo(4,0.25);});
 
@@ -78,9 +79,6 @@ var Slider = Slider || new function(){
                 s.forward.animate({width: '55px'}, 500, function(){});
             }
         }
-        console.log(s.pos);
-        console.log(threeDiff);
-        console.log(s.pos + (3 - threeDiff));
         if (s.pos + ((3 - threeDiff) % 3) > 0) {
         	if (parseInt(s.backward.css('width')) == 0) {
                 s.backward.animate({width: '55px'}, 500, function(){});
@@ -180,11 +178,10 @@ function produceItemTest(id) {
     Slider.add([i1,i2,i3,i4,i5,i6,i7,i8,i8], id);
 }
 /* * * * * * * * * * * * * * * * * * * *
- *     Actual mosaic shit goes here    *
+ *             mosaic code             *
  * * * * * * * * * * * * * * * * * * * */
 //TODO: LOADING INDICATION(SPINNERS) THROUGHOUT DURING LOADING
 //DO THIS AFTER YOU FIX UP THE INITIAL LOADING SCREEN
-/* Create the namespace */
 var Mosaic = Mosaic || new function(){
     var cUser; //this is the uid of the user who is using the application
     var accessToken; // we'll need this to get to a lot of the photos
@@ -198,15 +195,10 @@ var Mosaic = Mosaic || new function(){
     var friendPhotoCache = [];
     
     this.buildMosaic = function(response) {
-        /* Let the page know we've started talking to facebook 
-         * If the response exists, check the session, 
-         * if session exists, the login succeeded, proceed.
-         */
         if(response && response.session) {
             uid = response.session.uid;
             cUser = uid+'';
             accessToken = response.session.access_token;   
-            /* Let the page know we've started loading friends */
             $.event.trigger("loadingFriends");
             
             Mosaic.loadFriends(uid, function(photos){
@@ -388,8 +380,10 @@ var Mosaic = Mosaic || new function(){
         }
         Mosaic.addPhotos(photos, Mosaic.photoClick);
    	};
-    	
+    //THIS IS THE MOST IMPORTANT THING START HERE TOMMORROW!!!	
     //TODO: GLOBAL LOCK ON WHAT PHOTOS ARE BEING DISPLAYED
+    //TODO: PREVENT AGAINST DUPLICATE ID'S IN PHOTOS
+    //TODO: MAKE SURE WE ARE ADDING THE CORRECT ID'S (CURRENTLY NOT ALWAYS)
     /* load the photos of a specific album */
     this.loadAlbumPhotos = function() {
     	Slider.slideIn('myAlbums');
