@@ -54,7 +54,7 @@ var Slider = Slider || new function(){
         });
         s.backward.click(function(){
             var threeDiff = s.slideItems.length % 3;
-            if ((s.pos + threeDiff) - 3 >= 0) {
+            if (s.pos + ((3 - threeDiff) % 3) > 0) {
                 s.pos -= 3;
                 s.contentHelper.animate({left: (s.pos * -164)+'px'}, 1000, function(){});   
             }   
@@ -78,12 +78,15 @@ var Slider = Slider || new function(){
                 s.forward.animate({width: '55px'}, 500, function(){});
             }
         }
-        if ((s.pos + threeDiff) - 3 <= 0) {
-                s.backward.animate({width: '0px'}, 500, function(){});
-        } else {
-            if (parseInt(s.backward.css('width')) == 0) {
+        console.log(s.pos);
+        console.log(threeDiff);
+        console.log(s.pos + (3 - threeDiff));
+        if (s.pos + ((3 - threeDiff) % 3) > 0) {
+        	if (parseInt(s.backward.css('width')) == 0) {
                 s.backward.animate({width: '55px'}, 500, function(){});
             }
+        } else {
+            s.backward.animate({width: '0px'}, 500, function(){});
         }
     };
     this.clear = function(id) {
@@ -105,7 +108,7 @@ var Slider = Slider || new function(){
         	s.contentHelper.children().click(callback);
         }
         if (s.pos == 0) {
-            s.pos = (s.slideItems.length - 3);
+        	s.pos = (s.slideItems.length - 3);
         } 
         s.contentHelper.css('left', ((s.slideItems.length - 3) * -164)+'px');
         Slider.buttonAdjust(id);
@@ -174,11 +177,13 @@ function produceItemTest(id) {
     var i6 = '<div class="slideContentItem">hello-i6</div>';
     var i7 = '<div class="slideContentItem">hello-i7</div>';
     var i8 = '<div class="slideContentItem">hello-i8</div>';
-    Slider.add([i1,i2,i3,i4,i5,i6,i7,i8], id);
+    Slider.add([i1,i2,i3,i4,i5,i6,i7,i8,i8], id);
 }
 /* * * * * * * * * * * * * * * * * * * *
  *     Actual mosaic shit goes here    *
  * * * * * * * * * * * * * * * * * * * */
+//TODO: LOADING INDICATION(SPINNERS) THROUGHOUT DURING LOADING
+//DO THIS AFTER YOU FIX UP THE INITIAL LOADING SCREEN
 /* Create the namespace */
 var Mosaic = Mosaic || new function(){
     var cUser; //this is the uid of the user who is using the application
@@ -209,7 +214,6 @@ var Mosaic = Mosaic || new function(){
                 $my.photoList = $('#photoList');
                 
                 response = Mosaic.filterFriends(response, {});
-                //TODO: ADD cUser to EACH LOGGED IN PHOTO ID
                 Mosaic.addPhotos(photos, Mosaic.photoClick);
                 
                 $.event.trigger("displayPhotos");
@@ -233,7 +237,6 @@ var Mosaic = Mosaic || new function(){
     	var ids = this.id.split(',');
     	for (i in ids) {
 			var tId = ids[i];
-			console.log(tId);
 			if (tId in friendsCache) {
 				var user = friendsCache[tId];
 				var contentItem = $('<div>', {
@@ -249,6 +252,7 @@ var Mosaic = Mosaic || new function(){
 					class: 'smallName',
 					text: user.name.split(' ')[0]
 				});
+				//TODO: IF THERE IS NO cUser, Add them 
 				dn.appendTo(contentItem);
 				if (tId == cUser) { 
 					var myPictures = $('<button>', {
@@ -274,6 +278,11 @@ var Mosaic = Mosaic || new function(){
 				} else {
 					var myPictures = $('<button>', {
 						text: 'pictures'
+					});
+					myPictures.click(function(){
+						Slider.slideIn('profiles');
+						Mosaic.clearPhotos();
+						Mosaic.loadPhotos(tId);
 					});
 					myPictures.appendTo(contentItem);
 					var myFriends = $('<button>',{
@@ -308,6 +317,7 @@ var Mosaic = Mosaic || new function(){
                       +'WHERE uid='+cUser+' OR uid IN '
                       +'(SELECT uid2 FROM friend WHERE uid1 ='+uid+')'
             }, function(response) {
+            	console.log('count: '+response.length);
                 $.each(response, function(index, friend) {
                     friendsCache[friend.uid+''] = {ids: friend.uid, sex: friend.sex, name: friend.name, src: friend.pic_big, small: friend.pic_square, relationship_status: friend.relationship_status};
                 });
@@ -408,7 +418,6 @@ var Mosaic = Mosaic || new function(){
         	};
             FB.api('/'+albumId+'/photos', function(response){
             	//TODO: ADD LOADING SPINNER LOGIC
-            	console.log(response);
                 f(response);
             });
         }
@@ -440,6 +449,8 @@ var Mosaic = Mosaic || new function(){
         	};
             FB.api('/'+uid+'/photos', function(response){
             	//TODO: ADD LOADING SPINNER LOGIC
+            	//CHECK IF ARRAY LENGTH 0 --> PERMISSIONS DON'T LET YOU SEE THE USER'S PHOTOS
+           		console.log(response);
                 f(response);
             });
         }  
