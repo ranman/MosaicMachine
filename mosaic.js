@@ -186,6 +186,9 @@ var Mosaic = Mosaic || new function(){
     var cUser; //this is the uid of the user who is using the application
     var accessToken; // we'll need this to get to a lot of the photos
     
+    //THIS IS THE GLOBAL VARIABLE THAT CONTROLS WHICH ALBUM IS BEING DISPLAYED
+    var pictureLock = '';
+    
     /* caching fields*/
     var friendsCache = [];
     var jointCache = [];
@@ -204,22 +207,27 @@ var Mosaic = Mosaic || new function(){
             Mosaic.loadFriends(uid, function(photos){
                 $my.photos.html('<ul id="photoList"></ul>');
                 $my.photoList = $('#photoList');
-                
                 response = Mosaic.filterFriends(response, {});
-                Mosaic.addPhotos(photos, Mosaic.photoClick);
+                
+                pictureLock = 'friends';
+                Mosaic.clearPhotos();
+                
+                Mosaic.addPhotos(photos, Mosaic.photoClick, 'friends');
                 
                 $.event.trigger("displayPhotos");
             });
             
         }
     };
-    this.addPhotos = function(photos, clickCallback) {
-        var photo_array = [];
-        for (p in photos) {
-            photo_array.push('<li id="'+photos[p].ids+'" title="'+photos[p].name+'"><img src="'+photos[p].src+'" /></li>');
+    this.addPhotos = function(photos, clickCallback, lock) {
+    	if (lock == pictureLock) {
+        	var photo_array = [];
+        	for (p in photos) {
+            	photo_array.push('<li id="'+photos[p].ids+'" title="'+photos[p].name+'"><img src="'+photos[p].src+'" /></li>');
+        	}
+        	$my.photoList.html($my.photoList.html()+photo_array.join(''));
+        	$my.photoList.children().click(clickCallback);
         }
-        $my.photoList.html($my.photoList.html()+photo_array.join(''));
-        $my.photoList.children().click(clickCallback);
     };
     //TODO: NEED TO MAKE SURE SCROLLING BUTTONS APPEAR WHEN THERE ARE MORE THAN THREE PEOPLE
     this.photoClick = function(){
@@ -227,8 +235,8 @@ var Mosaic = Mosaic || new function(){
     	Slider.slideOut('profiles');
     	var tButtons = [];
     	var ids = this.id.split(',');
-    	for (i in ids) {
-			var tId = ids[i];
+    	$.each(ids, function(index,value) {
+			var tId = value;
 			if (tId in friendsCache) {
 				var user = friendsCache[tId];
 				var contentItem = $('<div>', {
@@ -260,10 +268,12 @@ var Mosaic = Mosaic || new function(){
 						text: 'friends'
 					});
 					myFriends.click(function(){
+						pictureLock = cUser;
+                		Mosaic.clearPhotos();
 						Mosaic.loadFriends(cUser, function(photos){
 							Slider.slideIn('profiles');
 							Mosaic.clearPhotos();
-                			Mosaic.addPhotos(photos, Mosaic.photoClick);
+                			Mosaic.addPhotos(photos, Mosaic.photoClick,cUser);
             			});
 					});
 					myFriends.appendTo(contentItem);
@@ -273,6 +283,7 @@ var Mosaic = Mosaic || new function(){
 					});
 					myPictures.click(function(){
 						Slider.slideIn('profiles');
+						pictureLock = tId;
 						Mosaic.clearPhotos();
 						Mosaic.loadPhotos(tId);
 					});
@@ -284,7 +295,7 @@ var Mosaic = Mosaic || new function(){
 				}
 				tButtons.push(contentItem);
 			}
-		}
+		});
     	//need to add callbacks here because of multiple buttons
     	//add these slider
     	Slider.add(tButtons, 'profiles', null);
@@ -354,7 +365,7 @@ var Mosaic = Mosaic || new function(){
         }
     };
     
-    this.prepareAndAddPhotos = function(response) {
+    this.prepareAndAddPhotos = function(response, lock) {
     	var photos = [];
         for (p in response.data) {
            	var tPhoto = new Object();
@@ -378,20 +389,19 @@ var Mosaic = Mosaic || new function(){
             tPhoto.src = raw.source;
             photos.push(tPhoto);
         }
-        Mosaic.addPhotos(photos, Mosaic.photoClick);
+        Mosaic.addPhotos(photos, Mosaic.photoClick, lock);
    	};
-    //THIS IS THE MOST IMPORTANT THING START HERE TOMMORROW!!!	
-    //TODO: GLOBAL LOCK ON WHAT PHOTOS ARE BEING DISPLAYED
     //TODO: PREVENT AGAINST DUPLICATE ID'S IN PHOTOS
-    //TODO: MAKE SURE WE ARE ADDING THE CORRECT ID'S (CURRENTLY NOT ALWAYS)
+    //TODO: MAKE SURE WE ARE ADDING THE CORRECTg ID'S (CURRENTLY NOT ALWAYS)
     /* load the photos of a specific album */
     this.loadAlbumPhotos = function() {
     	Slider.slideIn('myAlbums');
     	var albumId = this.id;
+    	pictureLock = albumId;
     	Mosaic.clearPhotos();
         if (albumId+'' in albumDataCache) {
         	for (d in albumDataCache[albumId+'']) {
-        		Mosaic.prepareAndAddPhotos(albumDataCache[albumId+''][d]);
+        		Mosaic.prepareAndAddPhotos(albumDataCache[albumId+''][d], albumId);
         	} 
         } else {
         	var f = function(response) {
@@ -400,7 +410,7 @@ var Mosaic = Mosaic || new function(){
         		} else {
         			albumDataCache[albumId+''] = [response];	
         		}
-                Mosaic.prepareAndAddPhotos(response);
+                Mosaic.prepareAndAddPhotos(response, albumId);
                 if (response.paging && "next" in response.paging) {
                 	var paging = Mosaic.pagingHelper(response);
                 	if (paging.limit && paging.offset) {
@@ -419,10 +429,11 @@ var Mosaic = Mosaic || new function(){
     /* load photos of a friend */
     this.loadPhotos = function(uid) {
         Slider.slideIn('profiles');
+        pictureLock = uid;
     	Mosaic.clearPhotos();
         if (uid+'' in friendPhotoCache) {
         	for (d in friendPhotoCache[uid+'']) {
-        		Mosaic.prepareAndAddPhotos(friendPhotoCache[uid+''][d]);
+        		Mosaic.prepareAndAddPhotos(friendPhotoCache[uid+''][d], uid);
         	} 
         } else {
         	var f = function(response) {
@@ -431,7 +442,7 @@ var Mosaic = Mosaic || new function(){
         		} else {
         			friendPhotoCache[uid+''] = [response];	
         		}
-                Mosaic.prepareAndAddPhotos(response);
+                Mosaic.prepareAndAddPhotos(response, uid);
                 if (response.paging && "next" in response.paging) {
                 	var paging = Mosaic.pagingHelper(response);
                 	if (paging.limit && paging.until) {
