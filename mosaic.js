@@ -311,6 +311,11 @@ var Mosaic = Mosaic || new function(){
 					var myFriends = $('<button>',{
 						text: 'me & you'
 					});
+					//loadJointPhotos = function(uid1, uid2) 1 is cUser
+					myFriends.click(function(){
+						Slider.slideIn('profiles');
+						Mosaic.loadJointPhotos(cUser, tId);
+					});
 					myFriends.appendTo(contentItem);
 				}
 				tButtons.push(contentItem);
@@ -346,21 +351,6 @@ var Mosaic = Mosaic || new function(){
                 });
                 callback(friendsCache);
             });
-        }
-    };
-    //uid2 is always the friend of the current user
-    this.loadJointPhotos = function(uid1, uid2, callback){ 
-        if (uid2+'' in Mosaic.jointCache) {
-            callback(jointCache[uid2+'']);
-        } else {
-            FB.api({
-            method: 'fql.query',
-            query: 'SELECT src_big FROM photo WHERE pid IN (SELECT pid FROM photo_tag WHERE subject='+uid1+') AND pid IN (SELECT pid FROM photo_tag WHERE subject='+uid2+')'
-            }, function(response) {
-                jointCache[uid2+''] = response;
-                console.log(response);
-                callback(response);
-            }); 
         }
     };
     this.sliderAlbumsPreviewArray = function(id) {
@@ -473,6 +463,55 @@ var Mosaic = Mosaic || new function(){
                 }
         	};
             FB.api('/'+uid+'/photos', function(response){
+            	//TODO: ADD LOADING SPINNER LOGIC
+            	//CHECK IF ARRAY LENGTH 0 --> PERMISSIONS DON'T LET YOU SEE THE USER'S PHOTOS
+           		console.log(response);
+                f(response);
+            });
+        }  
+    };
+    //uid2 is always the friend of the current user
+    this.loadJointPhotos = function(uid1, uid2){
+    	var tempPrepAndAdd = function(response) {
+    		var photos = [];
+    		var n = friendsCache[uid1].name+' '+friendsCache[uid2].name;
+    		var ids =  uid1+','+uid2;
+    		$.each(response, function(index, photo) {
+            	photos.push({ids: uid1+','+uid2, name: n, src: photo.src_big});
+            });
+        	Mosaic.addPhotos(photos, Mosaic.photoClick, uid1+uid2+'j');
+    	};
+    	Slider.slideIn('profiles');
+        pictureLock = uid1+uid2+'j';
+    	Mosaic.clearPhotos();
+        if (uid2+'' in jointCache) {
+        	for (d in jointCache[uid2+'']) {
+        		tempPrepAndAdd(jointCache[uid2+''][d], uid1+uid2+'j');
+        	} 
+        } else {
+        	var f = function(response) {
+        		if (uid2+'' in jointCache) {
+        			jointCache[uid2+''].push(response);
+        		} else {
+        			jointCache[uid2+''] = [response];	
+        		}
+                tempPrepAndAdd(response);
+                if (response.paging && "next" in response.paging) {
+                	var paging = Mosaic.pagingHelper(response);
+                	if (paging.limit && paging.until) {
+                		FB.api({
+            				method: 'fql.query',
+            				query: 'SELECT src_big FROM photo WHERE pid IN (SELECT pid FROM photo_tag WHERE subject='+uid1+') AND pid IN (SELECT pid FROM photo_tag WHERE subject='+uid2+')'
+            			}, function(response){
+                			f(response);
+            			});
+            		}
+                }
+        	};
+            FB.api({
+            method: 'fql.query',
+            query: 'SELECT src_big FROM photo WHERE pid IN (SELECT pid FROM photo_tag WHERE subject='+uid1+') AND pid IN (SELECT pid FROM photo_tag WHERE subject='+uid2+')'
+            }, function(response){
             	//TODO: ADD LOADING SPINNER LOGIC
             	//CHECK IF ARRAY LENGTH 0 --> PERMISSIONS DON'T LET YOU SEE THE USER'S PHOTOS
            		console.log(response);
