@@ -300,17 +300,27 @@ var Mosaic = Mosaic || new function(){
 		var contentItem = $('<div>', {
 			class: 'slideContentItem'
 		});
+		
+		var picDiv = $('<div>',{
+    		class: 'profileHalf pPicContainerBorder'
+    	});
+    	var buttonDiv = $('<div>',{
+    		class: 'profileHalf'
+    	});
+		
+		
 		var picture = $('<img>', {
 			src: user.small,
 			name: user.name,
 			class: 'smallPicture'
 		});
-		picture.appendTo(contentItem);
+		picture.appendTo(picDiv);
 		var dn = $('<div>', {
 			class: 'smallName',
 			text: user.name.split(' ')[0]
 		});
-		dn.appendTo(contentItem);
+		dn.appendTo(picDiv);
+		picDiv.appendTo(contentItem);
     	
     	var myPictures = $('<button>', {
 			text: 'pictures'
@@ -320,7 +330,7 @@ var Mosaic = Mosaic || new function(){
 			Mosaic.clearPhotos();
 			Mosaic.loadPhotos(cUser);
 		});
-		myPictures.appendTo(contentItem);
+		myPictures.appendTo(buttonDiv);
 		var myFriends = $('<button>',{
 			text: 'friends'
 		});
@@ -333,7 +343,8 @@ var Mosaic = Mosaic || new function(){
                 Mosaic.addPhotos(photos, Mosaic.photoClick,cUser);
             });
 		});
-		myFriends.appendTo(contentItem);
+		myFriends.appendTo(buttonDiv);
+		buttonDiv.appendTo(contentItem);
 		tButtons.push(contentItem);
 		var added = [cUser];
     	$.each(ids, function(index,value) {
@@ -345,18 +356,27 @@ var Mosaic = Mosaic || new function(){
 					var contentItem = $('<div>', {
 						class: 'slideContentItem'
 					});
+					
+					var picDiv = $('<div>',{
+    					class: 'profileHalf pPicContainerBorder'
+    				});
+    				var buttonDiv = $('<div>',{
+    					class: 'profileHalf'
+    				});
+					
+					
 					var picture = $('<img>', {
 						src: user.small,
 						name: user.name,
 						class: 'smallPicture'
 					});
-					picture.appendTo(contentItem);
+					picture.appendTo(picDiv);
 					var dn = $('<div>', {
 						class: 'smallName',
 						text: user.name.split(' ')[0]
 					});
-					//TODO: IF THERE IS NO cUser, Add them 
-					dn.appendTo(contentItem);
+					dn.appendTo(picDiv);
+					picDiv.appendTo(contentItem);
 				
 					var myPictures = $('<button>', {
 						text: 'pictures'
@@ -367,7 +387,7 @@ var Mosaic = Mosaic || new function(){
 						Mosaic.clearPhotos();
 						Mosaic.loadPhotos(tId);
 					});
-					myPictures.appendTo(contentItem);
+					myPictures.appendTo(buttonDiv);
 					var myFriends = $('<button>',{
 						text: 'me & you'
 					});
@@ -376,9 +396,10 @@ var Mosaic = Mosaic || new function(){
 						Slider.slideIn('profiles');
 						Mosaic.loadJointPhotos(cUser, tId);
 					});
-					myFriends.appendTo(contentItem);
+					myFriends.appendTo(buttonDiv);
+					buttonDiv.appendTo(contentItem);
+					tButtons.push(contentItem);
 				}
-				tButtons.push(contentItem);
 			}
 		});
     	//need to add callbacks here because of multiple buttons
