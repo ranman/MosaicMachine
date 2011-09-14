@@ -183,3 +183,34 @@ h1 {
     -webkit-border-bottom-right-radius: 20px;
     -webkit-border-top-right-radius: 20px;
 }
+/* stuff for filter controls */
+input {
+	width: 100%;
+	float: left;
+	margin-top: 5px;
+	font-family: 'Droid Sans', sans-serif;
+	font-weight: 700;
+	color: #222;
+}
+select {
+	width: 100%;
+	float: left;
+	margin-top: 5px;
+	font-family: 'Droid Sans', sans-serif;
+	font-weight: 700;
+	color: #222;
+}
+h4 {
+	color: #eee;
+    font-size:32px;
+    margin-top: -15px;
+    margin-bottom: 0px;
+    padding-top: 0px;
+    font-variant:small-caps;
+    font-family: 'Lobster', cursive;
+    float: left;
+    text-shadow: black 1px 1px 1px;
+    width: 100%;
+    border-bottom: 1px solid white;
+}
+

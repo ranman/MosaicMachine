@@ -41,10 +41,9 @@ $(document).bind("displayPhotos", function() {
     $my.photos.show();
     Slider.init('myAlbums', Mosaic.sliderAlbumsPreviewArray, false);
     Slider.init('profiles', null, false);
-    Slider.init('filter', produceItemTest, false);
+    Slider.init('filter', Mosaic.filterClick, false);
 });
 /* sliderStuff */
-
 var Slider = Slider || new function(){
     var sliderParams = [];
     this.init = function(id, loadCall, al){
@@ -181,6 +180,7 @@ function produceItemTest(id) {
  *             mosaic code             *
  * * * * * * * * * * * * * * * * * * * */
 //TODO: LOADING INDICATION(SPINNERS) THROUGHOUT DURING LOADING
+//TODO: ADD JUST cUser for when profile is clicked with nothing in it
 //DO THIS AFTER YOU FIX UP THE INITIAL LOADING SCREEN
 var Mosaic = Mosaic || new function(){
     var cUser; //this is the uid of the user who is using the application
@@ -229,6 +229,66 @@ var Mosaic = Mosaic || new function(){
         	$my.photoList.children().click(clickCallback);
         }
     };
+    //TODO: START HERE WHEN YOU GET BACK!!!
+    //THIS BUILDS THE CONTENT FOR THE FILTER SLIDER
+    this.filterClick = function() {
+    	var tButtons = [];
+    	var contentItemSex = $('<div>', {
+			class: 'slideContentItem'
+		});
+		var header1 = $('<h4>',{
+			text: 'sex'
+		});
+		header1.appendTo(contentItemSex);
+		var nosex = $('<input>',{
+			type: 'radio',
+			text: 'everybody',
+			name: 'sexRadio',
+			value: 'none',
+			class: 'myRadio'
+		});
+		nosex.attr('checked', true);
+		nosex.appendTo(contentItemSex);
+		var guys = $('<input>',{
+			type: 'radio',
+			text: 'just guys',
+			name: 'sexRadio',
+			value: 'guys',
+			class: 'myRadio'
+		});
+		guys.appendTo(contentItemSex);
+		var girls = $('<input>',{
+			type: 'radio',
+			text: 'just girls',
+			name: 'sexRadio',
+			value: 'girls',
+			class: 'myRadio'
+		});
+		girls.appendTo(contentItemSex);
+		tButtons.push(contentItemSex);
+		var contentItemRelationship = $('<div>', {
+			class: 'slideContentItem'
+		});
+		
+		//TODO: START HERE WHEN YOU RESUME
+		var selectContainer = $('<select>',{});
+		var rStatuses = ['None', 'Single', 'In a relationship', 'Engaged', 'Married', 'It\'s Complicated', 'In an open relationship', 'Widowed', 'Separated', 'Divorced', 'In a civil union', 'In a domestic partnership'];
+		$.each(rStatuses, function(index,value) {
+			var option = $('<option>', {
+				text: value
+			});
+			option.appendTo(selectContainer);
+		});
+		var header2 = $('<h4>',{
+			text: 'relationship'
+		});
+		header2.appendTo(contentItemRelationship);
+		selectContainer.appendTo(contentItemRelationship);
+		tButtons.push(contentItemRelationship);
+    	Slider.add(tButtons, 'filter', null);
+    };
+    
+    
     //TODO: HANDLE THOSE THAT ARE NOT FRIENDS
     this.photoClick = function(){
     	Slider.clear('profiles');
