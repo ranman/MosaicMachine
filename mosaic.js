@@ -229,55 +229,75 @@ var Mosaic = Mosaic || new function(){
         	$my.photoList.children().click(clickCallback);
         }
     };
-    //TODO: NEED TO MAKE SURE SCROLLING BUTTONS APPEAR WHEN THERE ARE MORE THAN THREE PEOPLE
+    //TODO: HANDLE THOSE THAT ARE NOT FRIENDS
     this.photoClick = function(){
     	Slider.clear('profiles');
     	Slider.slideOut('profiles');
     	var tButtons = [];
     	var ids = this.id.split(',');
+    	
+    	var user = friendsCache[cUser];
+		var contentItem = $('<div>', {
+			class: 'slideContentItem'
+		});
+		var picture = $('<img>', {
+			src: user.small,
+			name: user.name,
+			class: 'smallPicture'
+		});
+		picture.appendTo(contentItem);
+		var dn = $('<div>', {
+			class: 'smallName',
+			text: user.name.split(' ')[0]
+		});
+		dn.appendTo(contentItem);
+    	
+    	var myPictures = $('<button>', {
+			text: 'pictures'
+		});
+		myPictures.click(function(){
+			Slider.slideIn('profiles');
+			Mosaic.clearPhotos();
+			Mosaic.loadPhotos(cUser);
+		});
+		myPictures.appendTo(contentItem);
+		var myFriends = $('<button>',{
+			text: 'friends'
+		});
+		myFriends.click(function(){
+			pictureLock = cUser;
+            Mosaic.clearPhotos();
+			Mosaic.loadFriends(cUser, function(photos){
+				Slider.slideIn('profiles');
+				Mosaic.clearPhotos();
+                Mosaic.addPhotos(photos, Mosaic.photoClick,cUser);
+            });
+		});
+		myFriends.appendTo(contentItem);
+		tButtons.push(contentItem);
+		var added = [cUser];
     	$.each(ids, function(index,value) {
-			var tId = value;
-			if (tId in friendsCache) {
-				var user = friendsCache[tId];
-				var contentItem = $('<div>', {
-					class: 'slideContentItem'
-				});
-				var picture = $('<img>', {
-					src: user.small,
-					name: user.name,
-					class: 'smallPicture'
-				});
-				picture.appendTo(contentItem);
-				var dn = $('<div>', {
-					class: 'smallName',
-					text: user.name.split(' ')[0]
-				});
-				//TODO: IF THERE IS NO cUser, Add them 
-				dn.appendTo(contentItem);
-				if (tId == cUser) { 
-					var myPictures = $('<button>', {
-						text: 'pictures'
+    		var tId = value;
+    		if ($.inArray(tId, added) == -1) {
+				added.push(tId);
+				if (tId in friendsCache) {
+					var user = friendsCache[tId];
+					var contentItem = $('<div>', {
+						class: 'slideContentItem'
 					});
-					myPictures.click(function(){
-						Slider.slideIn('profiles');
-						Mosaic.clearPhotos();
-						Mosaic.loadPhotos(cUser);
+					var picture = $('<img>', {
+						src: user.small,
+						name: user.name,
+						class: 'smallPicture'
 					});
-					myPictures.appendTo(contentItem);
-					var myFriends = $('<button>',{
-						text: 'friends'
+					picture.appendTo(contentItem);
+					var dn = $('<div>', {
+						class: 'smallName',
+						text: user.name.split(' ')[0]
 					});
-					myFriends.click(function(){
-						pictureLock = cUser;
-                		Mosaic.clearPhotos();
-						Mosaic.loadFriends(cUser, function(photos){
-							Slider.slideIn('profiles');
-							Mosaic.clearPhotos();
-                			Mosaic.addPhotos(photos, Mosaic.photoClick,cUser);
-            			});
-					});
-					myFriends.appendTo(contentItem);
-				} else {
+					//TODO: IF THERE IS NO cUser, Add them 
+					dn.appendTo(contentItem);
+				
 					var myPictures = $('<button>', {
 						text: 'pictures'
 					});
