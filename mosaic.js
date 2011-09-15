@@ -210,7 +210,6 @@ var Mosaic = Mosaic || new function(){
             Mosaic.loadFriends(uid, function(photos){
                 $my.photos.html('<ul id="photoList"></ul>');
                 $my.photoList = $('#photoList');
-                response = Mosaic.filterFriends(response, {});
                 
                 pictureLock = 'friends';
                 Mosaic.clearPhotos();
@@ -235,7 +234,7 @@ var Mosaic = Mosaic || new function(){
     					return false;
     				}
     			}	
-    			if (filterRules.sex != 'Everybody') {
+    			if (filterRules.sex != 'Everybody' && person.sex != null && person.sex != '') {
     				if (filterRules.sex != person.sex) {
     					rVal = 0;
     					return false;
@@ -325,8 +324,6 @@ var Mosaic = Mosaic || new function(){
 		var contentItemRelationship = $('<div>', {
 			class: 'slideContentItem'
 		});
-		
-		//TODO: START HERE WHEN YOU RESUME
 		var selectContainer = $('<select>',{});
 		var rStatuses = ['None', 'Single', 'In a relationship', 'Engaged', 'Married', 'It\'s Complicated', 'In an open relationship', 'Widowed', 'Separated', 'Divorced', 'In a civil union', 'In a domestic partnership'];
 		$.each(rStatuses, function(index,value) {
@@ -334,6 +331,13 @@ var Mosaic = Mosaic || new function(){
 				text: value
 			});
 			option.appendTo(selectContainer);
+		});
+		selectContainer.change(function(){
+			$('option:selected').each(function(){
+				filterRules.relationship = $(this).text();
+				Mosaic.filterCurrentPhotos();
+				Slider.slideIn('filter');
+			});
 		});
 		var header2 = $('<h4>',{
 			text: 'relationship'
@@ -465,11 +469,6 @@ var Mosaic = Mosaic || new function(){
     this.clearPhotos = function() {
         $my.photoList.html('');
     };
-    //TODO: make working filtering functions
-    //THESE SCAN CURRENTLY DISPLAYED PHOTOS AND JUST CHANGE VISABILITY PROPERTIES
-    this.filterFriends = function(friends, params) {
-        return friends;
-    };
         
     /* load all friends / profile pictures for init */
     this.loadFriends = function(uid, callback) {
@@ -482,10 +481,8 @@ var Mosaic = Mosaic || new function(){
                       +'WHERE uid='+cUser+' OR uid IN '
                       +'(SELECT uid2 FROM friend WHERE uid1 ='+uid+')'
             }, function(response) {
-            	console.log('count: '+response.length);
                 $.each(response, function(index, friend) {
                     friendsCache[friend.uid+''] = {ids: friend.uid, sex: friend.sex, name: friend.name, src: friend.pic_big, small: friend.pic_square, relationship_status: friend.relationship_status};
-                    /*console.log(friendsCache[friend.uid+'']);*/
                 });
                 callback(friendsCache);
             });
@@ -603,11 +600,11 @@ var Mosaic = Mosaic || new function(){
             FB.api('/'+uid+'/photos', function(response){
             	//TODO: ADD LOADING SPINNER LOGIC
             	//CHECK IF ARRAY LENGTH 0 --> PERMISSIONS DON'T LET YOU SEE THE USER'S PHOTOS
-           		console.log(response);
                 f(response);
             });
         }  
     };
+    //TODO: CHECK IF ALBUM HAS BEEN ONLY PARTIALLY LOADED INTO CACHE AND UPDATE ACCORDINGLY
     //uid2 is always the friend of the current user
     this.loadJointPhotos = function(uid1, uid2){
     	var tempPrepAndAdd = function(response) {
