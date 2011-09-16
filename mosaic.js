@@ -197,6 +197,9 @@ var Mosaic = Mosaic || new function(){
     var albumDataCache = []; // stores the images in each of cUser's albums
     var friendPhotoCache = [];
     
+    /* filter rule stores */
+    var filterRules = {relationship: 'None', sex: 'Everybody'};
+    
     this.buildMosaic = function(response) {
         if(response && response.session) {
             uid = response.session.uid;
@@ -207,7 +210,6 @@ var Mosaic = Mosaic || new function(){
             Mosaic.loadFriends(uid, function(photos){
                 $my.photos.html('<ul id="photoList"></ul>');
                 $my.photoList = $('#photoList');
-                response = Mosaic.filterFriends(response, {});
                 
                 pictureLock = 'friends';
                 Mosaic.clearPhotos();
@@ -219,11 +221,49 @@ var Mosaic = Mosaic || new function(){
             
         }
     };
+    
+    /* this returns true if a photo should be visable based on filter rules; false otherwise */
+    this.filterPhoto = function(ids) {
+    	var rVal = 1; 
+    	$.each(ids.split(','),function(key, value) {
+    		if (value in friendsCache) {
+    			var person = friendsCache[value+''];
+    			if (filterRules.relationship != 'None') {
+    				if (filterRules.relationship != person.relationship_status) {
+    					rVal = 0;
+    					return false;
+    				}
+    			}	
+    			if (filterRules.sex != 'Everybody' && person.sex != null && person.sex != '') {
+    				if (filterRules.sex != person.sex) {
+    					rVal = 0;
+    					return false;
+    				}
+    			}	
+    		}
+    	});
+    	return rVal;
+    };
+    this.filterCurrentPhotos = function() {
+    	$.each($my.photoList.children(), function(key, value) {
+    		if (Mosaic.filterPhoto(value.id) == 1) {
+    			$(value).css('display', '');
+    		} else {
+    			$(value).css('display', 'none');
+    		}
+    	});
+    };
+    
     this.addPhotos = function(photos, clickCallback, lock) {
     	if (lock == pictureLock) {
         	var photo_array = [];
         	for (p in photos) {
-            	photo_array.push('<li id="'+photos[p].ids+'" title="'+photos[p].name+'"><img src="'+photos[p].src+'" /></li>');
+        		if (Mosaic.filterPhoto(photos[p].ids) == 1) {
+    				photo_array.push('<li id="'+photos[p].ids+'" title="'+photos[p].name+'"><img src="'+photos[p].src+'" /></li>');
+    			} else {
+    				photo_array.push('<li id="'+photos[p].ids+'" title="'+photos[p].name+'" style="display: none;"><img src="'+photos[p].src+'"/></li>');
+    			}
+            	Mosaic.filterPhoto(photos[p].ids);
         	}
         	$my.photoList.html($my.photoList.html()+photo_array.join(''));
         	$my.photoList.children().click(clickCallback);
@@ -244,33 +284,46 @@ var Mosaic = Mosaic || new function(){
 			type: 'radio',
 			text: 'everybody',
 			name: 'sexRadio',
-			value: 'none',
+			value: 'Everybody',
 			class: 'myRadio'
 		});
 		nosex.attr('checked', true);
+		nosex.click(function(){
+			filterRules.sex = 'Everybody';
+			Mosaic.filterCurrentPhotos();
+			Slider.slideIn('filter');
+		});
 		nosex.appendTo(contentItemSex);
 		var guys = $('<input>',{
 			type: 'radio',
 			text: 'just guys',
 			name: 'sexRadio',
-			value: 'guys',
+			value: 'male',
 			class: 'myRadio'
+		});
+		guys.click(function(){
+			filterRules.sex = 'male';
+			Mosaic.filterCurrentPhotos();
+			Slider.slideIn('filter');
 		});
 		guys.appendTo(contentItemSex);
 		var girls = $('<input>',{
 			type: 'radio',
 			text: 'just girls',
 			name: 'sexRadio',
-			value: 'girls',
+			value: 'female',
 			class: 'myRadio'
+		});
+		girls.click(function(){
+			filterRules.sex = 'female';
+			Mosaic.filterCurrentPhotos();
+			Slider.slideIn('filter');
 		});
 		girls.appendTo(contentItemSex);
 		tButtons.push(contentItemSex);
 		var contentItemRelationship = $('<div>', {
 			class: 'slideContentItem'
 		});
-		
-		//TODO: START HERE WHEN YOU RESUME
 		var selectContainer = $('<select>',{});
 		var rStatuses = ['None', 'Single', 'In a relationship', 'Engaged', 'Married', 'It\'s Complicated', 'In an open relationship', 'Widowed', 'Separated', 'Divorced', 'In a civil union', 'In a domestic partnership'];
 		$.each(rStatuses, function(index,value) {
@@ -278,6 +331,13 @@ var Mosaic = Mosaic || new function(){
 				text: value
 			});
 			option.appendTo(selectContainer);
+		});
+		selectContainer.change(function(){
+			$('option:selected').each(function(){
+				filterRules.relationship = $(this).text();
+				Mosaic.filterCurrentPhotos();
+				Slider.slideIn('filter');
+			});
 		});
 		var header2 = $('<h4>',{
 			text: 'relationship'
@@ -300,17 +360,27 @@ var Mosaic = Mosaic || new function(){
 		var contentItem = $('<div>', {
 			class: 'slideContentItem'
 		});
+		
+		var picDiv = $('<div>',{
+    		class: 'profileHalf pPicContainerBorder'
+    	});
+    	var buttonDiv = $('<div>',{
+    		class: 'profileHalf'
+    	});
+		
+		
 		var picture = $('<img>', {
 			src: user.small,
 			name: user.name,
 			class: 'smallPicture'
 		});
-		picture.appendTo(contentItem);
+		picture.appendTo(picDiv);
 		var dn = $('<div>', {
 			class: 'smallName',
 			text: user.name.split(' ')[0]
 		});
-		dn.appendTo(contentItem);
+		dn.appendTo(picDiv);
+		picDiv.appendTo(contentItem);
     	
     	var myPictures = $('<button>', {
 			text: 'pictures'
@@ -320,7 +390,7 @@ var Mosaic = Mosaic || new function(){
 			Mosaic.clearPhotos();
 			Mosaic.loadPhotos(cUser);
 		});
-		myPictures.appendTo(contentItem);
+		myPictures.appendTo(buttonDiv);
 		var myFriends = $('<button>',{
 			text: 'friends'
 		});
@@ -333,7 +403,8 @@ var Mosaic = Mosaic || new function(){
                 Mosaic.addPhotos(photos, Mosaic.photoClick,cUser);
             });
 		});
-		myFriends.appendTo(contentItem);
+		myFriends.appendTo(buttonDiv);
+		buttonDiv.appendTo(contentItem);
 		tButtons.push(contentItem);
 		var added = [cUser];
     	$.each(ids, function(index,value) {
@@ -345,18 +416,27 @@ var Mosaic = Mosaic || new function(){
 					var contentItem = $('<div>', {
 						class: 'slideContentItem'
 					});
+					
+					var picDiv = $('<div>',{
+    					class: 'profileHalf pPicContainerBorder'
+    				});
+    				var buttonDiv = $('<div>',{
+    					class: 'profileHalf'
+    				});
+					
+					
 					var picture = $('<img>', {
 						src: user.small,
 						name: user.name,
 						class: 'smallPicture'
 					});
-					picture.appendTo(contentItem);
+					picture.appendTo(picDiv);
 					var dn = $('<div>', {
 						class: 'smallName',
 						text: user.name.split(' ')[0]
 					});
-					//TODO: IF THERE IS NO cUser, Add them 
-					dn.appendTo(contentItem);
+					dn.appendTo(picDiv);
+					picDiv.appendTo(contentItem);
 				
 					var myPictures = $('<button>', {
 						text: 'pictures'
@@ -367,7 +447,7 @@ var Mosaic = Mosaic || new function(){
 						Mosaic.clearPhotos();
 						Mosaic.loadPhotos(tId);
 					});
-					myPictures.appendTo(contentItem);
+					myPictures.appendTo(buttonDiv);
 					var myFriends = $('<button>',{
 						text: 'me & you'
 					});
@@ -376,9 +456,10 @@ var Mosaic = Mosaic || new function(){
 						Slider.slideIn('profiles');
 						Mosaic.loadJointPhotos(cUser, tId);
 					});
-					myFriends.appendTo(contentItem);
+					myFriends.appendTo(buttonDiv);
+					buttonDiv.appendTo(contentItem);
+					tButtons.push(contentItem);
 				}
-				tButtons.push(contentItem);
 			}
 		});
     	//need to add callbacks here because of multiple buttons
@@ -387,11 +468,6 @@ var Mosaic = Mosaic || new function(){
     };
     this.clearPhotos = function() {
         $my.photoList.html('');
-    };
-    //TODO: make working filtering functions
-    //THESE SCAN CURRENTLY DISPLAYED PHOTOS AND JUST CHANGE VISABILITY PROPERTIES
-    this.filterFriends = function(friends, params) {
-        return friends;
     };
         
     /* load all friends / profile pictures for init */
@@ -405,7 +481,6 @@ var Mosaic = Mosaic || new function(){
                       +'WHERE uid='+cUser+' OR uid IN '
                       +'(SELECT uid2 FROM friend WHERE uid1 ='+uid+')'
             }, function(response) {
-            	console.log('count: '+response.length);
                 $.each(response, function(index, friend) {
                     friendsCache[friend.uid+''] = {ids: friend.uid, sex: friend.sex, name: friend.name, src: friend.pic_big, small: friend.pic_square, relationship_status: friend.relationship_status};
                 });
@@ -525,11 +600,11 @@ var Mosaic = Mosaic || new function(){
             FB.api('/'+uid+'/photos', function(response){
             	//TODO: ADD LOADING SPINNER LOGIC
             	//CHECK IF ARRAY LENGTH 0 --> PERMISSIONS DON'T LET YOU SEE THE USER'S PHOTOS
-           		console.log(response);
                 f(response);
             });
         }  
     };
+    //TODO: CHECK IF ALBUM HAS BEEN ONLY PARTIALLY LOADED INTO CACHE AND UPDATE ACCORDINGLY
     //uid2 is always the friend of the current user
     this.loadJointPhotos = function(uid1, uid2){
     	var tempPrepAndAdd = function(response) {
