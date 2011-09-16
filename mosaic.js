@@ -122,7 +122,7 @@ var Slider = Slider || new function(){
         else if (loadState == 1) {
             Slider.clear(id);
             s.contentHelper.append('<div class="slideContentItem"></div>');
-            s.contentHelper.append('<div class="slideContentItem"><img src="ajax-loader.gif" /></div>');
+            s.contentHelper.append('<div class="slideContentItem"><img src="largeGreyLoader.gif" /></div>');
             s.slideItems.push('<div class="slideContentItem">block</div>');
             s.slideItems.push('<div class="slideContentItem">loading spinner</div>');
         }    
