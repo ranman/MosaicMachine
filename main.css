@@ -253,7 +253,10 @@ button {
 #feedback {
     top: 583px;
     left: 0px;
-    float: right;
+    height: 131px;
+    width: 55px;  
+    position: fixed;    
+    cursor: pointer;
     background-color: #ccc;
     border-bottom-right-radius: 20px;
     border-top-right-radius: 20px;
@@ -262,4 +265,7 @@ button {
     -webkit-border-bottom-right-radius: 20px;
     -webkit-border-top-right-radius: 20px;
 }
-
+#feedbackLabel {
+	margin-top:4px;
+	margin-left: 4px;
+}
