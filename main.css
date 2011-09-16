@@ -17,6 +17,8 @@ h1 {
     float: left;
     text-shadow: black 1px 1px 1px;
 }
+
+/* loading spinner layout */
 #loadText {
     text-align: left;
     font-size:30px;
@@ -31,6 +33,17 @@ h1 {
 	margin-right: 10px;
 	margin-top: 2px;
 }
+
+#loadingSpinner {
+    width: 300px;
+    text-align: left;
+    position: absolute;
+    top: 200px;
+    left: 50%;
+    margin-left: -150px;
+    display: none;
+}
+
 #constant {
     position: fixed;
     width: 100%;
@@ -59,14 +72,6 @@ h1 {
     top: 200px;
     left: 50%;
     margin-left: -70px;
-}
-#loadingSpinner {
-    width: 300px;
-    text-align: left;
-    position: absolute;
-    top: 200px;
-    left: 50%;
-    display: none;
 }
 #photos img {
   /* Just in case there are inline attributes */
