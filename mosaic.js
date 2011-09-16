@@ -42,6 +42,7 @@ $(document).bind("displayPhotos", function() {
     Slider.init('myAlbums', Mosaic.sliderAlbumsPreviewArray, false);
     Slider.init('profiles', null, false);
     Slider.init('filter', Mosaic.filterClick, false);
+    Mosaic.firstProfile();
 });
 /* sliderStuff */
 var Slider = Slider || new function(){
@@ -92,7 +93,7 @@ var Slider = Slider || new function(){
         s.slideItems.length = 0;
         s.pos = 0;
     };
-    this.add = function(item, id, callback) {
+    this.add = function(item, id, callback, skipButtonAdjust) {
         var s = sliderParams[id];    
         if (s.loadMode == 1) {
             Slider.setLoading(id, 0);
@@ -108,7 +109,9 @@ var Slider = Slider || new function(){
         	s.pos = (s.slideItems.length - 3);
         } 
         s.contentHelper.css('left', ((s.slideItems.length - 3) * -164)+'px');
-        Slider.buttonAdjust(id);
+        if (!skipButtonAdjust) {
+        	Slider.buttonAdjust(id);
+        }
     };
     this.setLoading = function(id, loadState) {
         var s = sliderParams[id];
@@ -174,7 +177,7 @@ function produceItemTest(id) {
     var i6 = '<div class="slideContentItem">hello-i6</div>';
     var i7 = '<div class="slideContentItem">hello-i7</div>';
     var i8 = '<div class="slideContentItem">hello-i8</div>';
-    Slider.add([i1,i2,i3,i4,i5,i6,i7,i8,i8], id);
+    Slider.add([i1,i2,i3,i4,i5,i6,i7,i8,i8], id, false);
 }
 /* * * * * * * * * * * * * * * * * * * *
  *             mosaic code             *
@@ -269,8 +272,6 @@ var Mosaic = Mosaic || new function(){
         	$my.photoList.children().click(clickCallback);
         }
     };
-    //TODO: START HERE WHEN YOU GET BACK!!!
-    //THIS BUILDS THE CONTENT FOR THE FILTER SLIDER
     this.filterClick = function() {
     	var tButtons = [];
     	var contentItemSex = $('<div>', {
@@ -345,11 +346,66 @@ var Mosaic = Mosaic || new function(){
 		header2.appendTo(contentItemRelationship);
 		selectContainer.appendTo(contentItemRelationship);
 		tButtons.push(contentItemRelationship);
-    	Slider.add(tButtons, 'filter', null);
+    	Slider.add(tButtons, 'filter', null,false);
     };
     
+    this.firstProfile = function() {
+    	var tButtons = [];
+    	var user = friendsCache[cUser];
+		var contentItem = $('<div>', {
+			class: 'slideContentItem'
+		});
+		
+		var picDiv = $('<div>',{
+    		class: 'profileHalf pPicContainerBorder'
+    	});
+    	var buttonDiv = $('<div>',{
+    		class: 'profileHalf'
+    	});
+		
+		
+		var picture = $('<img>', {
+			src: user.small,
+			name: user.name,
+			class: 'smallPicture'
+		});
+		picture.appendTo(picDiv);
+		var dn = $('<div>', {
+			class: 'smallName',
+			text: user.name.split(' ')[0]
+		});
+		dn.appendTo(picDiv);
+		picDiv.appendTo(contentItem);
+    	
+    	var myPictures = $('<button>', {
+			text: 'pictures'
+		});
+		myPictures.click(function(){
+			Slider.slideIn('profiles');
+			Mosaic.clearPhotos();
+			Mosaic.loadPhotos(cUser);
+		});
+		myPictures.appendTo(buttonDiv);
+		var myFriends = $('<button>',{
+			text: 'friends'
+		});
+		myFriends.click(function(){
+			pictureLock = cUser;
+            Mosaic.clearPhotos();
+			Mosaic.loadFriends(cUser, function(photos){
+				Slider.slideIn('profiles');
+				Mosaic.clearPhotos();
+                Mosaic.addPhotos(photos, Mosaic.photoClick,cUser);
+            });
+		});
+		myFriends.appendTo(buttonDiv);
+		buttonDiv.appendTo(contentItem);
+		tButtons.push(contentItem);
+		Slider.add(tButtons, 'profiles', null, true);
+    }
     
-    //TODO: HANDLE THOSE THAT ARE NOT FRIENDS
+    
+    
     this.photoClick = function(){
     	Slider.clear('profiles');
     	Slider.slideOut('profiles');
@@ -464,7 +520,7 @@ var Mosaic = Mosaic || new function(){
 		});
     	//need to add callbacks here because of multiple buttons
     	//add these slider
-    	Slider.add(tButtons, 'profiles', null);
+    	Slider.add(tButtons, 'profiles', null,false);
     };
     this.clearPhotos = function() {
         $my.photoList.html('');
@@ -493,9 +549,8 @@ var Mosaic = Mosaic || new function(){
             var output = [];
             for (ak in response.data) {
                output.push('<div class="slideContentItem" id="'+response.data[ak].id+'"><img src="https://graph.facebook.com/'+response.data[ak].id+'/picture?access_token='+accessToken+'"title="'+response.data[ak].name+'" height="111" width="144"/></div>');
-               // TODO: bind click functions to slide content items
             }
-            Slider.add(output, id, Mosaic.loadAlbumPhotos);
+            Slider.add(output, id, Mosaic.loadAlbumPhotos,false);
         });
     };
     /* loads the albums of a user*/
@@ -536,8 +591,6 @@ var Mosaic = Mosaic || new function(){
         }
         Mosaic.addPhotos(photos, Mosaic.photoClick, lock);
    	};
-    //TODO: PREVENT AGAINST DUPLICATE ID'S IN PHOTOS
-    //TODO: MAKE SURE WE ARE ADDING THE CORRECTg ID'S (CURRENTLY NOT ALWAYS)
     /* load the photos of a specific album */
     this.loadAlbumPhotos = function() {
     	Slider.slideIn('myAlbums');
