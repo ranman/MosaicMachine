@@ -18,16 +18,18 @@ h1 {
     text-shadow: black 1px 1px 1px;
 }
 #loadText {
-    color: #000;
-    width: 200px;
-    text-align: center;
-    font-size:24px;
-    font-variant:small-caps;
-    font-family:Helvetica, Arial, sans-serif;
+    text-align: left;
+    font-size:30px;
+	font-family: 'Droid Sans', sans-serif;
+	font-weight: 700;
+	color: #222;
+    float: left;
     display: none;
-    position: absolute;
-    top: 250px;
-    left: 45.5%;
+}
+#loadingSpinnerImage {
+	float: left;
+	margin-right: 10px;
+	margin-top: 2px;
 }
 #constant {
     position: fixed;

@@ -29,7 +29,7 @@ $(document).bind('loadingFriends', function() {
     $my.loginButton.hide();
     $my.loadingSpinner.show();
     $my.loadText.show();
-    $my.loadText.text('Loading Friends');
+    $my.loadText.text('loading friends...');
     $my.infobar.animate({marginTop: '-225px'}, 1000);
 });
 $(document).bind('loadingPhotos', function() {
