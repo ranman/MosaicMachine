@@ -257,25 +257,28 @@ button {
 }
 
 /* feedback */
+
+/* this is the feedback button*/
 #feedback {
-    top: 583px;
-    left: 0px;
+    top: 130px;
+    left: 100%;
     height: 131px;
     width: 55px;  
+    margin-left: -55px;
     position: fixed;    
     cursor: pointer;
     background-color: #ccc;
-    border-bottom-right-radius: 20px;
-    border-top-right-radius: 20px;
-    -moz-border-radius-bottomright:  20px;
-    -moz-border-radius-topright:  20px;
-    -webkit-border-bottom-right-radius: 20px;
-    -webkit-border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+    -moz-border-radius-bottomleft:  20px;
+    -moz-border-radius-topleft:  20px;
+    -webkit-border-bottom-left-radius: 20px;
+    -webkit-border-top-left-radius: 20px;
 }
 
 #feedbackLabel {
 	margin-top:4px;
-	margin-left: 4px;
+	margin-left: 9px;
 }
 
 #feedbackContainer {
