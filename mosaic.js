@@ -12,7 +12,8 @@ window.$my = {
     photos: $('#photos'),
     hideFeedback: true,
     feedback: $('#feedback'),
-    feedbackForm: $('#feedbackContainer')
+    feedbackForm: $('#feedbackContainer'),
+    hideControls: false
 };
 /* Events which trigger page changes */
 $(document).bind("FBLoaded", function() {
@@ -30,8 +31,27 @@ $(document).bind("FBLoaded", function() {
     $my.feedback.click(function(){
     	$my.feedbackForm.css('display', 'block');
     });
-    $('#feedbackCloseB').click(function(){
+    $('#feedbackCloseB').click(functhhion(){
     	$my.feedbackForm.css('display', 'none');		
+    });
+    $('body').keydown(function(e){
+    	if (e.keyCode == '72') {
+    		if ($my.hideControls) {
+    			$my.hideControls = false;
+    			$('#myAlbums').css('display', '');
+    			$('#profiles').css('display', '');
+    			$('#filter').css('display', '');
+    			$('#constant').css('display', '');
+    			$('#feedback').css('display', '');
+    		} else {
+    			$my.hideControls = true;
+    			$('#myAlbums').css('display', 'none');
+    			$('#profiles').css('display', 'none');
+    			$('#filter').css('display', 'none');
+    			$('#constant').css('display', 'none');
+    			$('#feedback').css('display', 'none');
+    		}
+    	}
     });
 });
 $(document).bind('loadingFriends', function() {
