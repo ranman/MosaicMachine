@@ -9,7 +9,10 @@ window.$my = {
     loginButton: $('#loginButton'),
     loadingSpinner: $('#loadingSpinner'),
     loadText: $('#loadText'),
-    photos: $('#photos')
+    photos: $('#photos'),
+    hideFeedback: true,
+    feedback: $('#feedback'),
+    feedbackForm: $('#feedbackContainer')
 };
 /* Events which trigger page changes */
 $(document).bind("FBLoaded", function() {
@@ -24,6 +27,12 @@ $(document).bind("FBLoaded", function() {
     $my.infoHideDivButton.fadeTo(4,0.5);
     $my.infobar.mouseover(function(){$my.infoContent.fadeTo(4,1);$my.infoHideDivButton.fadeTo(4,1);});
     $my.infobar.mouseleave(function(){$my.infoContent.fadeTo(4,0.25);$my.infoHideDivButton.fadeTo(4,0.25);});
+    $my.feedback.click(function(){
+    	$my.feedbackForm.css('display', 'block');
+    });
+    $('#feedbackCloseB').click(function(){
+    	$my.feedbackForm.css('display', 'none');		
+    });
 });
 $(document).bind('loadingFriends', function() {
     $my.loginButton.hide();

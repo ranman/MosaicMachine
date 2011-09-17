@@ -256,7 +256,7 @@ button {
 	padding-right: 5px;
 }
 
-/* feedback button */
+/* feedback */
 #feedback {
     top: 583px;
     left: 0px;
@@ -272,7 +272,50 @@ button {
     -webkit-border-bottom-right-radius: 20px;
     -webkit-border-top-right-radius: 20px;
 }
+
 #feedbackLabel {
 	margin-top:4px;
 	margin-left: 4px;
+}
+
+#feedbackContainer {
+	width: 520px;
+	height: 670px;
+    text-align: left;
+    background-color: #ccc;
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    margin-left: -250px;
+    border-radius: 20px;
+    -moz-border-radius:  20px;
+    -webkit-border-radius: 20px;
+    display: none;
+}
+#feedbackForm {
+	margin-top: 20px;
+	margin-left: 20px;
+	position: absolute;
+}
+#feedbackCloseB {
+	width: 40px;
+	height: 40px;
+	background-color: #000;
+	position: absolute;
+	z-index: 10;
+	border-radius: 21px;
+    -moz-border-radius:  21px;
+    -webkit-border-radius: 21px;
+    font-family: 'Lobster', cursive;
+	text-shadow: black 1px 1px 1px;
+	color: #eee;
+    font-size:40px;
+    float: right;
+    margin-left: 490px;
+    margin-top: -10px;
+    cursor: pointer;
+}
+#feedbackCloseText {
+	margin-top: -4px;	
+	margin-left: 5px;
 }
