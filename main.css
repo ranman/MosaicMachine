@@ -337,3 +337,32 @@ button {
     top: 100px;
     left: 50%;
 }
+
+/* how to use text*/
+#explanatoryText {
+	width: 700px;
+	height: 150px;
+	text-align: left;
+	margin-left: -350px;
+	font-size:16px;
+	font-family: 'Droid Sans', sans-serif;
+	font-weight: 700;
+	color: #222;
+	position: fixed;
+    top: 100px;
+    left: 50%;
+    background-color: #ccc;
+    padding: 10px;
+    border-radius: 21px;
+    -moz-border-radius:  21px;
+    -webkit-border-radius: 21px;
+    display: none;
+}
+
+#hideExplainButton {
+	width: 200px;
+	position: fixed;
+	margin-left: -100px;
+	top: 210px;
+    left: 50%;
+}

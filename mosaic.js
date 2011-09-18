@@ -77,6 +77,10 @@ $(document).bind("displayPhotos", function() {
     $my.loadingSpinner.hide();
     $my.loadText.hide();
     $my.photos.show();
+    $('#hideExplainButton').click(function(){
+    	$('#explanatoryText').hide();
+    });
+    $('#explanatoryText').show();
     Slider.init('myAlbums', Mosaic.sliderAlbumsPreviewArray, false);
     Slider.init('profiles', null, false);
     Slider.init('filter', Mosaic.filterClick, false);
