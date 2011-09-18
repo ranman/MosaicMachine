@@ -31,7 +31,7 @@ $(document).bind("FBLoaded", function() {
     $my.feedback.click(function(){
     	$my.feedbackForm.css('display', 'block');
     });
-    $('#feedbackCloseB').click(functhhion(){
+    $('#feedbackCloseB').click(function(){
     	$my.feedbackForm.css('display', 'none');		
     });
     $('body').keydown(function(e){
@@ -55,6 +55,7 @@ $(document).bind("FBLoaded", function() {
     });
 });
 $(document).bind('loadingFriends', function() {
+	$('#introText').css('display', 'none');
     $my.loginButton.hide();
     $my.loadingSpinner.show();
     $my.loadText.show();
@@ -62,8 +63,16 @@ $(document).bind('loadingFriends', function() {
     $my.infobar.animate({marginTop: '-225px'}, 1000);
 });
 $(document).bind('loadingPhotos', function() {
-    $my.loadText.text('Loading Photos');
+    $my.loadText.text('Loading Photos...');
+    $my.loadText.show();
+    $my.loadingSpinner.show();
 });
+$(document).bind("showAlbum", function(){
+	$my.loadingSpinner.hide();
+	$my.loadText.hide();
+	$my.photos.show();
+});
+
 $(document).bind("displayPhotos", function() {
     $my.loadingSpinner.hide();
     $my.loadText.hide();
@@ -621,12 +630,14 @@ var Mosaic = Mosaic || new function(){
         Mosaic.addPhotos(photos, Mosaic.photoClick, lock);
    	};
     /* load the photos of a specific album */
-    this.loadAlbumPhotos = function() {
+    this.loadAlbumPhotos = function() {    
     	Slider.slideIn('myAlbums');
     	var albumId = this.id;
     	pictureLock = albumId;
     	Mosaic.clearPhotos();
+    	$.event.trigger("loadingPhotos");
         if (albumId+'' in albumDataCache) {
+        	$.event.trigger("showAlbum");
         	for (d in albumDataCache[albumId+'']) {
         		Mosaic.prepareAndAddPhotos(albumDataCache[albumId+''][d], albumId);
         	} 
@@ -649,6 +660,7 @@ var Mosaic = Mosaic || new function(){
         	};
             FB.api('/'+albumId+'/photos', function(response){
             	//TODO: ADD LOADING SPINNER LOGIC
+            	$.event.trigger("showAlbum");
                 f(response);
             });
         }
@@ -658,7 +670,9 @@ var Mosaic = Mosaic || new function(){
         Slider.slideIn('profiles');
         pictureLock = uid;
     	Mosaic.clearPhotos();
+    	 $.event.trigger("loadingPhotos");    	
         if (uid+'' in friendPhotoCache) {
+        	$.event.trigger("showAlbum");
         	for (d in friendPhotoCache[uid+'']) {
         		Mosaic.prepareAndAddPhotos(friendPhotoCache[uid+''][d], uid);
         	} 
@@ -682,6 +696,7 @@ var Mosaic = Mosaic || new function(){
             FB.api('/'+uid+'/photos', function(response){
             	//TODO: ADD LOADING SPINNER LOGIC
             	//CHECK IF ARRAY LENGTH 0 --> PERMISSIONS DON'T LET YOU SEE THE USER'S PHOTOS
+            	$.event.trigger("showAlbum");
                 f(response);
             });
         }  
@@ -701,7 +716,9 @@ var Mosaic = Mosaic || new function(){
     	Slider.slideIn('profiles');
         pictureLock = uid1+uid2+'j';
     	Mosaic.clearPhotos();
+    	$.event.trigger("loadingPhotos");
         if (uid2+'' in jointCache) {
+        	$.event.trigger("showAlbum");
         	for (d in jointCache[uid2+'']) {
         		tempPrepAndAdd(jointCache[uid2+''][d], uid1+uid2+'j');
         	} 
@@ -731,7 +748,8 @@ var Mosaic = Mosaic || new function(){
             }, function(response){
             	//TODO: ADD LOADING SPINNER LOGIC
             	//CHECK IF ARRAY LENGTH 0 --> PERMISSIONS DON'T LET YOU SEE THE USER'S PHOTOS
-           		console.log(response);
+            	$.event.trigger("showAlbum");
+           		/* console.log(response); */
                 f(response);
             });
         }  
