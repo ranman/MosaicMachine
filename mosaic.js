@@ -66,7 +66,20 @@ $(document).bind('loadingPhotos', function() {
     $my.loadText.text('Loading Photos...');
     $my.loadText.show();
     $my.loadingSpinner.show();
+    $('#loadingSpinnerImage').show();
 });
+$(document).bind('permissions', function() {
+    $my.loadText.text('A user\'s permissions prevent us from loading these photos.  Sorry. ');
+    $my.loadText.show();
+    $('#loadingSpinnerImage').hide();
+});
+
+$(document).bind('noPhotos', function() {
+    $my.loadText.text('No photos to display.');
+    $my.loadText.show();
+    $('#loadingSpinnerImage').hide();
+});
+
 $(document).bind("showAlbum", function(){
 	$my.loadingSpinner.hide();
 	$my.loadText.hide();
@@ -663,9 +676,16 @@ var Mosaic = Mosaic || new function(){
                 }
         	};
             FB.api('/'+albumId+'/photos', function(response){
-            	//TODO: ADD LOADING SPINNER LOGIC
-            	$.event.trigger("showAlbum");
-                f(response);
+            	if (response.length == 0) {
+            		$.event.trigger("noPhotos");
+            	} else if (response.data && response.data.length == 0) {
+            		$.event.trigger("permissions");
+            	} 
+            	else {
+            		$.event.trigger("showAlbum");
+           			console.log(response); 
+                	f(response);
+            	}
             });
         }
     };
@@ -700,8 +720,16 @@ var Mosaic = Mosaic || new function(){
             FB.api('/'+uid+'/photos', function(response){
             	//TODO: ADD LOADING SPINNER LOGIC
             	//CHECK IF ARRAY LENGTH 0 --> PERMISSIONS DON'T LET YOU SEE THE USER'S PHOTOS
-            	$.event.trigger("showAlbum");
-                f(response);
+            	if (response.length == 0) {
+            		$.event.trigger("noPhotos");
+            	} else if (response.data && response.data.length == 0) {
+            		$.event.trigger("permissions");
+            	} 
+            	else {
+            		$.event.trigger("showAlbum");
+           			console.log(response); 
+                	f(response);
+            	}
             });
         }  
     };
@@ -752,9 +780,16 @@ var Mosaic = Mosaic || new function(){
             }, function(response){
             	//TODO: ADD LOADING SPINNER LOGIC
             	//CHECK IF ARRAY LENGTH 0 --> PERMISSIONS DON'T LET YOU SEE THE USER'S PHOTOS
-            	$.event.trigger("showAlbum");
-           		/* console.log(response); */
-                f(response);
+            	if (response.length == 0) {
+            		$.event.trigger("noPhotos");
+            	} else if (response.data && response.data.length == 0) {
+            		$.event.trigger("permissions");
+            	} 
+            	else {
+            		$.event.trigger("showAlbum");
+           			console.log(response); 
+                	f(response);
+            	}
             });
         }  
     };
