@@ -180,16 +180,24 @@ var photoManager = photoManager || new function(){
 			}
 		}
 	};
-	this.addPhoto = function(photo, photoCount) {
-		colHandles[lastAdd].html(colHandles[lastAdd].html()+photo);
-		colPCounts[lastAdd] += 1;
-		photoCount += 1;
-		lastAdd = (lastAdd + photoCount) % colCount;
-		/*
-		if (lastAdd >= colCount) {
-			lastAdd = 0;
+	this.addPhoto = function(photo) {
+		var colStrs = [];
+		for (var z = 0; z < colCount; ++z)  {
+			colStrs.push('');
 		}
-		*/
+		
+		for (i in photo) {
+			colStrs[lastAdd] += photo[i];
+			colPCounts[lastAdd] += 1;
+			photoCount += 1;
+			lastAdd += 1;
+			if (lastAdd >= colCount) {
+				lastAdd = 0;
+			}
+		}
+		for (var z = 0; z < colCount; ++z)  {
+			colHandles[z].html(colHandles[z].html()+colStrs[z]);
+		}
 	};
 	this.clearPhotos = function() {
 		photoCount = 0;	
@@ -439,21 +447,18 @@ var Mosaic = Mosaic || new function(){
     
     this.addPhotos = function(photos, clickCallback, lock) {
     	if (lock == pictureLock) {
-    		var as = '';
-    		var c = 0;
+    		var as = [];
         	for (p in photos) {
         		if (Mosaic.filterPhoto(photos[p].ids) == 1) {
-        			as += '<img id="'+photos[p].ids+'" title="'+photos[p].name+'" src="'+photos[p].src+'" />';
-        			c += 1;
+        			as.push('<img id="'+photos[p].ids+'" title="'+photos[p].name+'" src="'+photos[p].src+'" />');
     				//photoManager.addPhoto('<img id="'+photos[p].ids+'" title="'+photos[p].name+'" src="'+photos[p].src+'" />');
     			} else {
-    				as += '<img id="'+photos[p].ids+'" title="'+photos[p].name+'" style="display: none;" src="'+photos[p].src+'"/>';
-        			c += 1;
+    				as.push('<img id="'+photos[p].ids+'" title="'+photos[p].name+'" style="display: none;" src="'+photos[p].src+'"/>');
     				//photoManager.addPhoto('<img id="'+photos[p].ids+'" title="'+photos[p].name+'" style="display: none;" src="'+photos[p].src+'"/>');
     			}
-    			photoManager.addPhoto(as, c);
-            	Mosaic.filterPhoto(photos[p].ids);
+            	//Mosaic.filterPhoto(photos[p].ids);
         	}
+        	photoManager.addPhoto(as);
         	photoManager.addClick(clickCallback);
         }
     };
