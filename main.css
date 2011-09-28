@@ -53,8 +53,8 @@ h1 {
 #something {
     list-style-type: none;
 }
+/*
 #photos {
-   /* Prevent vertical gaps */
    line-height: 0;topBar
    display: none;
    width: 100%;
@@ -65,6 +65,8 @@ h1 {
    column-count:         5;
    column-gap:           0px;
 }
+*/
+
 #loginButton {
     width: 200px;
     text-align: left;
@@ -73,12 +75,43 @@ h1 {
     left: 50%;
     margin-left: -70px;
 }
-#photos img {
-  /* Just in case there are inline attributes */
-  width: 100% !important;
-  height: auto !important;
+
+/* new layout css */
+
+#photos {
+  	float: left; 
+  	width: 100%;
+	margin: 0px;
+	padding: 0px;
 }
 
+body {
+	margin: 0px;
+	padding: 0px;
+}
+
+.pCol {
+	float: left; 
+	width: 20%;
+	margin: 0px;
+	padding: 0px;
+}
+.pCol img {
+	float: left; 
+	width: 100% !important;
+  	height: auto !important;
+	margin: 0px;
+	padding: 0px;
+}
+.pLi {
+	float: left; 
+	width: 100% !important;
+  	height: auto !important;
+	margin: 0px;
+	padding: 0px;
+}
+
+/*
 @media (max-width: 1200px) {
   #photos {
   -moz-column-count:    4;
@@ -109,6 +142,7 @@ h1 {
   column-count:         1;
   }
 }
+*/
 /* this is the slideout styling*/
 #myAlbums {
     top: 130px;

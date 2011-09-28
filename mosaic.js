@@ -17,6 +17,7 @@ window.$my = {
 };
 /* Events which trigger page changes */
 $(document).bind("FBLoaded", function() {
+	photoManager.init();
     $my.constant.fadeTo(1,0.5).mouseover(function(){$my.constant.fadeTo(4,1);}).mouseleave(function(){$my.constant.fadeTo(4,0.25);});
 
     $my.infoHideDivRight.mouseover(function(e){e.stopPropagation();});
@@ -99,6 +100,133 @@ $(document).bind("displayPhotos", function() {
     Slider.init('filter', Mosaic.filterClick, false);
     Mosaic.firstProfile();
 });
+/* this controls how photos are actually layed out*/
+var photoManager = photoManager || new function(){
+	var colCount = 5;
+	var colHandles = [];
+	var photoCount = 0;
+	var lastAdd = 0;
+	var colPCounts = [0,0,0,0,0];
+	this.init = function(){
+		colHandles.push($('#col0'));
+		colHandles.push($('#col1'));
+		colHandles.push($('#col2'));
+		colHandles.push($('#col3'));
+		colHandles.push($('#col4'));
+		$(window).resize(photoManager.adjustForResize);
+		photoManager.adjustForResize();
+	};
+	this.adjustForResize = function() {
+		var w = parseInt($(window).width());
+		var change = false;
+		var oldCount = colCount;
+		if (w > 1200) {
+			if (colCount != 5) {
+				change = true;
+			}
+			colCount = 5;
+		}
+		else if (w > 1000) {
+			if (colCount != 4) {
+				change = true;
+			}
+			colCount = 4;
+		}
+		else if (w > 800) {
+			if (colCount != 3) {
+				change = true;
+			}
+			colCount = 3;
+		}
+		else {
+			if (colCount != 2) {
+				change = true;
+			}
+			colCount = 2;
+		}
+		if (change) {
+			var p = 100 / colCount;
+			if (colCount > oldCount) {
+				var ps = Math.round(photoCount / colCount);
+				var addArray = photoManager.removeExtra(ps);
+				var l = addArray.length;
+				var x = oldCount;
+				while (l > 0) {
+					var t = addArray.pop();
+					$(t).appendTo(colHandles[x]);
+					x += 1;
+					if (x >= colCount) {
+						x = oldCount;
+					}
+					l -= 1;
+				}
+			}
+			for (var i = 0; i < 5; ++i) {
+				colHandles[i].css('width', p+'%');
+				if (i < colCount) {
+					colHandles[i].show();
+				} else {
+					colHandles[i].hide();
+					var tPos = 0;
+					colHandles[i].children().each(function(index,val){
+						$(val).appendTo(colHandles[tPos]);
+						tPos += 1;
+						if (tPos > colCount) {
+							tPos = 0;
+						}
+					});
+					colHandles[i].html('');
+				} 
+			}
+		}
+	};
+	this.addPhoto = function(photo, photoCount) {
+		colHandles[lastAdd].html(colHandles[lastAdd].html()+photo);
+		colPCounts[lastAdd] += 1;
+		photoCount += 1;
+		lastAdd = (lastAdd + photoCount) % colCount;
+		/*
+		if (lastAdd >= colCount) {
+			lastAdd = 0;
+		}
+		*/
+	};
+	this.clearPhotos = function() {
+		photoCount = 0;	
+		colHandles[0].html('');
+		colHandles[1].html('');
+		colHandles[2].html('');
+		colHandles[3].html('');
+		colHandles[4].html('');
+		colPCounts[0] = 0;
+		colPCounts[1] = 0;
+		colPCounts[2] = 0;
+		colPCounts[3] = 0;
+		colPCounts[4] = 0;
+	};
+	this.removeExtra = function(max) {
+		var addArray = [];
+		for (var i = 0; i < 5; ++i) {
+			var ch = colHandles[i].children();
+			var cCount = ch.length;
+			var diff = cCount - max;
+			ch.each(function(index, value){
+				if (index < diff) {
+					addArray.push(value);
+				}
+			});
+		}
+		return addArray;
+	};
+	this.addClick = function(callback) {
+		colHandles[0].children().click(callback);
+		colHandles[1].children().click(callback);
+		colHandles[2].children().click(callback);
+		colHandles[3].children().click(callback);
+		colHandles[4].children().click(callback);
+	};
+};	
+
 /* sliderStuff */
 var Slider = Slider || new function(){
     var sliderParams = [];
@@ -265,10 +393,7 @@ var Mosaic = Mosaic || new function(){
             accessToken = response.session.access_token;   
             $.event.trigger("loadingFriends");
             
-            Mosaic.loadFriends(uid, function(photos){
-                $my.photos.html('<ul id="photoList"></ul>');
-                $my.photoList = $('#photoList');
-                
+            Mosaic.loadFriends(uid, function(photos){                
                 pictureLock = 'friends';
                 Mosaic.clearPhotos();
                 
@@ -314,23 +439,28 @@ var Mosaic = Mosaic || new function(){
     
     this.addPhotos = function(photos, clickCallback, lock) {
     	if (lock == pictureLock) {
-        	var photo_array = [];
+    		var as = '';
+    		var c = 0;
         	for (p in photos) {
         		if (Mosaic.filterPhoto(photos[p].ids) == 1) {
-    				photo_array.push('<li id="'+photos[p].ids+'" title="'+photos[p].name+'"><img src="'+photos[p].src+'" /></li>');
+        			as += '<img id="'+photos[p].ids+'" title="'+photos[p].name+'" src="'+photos[p].src+'" />';
+        			c += 1;
+    				//photoManager.addPhoto('<img id="'+photos[p].ids+'" title="'+photos[p].name+'" src="'+photos[p].src+'" />');
     			} else {
-    				photo_array.push('<li id="'+photos[p].ids+'" title="'+photos[p].name+'" style="display: none;"><img src="'+photos[p].src+'"/></li>');
+    				as += '<img id="'+photos[p].ids+'" title="'+photos[p].name+'" style="display: none;" src="'+photos[p].src+'"/>';
+        			c += 1;
+    				//photoManager.addPhoto('<img id="'+photos[p].ids+'" title="'+photos[p].name+'" style="display: none;" src="'+photos[p].src+'"/>');
     			}
+    			photoManager.addPhoto(as, c);
             	Mosaic.filterPhoto(photos[p].ids);
         	}
-        	$my.photoList.html($my.photoList.html()+photo_array.join(''));
-        	$my.photoList.children().click(clickCallback);
+        	photoManager.addClick(clickCallback);
         }
     };
     this.filterClick = function() {
     	var tButtons = [];
     	var contentItemSex = $('<div>', {
-			class: 'slideContentItem'
+			'class': 'slideContentItem'
 		});
 		var header1 = $('<h4>',{
 			text: 'sex'
@@ -341,7 +471,7 @@ var Mosaic = Mosaic || new function(){
 			text: 'everybody',
 			name: 'sexRadio',
 			value: 'Everybody',
-			class: 'myRadio'
+			'class': 'myRadio'
 		});
 		nosex.attr('checked', true);
 		nosex.click(function(){
@@ -355,7 +485,7 @@ var Mosaic = Mosaic || new function(){
 			text: 'just guys',
 			name: 'sexRadio',
 			value: 'male',
-			class: 'myRadio'
+			'class': 'myRadio'
 		});
 		guys.click(function(){
 			filterRules.sex = 'male';
@@ -368,7 +498,7 @@ var Mosaic = Mosaic || new function(){
 			text: 'just girls',
 			name: 'sexRadio',
 			value: 'female',
-			class: 'myRadio'
+			'class': 'myRadio'
 		});
 		girls.click(function(){
 			filterRules.sex = 'female';
@@ -378,7 +508,7 @@ var Mosaic = Mosaic || new function(){
 		girls.appendTo(contentItemSex);
 		tButtons.push(contentItemSex);
 		var contentItemRelationship = $('<div>', {
-			class: 'slideContentItem'
+			'class': 'slideContentItem'
 		});
 		var selectContainer = $('<select>',{});
 		var rStatuses = ['None', 'Single', 'In a relationship', 'Engaged', 'Married', 'It\'s Complicated', 'In an open relationship', 'Widowed', 'Separated', 'Divorced', 'In a civil union', 'In a domestic partnership'];
@@ -408,25 +538,25 @@ var Mosaic = Mosaic || new function(){
     	var tButtons = [];
     	var user = friendsCache[cUser];
 		var contentItem = $('<div>', {
-			class: 'slideContentItem'
+			'class': 'slideContentItem'
 		});
 		
 		var picDiv = $('<div>',{
-    		class: 'profileHalf pPicContainerBorder'
+    		'class': 'profileHalf pPicContainerBorder'
     	});
     	var buttonDiv = $('<div>',{
-    		class: 'profileHalf'
+    		'class': 'profileHalf'
     	});
 		
 		
 		var picture = $('<img>', {
 			src: user.small,
 			name: user.name,
-			class: 'smallPicture'
+			'class': 'smallPicture'
 		});
 		picture.appendTo(picDiv);
 		var dn = $('<div>', {
-			class: 'smallName',
+			'class': 'smallName',
 			text: user.name.split(' ')[0]
 		});
 		dn.appendTo(picDiv);
@@ -469,25 +599,25 @@ var Mosaic = Mosaic || new function(){
     	
     	var user = friendsCache[cUser];
 		var contentItem = $('<div>', {
-			class: 'slideContentItem'
+			'class': 'slideContentItem'
 		});
 		
 		var picDiv = $('<div>',{
-    		class: 'profileHalf pPicContainerBorder'
+    		'class': 'profileHalf pPicContainerBorder'
     	});
     	var buttonDiv = $('<div>',{
-    		class: 'profileHalf'
+    		'class': 'profileHalf'
     	});
 		
 		
 		var picture = $('<img>', {
 			src: user.small,
 			name: user.name,
-			class: 'smallPicture'
+			'class': 'smallPicture'
 		});
 		picture.appendTo(picDiv);
 		var dn = $('<div>', {
-			class: 'smallName',
+			'class': 'smallName',
 			text: user.name.split(' ')[0]
 		});
 		dn.appendTo(picDiv);
@@ -525,25 +655,25 @@ var Mosaic = Mosaic || new function(){
 				if (tId in friendsCache) {
 					var user = friendsCache[tId];
 					var contentItem = $('<div>', {
-						class: 'slideContentItem'
+						'class': 'slideContentItem'
 					});
 					
 					var picDiv = $('<div>',{
-    					class: 'profileHalf pPicContainerBorder'
+    					'class': 'profileHalf pPicContainerBorder'
     				});
     				var buttonDiv = $('<div>',{
-    					class: 'profileHalf'
+    					'class': 'profileHalf'
     				});
 					
 					
 					var picture = $('<img>', {
 						src: user.small,
 						name: user.name,
-						class: 'smallPicture'
+						'class': 'smallPicture'
 					});
 					picture.appendTo(picDiv);
 					var dn = $('<div>', {
-						class: 'smallName',
+						'class': 'smallName',
 						text: user.name.split(' ')[0]
 					});
 					dn.appendTo(picDiv);
@@ -578,7 +708,7 @@ var Mosaic = Mosaic || new function(){
     	Slider.add(tButtons, 'profiles', null,false);
     };
     this.clearPhotos = function() {
-        $my.photoList.html('');
+    	photoManager.clearPhotos();
     };
         
     /* load all friends / profile pictures for init */
