@@ -107,6 +107,7 @@ var photoManager = photoManager || new function(){
 	var photoCount = 0;
 	var lastAdd = 0;
 	var colPCounts = [0,0,0,0,0];
+	var resizeCallbackReset;
 	this.init = function(){
 		colHandles.push($('#col0'));
 		colHandles.push($('#col1'));
@@ -115,6 +116,7 @@ var photoManager = photoManager || new function(){
 		colHandles.push($('#col4'));
 		$(window).resize(photoManager.adjustForResize);
 		photoManager.adjustForResize();
+		resizeCallbackReset = Mosaic.photoClick;
 	};
 	this.adjustForResize = function() {
 		var w = parseInt($(window).width());
@@ -146,46 +148,27 @@ var photoManager = photoManager || new function(){
 		}
 		if (change) {
 			var p = 100 / colCount;
-			if (colCount > oldCount) {
-				var ps = Math.round(photoCount / colCount);
-				var addArray = photoManager.removeExtra(ps);
-				var l = addArray.length;
-				var x = oldCount;
-				while (l > 0) {
-					var t = addArray.pop();
-					$(t).appendTo(colHandles[x]);
-					x += 1;
-					if (x >= colCount) {
-						x = oldCount;
-					}
-					l -= 1;
-				}
-			}
+			var pArr = [];
+			var pAdd = 0;
 			for (var i = 0; i < 5; ++i) {
 				colHandles[i].css('width', p+'%');
-				if (i < colCount) {
-					colHandles[i].show();
-				} else {
+				$.each(colHandles[i].children(), function(index, value){
+					pArr.push('<img id="'+value.id+'" title="'+value.name+'" style="'+value.style+'" src="'+value.src+'"/>');
+					pAdd += 1;
+				});
+				if (i > colCount) {
 					colHandles[i].hide();
-					var tPos = 0;
-					colHandles[i].children().each(function(index,val){
-						$(val).appendTo(colHandles[tPos]);
-						tPos += 1;
-						if (tPos > colCount) {
-							tPos = 0;
-						}
-					});
-					colHandles[i].html('');
-				} 
+				} else {
+					colHandles[i].show();
+				}
 			}
+			photoManager.clearPhotos();
+			photoManager.addPhoto(pArr);
+			photoManager.addClick(resizeCallbackReset);
 		}
 	};
 	this.addPhoto = function(photo) {
-		var colStrs = [];
-		for (var z = 0; z < colCount; ++z)  {
-			colStrs.push('');
-		}
-		
+		var colStrs = ['','','','',''];
 		for (i in photo) {
 			colStrs[lastAdd] += photo[i];
 			colPCounts[lastAdd] += 1;
@@ -211,20 +194,6 @@ var photoManager = photoManager || new function(){
 		colPCounts[2] = 0;
 		colPCounts[3] = 0;
 		colPCounts[4] = 0;
-	};
-	this.removeExtra = function(max) {
-		var addArray = [];
-		for (var i = 0; i < 5; ++i) {
-			var ch = colHandles[i].children();
-			var cCount = ch.length;
-			var diff = cCount - max;
-			ch.each(function(index, value){
-				if (index < diff) {
-					addArray.push(value);
-				}
-			});
-		}
-		return addArray;
 	};
 	this.addClick = function(callback) {
 		colHandles[0].children().click(callback);
@@ -818,7 +787,6 @@ var Mosaic = Mosaic || new function(){
             	} 
             	else {
             		$.event.trigger("showAlbum");
-           			console.log(response); 
                 	f(response);
             	}
             });
@@ -862,7 +830,6 @@ var Mosaic = Mosaic || new function(){
             	} 
             	else {
             		$.event.trigger("showAlbum");
-           			console.log(response); 
                 	f(response);
             	}
             });
@@ -922,7 +889,6 @@ var Mosaic = Mosaic || new function(){
             	} 
             	else {
             		$.event.trigger("showAlbum");
-           			console.log(response); 
                 	f(response);
             	}
             });
