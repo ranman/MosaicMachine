@@ -10,5 +10,5 @@ elif [ $1 = "test" ]; then
 elif [ $1 = "prod" ]; then
     HOST_PATH="~/html"
 fi
-echo `scp * ec2-user@$HOST:$HOST_PATH/$2`
+echo `scp * -i corekey.pem ec2-user@$HOST:$HOST_PATH`
 echo "Success"
